@@ -1,4 +1,6 @@
 //Studio Alexander
+console.log("test");
+
 gsap.registerPlugin(ScrollTrigger, SplitText);
 let mm = gsap.matchMedia();
 let lenis;
