@@ -147,7 +147,7 @@ function pageInit() {
       },
     });
 
-    tl.to(bgColour, { backgroundColor: "#f8f5f2" });
+    tl.to(bgColour, { backgroundColor: "#f8f5f2", ease: "power2.out" });
   }
   bgColourChange();
 
