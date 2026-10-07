@@ -132,6 +132,23 @@ function pageInit() {
   reasonsSwiper();
   */
 
+  function navColourChange() {
+    let nav = document.querySelector("nav");
+    let navTrigger = document.querySelector("[data-nav-trigger]");
+    if (!nav || !navTrigger) return;
+
+    let tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: navTrigger,
+        start: "top top",
+        end: "bottom bottom",
+      },
+    });
+
+    tl.add(() => nav.classList.add("dark"));
+  }
+  navColourChange();
+
   function cmsHighlight() {
     document.querySelectorAll('[data-p-subheading]').length
 
@@ -154,7 +171,6 @@ function pageInit() {
         trigger: bgTrigger,
         start: "top top",
         end: "bottom bottom",
-        markers: true,
         scrub: 1,
       },
     });
