@@ -140,7 +140,7 @@ function pageInit() {
     ScrollTrigger.create({
       trigger: navTrigger,
       start: "top top",
-      end: "bottom bottom",
+      end: "bottom top",
       toggleClass: { targets: nav, className: "dark" },
     });
   }
