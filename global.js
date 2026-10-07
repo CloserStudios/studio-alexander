@@ -1,6 +1,4 @@
 //Studio Alexander
-console.log("test");
-
 gsap.registerPlugin(ScrollTrigger, SplitText);
 let mm = gsap.matchMedia();
 let lenis;
@@ -133,6 +131,25 @@ function pageInit() {
   }
   reasonsSwiper();
   */
+
+  function bgColourChange() {
+    let bgColour = document.querySelector("[data-bg-colour]");
+    let bgTrigger = document.querySelector("[data-bg-trigger]");
+
+    if (!bgColour || !bgTrigger) return;
+
+    let tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: bgTrigger,
+        start: "top top",
+        end: "bottom bottom",
+        scrub: true,
+      },
+    });
+
+    tl.to(bgColour, { backgroundColor: "#ffffff", duration: 2 });
+  }
+  bgColourChange();
 
 
   function teamAnimation() {
