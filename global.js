@@ -163,7 +163,6 @@ function pageInit() {
 
     if (!bgColour || !bgTrigger) return;
 
-    gsap.set(bgColour, { height: "200vh" });
     gsap.set(bgTrigger, { height: "300vh" });
 
     let tl = gsap.timeline({
