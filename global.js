@@ -145,7 +145,7 @@ function pageInit() {
       },
     });
 
-    tl.add(() => nav.classList.add("dark"));
+    tl.add(() => nav.classList.toggle("dark"));
   }
   navColourChange();
 
