@@ -142,10 +142,11 @@ function pageInit() {
         trigger: navTrigger,
         start: "top top",
         end: "bottom bottom",
+        toggleActions: 'play reset resume reset',
       },
     });
 
-    tl.add(() => nav.classList.toggle("dark"));
+    tl.add(() => nav.classList.add("dark"));
   }
   navColourChange();
 
