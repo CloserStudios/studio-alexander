@@ -133,6 +133,8 @@ function pageInit() {
   */
 
   function cmsHighlight() {
+    document.querySelectorAll('[data-p-subheading]').length
+
     document.querySelectorAll('[data-p-subheading]').forEach(el => {
     const raw = el.textContent;
     const html = raw.replace(/\*([^*]+)\*/g, '<span class="h6__emphasis">$1</span>');
