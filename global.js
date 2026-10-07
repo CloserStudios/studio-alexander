@@ -132,6 +132,15 @@ function pageInit() {
   reasonsSwiper();
   */
 
+  function cmsHighlight() {
+    document.querySelectorAll('[data-p-subheading]').forEach(el => {
+    const raw = el.textContent;
+    const html = raw.replace(/\*([^*]+)\*/g, '<span class="h6__emphasis">$1</span>');
+    el.innerHTML = html;
+  });
+  }
+  cmsHighlight();
+
   function bgColourChange() {
     let bgColour = document.querySelector("[data-bg-colour]");
     let bgTrigger = document.querySelector("[data-bg-trigger]");
@@ -151,7 +160,6 @@ function pageInit() {
     tl.to(bgColour, { backgroundColor: "#f8f5f2", ease: "power2.out" });
   }
   bgColourChange();
-
 
   function teamAnimation() {
     const teamWrapper = document.querySelector("[team-wrapper]");
