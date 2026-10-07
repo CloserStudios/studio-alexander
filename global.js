@@ -143,6 +143,7 @@ function pageInit() {
         trigger: bgTrigger,
         start: "top top",
         end: "bottom bottom",
+        markers: true,
         scrub: 1,
       },
     });
