@@ -147,7 +147,7 @@ function pageInit() {
       },
     });
 
-    tl.to(bgColour, { backgroundColor: "#ffffff", duration: 2 });
+    tl.to(bgColour, { backgroundColor: "#f8f5f2", duration: 2 });
   }
   bgColourChange();
 
