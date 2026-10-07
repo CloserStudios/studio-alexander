@@ -133,20 +133,16 @@ function pageInit() {
   */
 
   function navColourChange() {
-    let nav = document.querySelector("nav");
-    let navTrigger = document.querySelector("[data-nav-trigger]");
+    const nav = document.querySelector("nav");
+    const navTrigger = document.querySelector("[data-nav-trigger]");
     if (!nav || !navTrigger) return;
 
-    let tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: navTrigger,
-        start: "top top",
-        end: "bottom bottom",
-        toggleActions: 'play reset resume reset',
-      },
+    ScrollTrigger.create({
+      trigger: navTrigger,
+      start: "top top",
+      end: "bottom bottom",
+      toggleClass: { targets: nav, className: "dark" },
     });
-
-    tl.add(() => nav.classList.add("dark"));
   }
   navColourChange();
 
