@@ -143,11 +143,11 @@ function pageInit() {
         trigger: bgTrigger,
         start: "top top",
         end: "bottom bottom",
-        scrub: true,
+        scrub: 1,
       },
     });
 
-    tl.to(bgColour, { backgroundColor: "#f8f5f2", duration: 2 });
+    tl.to(bgColour, { backgroundColor: "#f8f5f2" });
   }
   bgColourChange();
 
