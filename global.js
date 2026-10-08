@@ -57,8 +57,8 @@ function menuButtonHover() {
   tl
     .to(menuLineTop, { duration: 0.2, xPercent: 200 }, 0)
     .to(menuLineTopHover, { duration: 0.3, xPercent: 200 }, 0.1)
-    .to(menuLineBottom, { duration: 0.2, xPercent: 200 }, 0.2)
-    .to(menuLineBottomHover, { duration: 0.3, xPercent: 200 }, 0.3);
+    .to(menuLineBottom, { duration: 0.2, xPercent: 200 }, 0.15)
+    .to(menuLineBottomHover, { duration: 0.3, xPercent: 200 }, 0.2);
 
   menuButton.addEventListener("mouseenter", () => tl.play());
   menuButton.addEventListener("mouseleave", () => tl.reverse());
