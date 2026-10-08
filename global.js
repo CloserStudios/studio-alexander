@@ -244,6 +244,7 @@ function pageInit() {
     tl.eventCallback("onStart", () => lenis?.stop?.());
     tl.eventCallback("onReverseComplete", () => lenis?.start?.());
   }
+  menuAnimation();
 
   function currentPage() {
     const container = document.querySelector('[data-barba="container"]');
