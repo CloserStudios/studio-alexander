@@ -142,6 +142,7 @@ function pageInit() {
   }
   teamAnimation();
 
+  /*
   function menuAnimation() {
     const menu = document.querySelector(".menu");
     const menuBackground = document.querySelector(".menu-background");
@@ -193,6 +194,56 @@ function pageInit() {
     tl.eventCallback("onReverseComplete", () => lenis?.start?.());
   }
   menuAnimation();
+  */
+
+  function menuAnimation() {
+    const menu = document.querySelector(".menu");
+    const menuBackground = document.querySelector(".menu-background");
+    const menuWrapper = document.querySelector(".menu-wrapper");
+    const menuOpen = document.querySelector(".menu-button");
+    const menuTextWrapper = document.querySelector(".menu-text-wrapper");
+    const menuTextOpen = document.querySelector("[data-menu-open]");
+    const menuTextClose = document.querySelector("[data-menu-close]");
+    const container = document.querySelector('[data-barba="container"]');
+
+    if (!menu || !menuWrapper || !menuOpen || !menuBackground || !menuTextWrapper || !container) return;
+
+    const baseDark = container.dataset.navTheme === "dark";
+
+    // If the page is dark, menu text should be black
+    menuTextWrapper.style.color = baseDark ? "#000" : "#fff";
+
+    gsap.set(menuTextOpen, { y: 0 });
+    gsap.set(menuTextClose, { y: 12 });
+
+    const tl = gsap.timeline({
+      paused: true,
+      defaults: {
+        ease: "power2.inOut",
+      },
+    });
+
+    tl
+      .set(menu, { display: "flex" }, 0)
+      .to(menuBackground, { opacity: 0.5, duration: 0.5 }, 0.1)
+      .to(menuWrapper, { scale: 1, duration: 0.5 }, 0.15)
+      .to(menuTextOpen, { y: -12, duration: 0.5 }, 0.15)
+      .to(menuTextClose, { y: 0, duration: 0.5 }, 0.2);
+
+    const toggle = () => {
+      tl.reversed() ? tl.play() : tl.timeScale(1).reverse(0);
+    };
+
+    menuOpen.addEventListener("click", toggle);
+    menuBackground.addEventListener("click", toggle);
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && !tl.reversed()) tl.timeScale(1).reverse(0);
+    });
+
+    tl.eventCallback("onStart", () => lenis?.stop?.());
+    tl.eventCallback("onReverseComplete", () => lenis?.start?.());
+  }
 
   function currentPage() {
     const container = document.querySelector('[data-barba="container"]');
