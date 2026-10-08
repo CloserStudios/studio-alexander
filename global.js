@@ -36,22 +36,6 @@ function pageInit() {
   ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
   mm.revert();
 
-  /*
-  function navColourChange() {
-    const nav = document.querySelector("nav");
-    const navTrigger = document.querySelector("[data-nav-trigger]");
-    if (!nav || !navTrigger) return;
-
-    ScrollTrigger.create({
-      trigger: navTrigger,
-      start: "top top",
-      end: "bottom top",
-      toggleClass: { targets: nav, className: "dark" },
-    });
-  }
-  navColourChange();
-  */
-
   function navColourChange() {
     const nav = getNav();
     const navTrigger = document.querySelector("[data-nav-trigger]");
@@ -201,7 +185,7 @@ function pageInit() {
         const root = document.querySelector('.home-hero');
         if (!root) return;
     
-        const pinHeight = root.querySelector('.pin-height');
+        const pinHeight = root.querySelector('[data-pin-height]');
         const container = root.querySelector('.home-hero__wrapper');
         const heroImage = root.querySelector('.home-hero__image');
 
