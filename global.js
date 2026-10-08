@@ -4,12 +4,46 @@ let mm = gsap.matchMedia();
 let lenis;
 let resizeObserver = null;
 
+/*
 const getNav = () => document.querySelector(".nav");
+const show = container.dataset.navProject === "true";
 
 function navTheme(container) {
   const nav = getNav();
   if (!nav || !container) return;
+
+  const title = container.getAttribute("page-name");
+  if (isWork && title) nav.querySelector(".nav__title").textContent = title;
+
   nav.classList.toggle("dark", container.dataset.navTheme === "dark");
+  navCurrentProject(container);
+}
+*/
+
+const getNav = () => document.querySelector(".nav");
+
+function navCurrentProject(container) {
+  const el = document.querySelector(".nav__current-project");
+  if (!el || !container) return;
+
+  const show = container.dataset.navProject === "true";
+  el.classList.toggle("is-hidden", !show);
+}
+
+function navTheme(container) {
+  const nav = getNav();
+  if (!nav || !container) return;
+
+  const title = container.getAttribute("page-name");
+  const isWork = container.dataset.navProject === "true";
+
+  if (isWork && title) {
+    const navTitle = nav.querySelector(".nav__title");
+    if (navTitle) navTitle.textContent = title;
+  }
+
+  nav.classList.toggle("dark", container.dataset.navTheme === "dark");
+  navCurrentProject(container);
 }
 
 function globalInit() {
