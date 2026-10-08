@@ -165,7 +165,7 @@ function pageInit() {
     tl
       .set(menu, { display: "flex" }, 0)
       .set(menuTextOpen, { yPercent: 0 })
-      .set(menuTextClose, { yPercent: 30 })
+      .set(menuTextClose, { yPercent: 100 })
       .to(menuBackground, { opacity: 0.5, duration: 0.5 }, 0.1)
       .to(
         menuWrapper,
@@ -176,7 +176,7 @@ function pageInit() {
         },
         0.15
       )
-      .to(menuTextOpen, { yPercent: -30, duration: 0.5 }, 0.15)
+      .to(menuTextOpen, { yPercent: -100, duration: 0.5 }, 0.15)
       .to(menuTextClose, { yPercent: 0, duration: 0.5 }, 0.2);
       //.fromTo(menuItems, { y: 30, opacity: 0 }, { y: 0, opacity: 1, stagger: 0.075 },0.75);
 
