@@ -32,6 +32,31 @@ function globalInit() {
   });
 }
 
+function menuButtonHover() {
+  const menuButton = document.querySelector(".menu-button");
+  const menuLineTop = document.querySelector(".menu-line__top");
+  const menuLineTopHover = document.querySelector(".menu-line__top.hover");
+  const menuLineBottom = document.querySelector(".menu-line__bottom");
+  const menuLineBottomHover = document.querySelector(".menu-line__bottom.hover");
+
+    let tl = gsap.timeline({
+      paused: true,
+      ease: 'power2.inOut'
+    });
+
+    tl
+      .to(menuLineTop, {duration: 0.2, xPercent: 200,}, 0)
+      .to(menuLineTopHover, {duration: 0.3, xPercent: 200,}, 0.1)
+      .to(menuLineBottom, {duration: 0.2, xPercent: 200,}, 0.2)
+      .to(menuLineBottomHover, {duration: 0.3, xPercent: 200,}, 0.3);
+
+
+    document.querySelectorAll(menuButton).forEach((wrapper) => {
+      wrapper.addEventListener("mouseenter", () => tl.play());
+      wrapper.addEventListener("mouseleave", () => tl.reverse());
+    });
+}
+
 function pageInit() {
   ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
   mm.revert();
@@ -250,6 +275,7 @@ function destroyResizeObserver() {
 
 function init() {
   globalInit();
+  menuButtonHover();
   pageInit();
   initResizeObserver();
 }
