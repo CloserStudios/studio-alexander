@@ -154,6 +154,9 @@ function pageInit() {
 
     if ( !menu || !menuWrapper || !menuOpen || !menuBackground) return;
 
+    gsap.set(menuTextOpen, { yPercent: 0 });
+    gsap.set(menuTextClose, { yPercent: 100 });
+
     const tl = gsap.timeline({
       paused: true,
       reversed: true,
@@ -164,8 +167,6 @@ function pageInit() {
 
     tl
       .set(menu, { display: "flex" }, 0)
-      .set(menuTextOpen, { yPercent: 0 })
-      .set(menuTextClose, { yPercent: 100 })
       .to(menuBackground, { opacity: 0.5, duration: 0.5 }, 0.1)
       .to(
         menuWrapper,
