@@ -163,18 +163,17 @@ function pageInit() {
 
     if (!bgColour || !bgTrigger) return;
 
-    gsap.set(bgTrigger, { height: "250vh" });
-
     let tl = gsap.timeline({
       scrollTrigger: {
         trigger: bgTrigger,
         start: "top top",
         end: "bottom bottom",
-        scrub: 1,
+        scrub: true,
       },
     });
 
-    tl.to(bgColour, { backgroundColor: "#f8f5f2", ease: "power2.out" });
+    //tl.to(bgColour, { backgroundColor: "#f8f5f2", ease: "power2.out" });
+    tl.to(bgColour, { opacity: 0, ease: "power2.out" });
   }
   bgColourChange();
 
