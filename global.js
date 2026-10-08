@@ -147,6 +147,9 @@ function pageInit() {
     const menuBackground = document.querySelector(".menu-background");
     const menuWrapper = document.querySelector(".menu-wrapper");
     const menuOpen = document.querySelector(".menu-button");
+    const menuTextOpen = document.querySelector(".[data-menu-open]");
+    const menuTextClose = document.querySelector(".[data-menu-close]");
+    
     //const menuItems = gsap.utils.toArray("[menu-item-stagger]");
 
     if ( !menu || !menuWrapper || !menuOpen || !menuBackground) return;
@@ -161,6 +164,8 @@ function pageInit() {
 
     tl
       .set(menu, { display: "flex" }, 0)
+      .set(menuTextOpen, { yPercent: 0 })
+      .set(menuTextClose, { yPercent: 30 })
       .to(menuBackground, { opacity: 0.5, duration: 0.5 }, 0.1)
       .to(
         menuWrapper,
@@ -170,7 +175,9 @@ function pageInit() {
           ease: "power2.inOut"
         },
         0.15
-      );
+      )
+      .to(menuTextOpen, { yPercent: -30, duration: 0.5 }, 0.15)
+      .to(menuTextClose, { yPercent: 0, duration: 0.5 }, 0.2);
       //.fromTo(menuItems, { y: 30, opacity: 0 }, { y: 0, opacity: 1, stagger: 0.075 },0.75);
 
     const toggle = () => {
@@ -178,7 +185,7 @@ function pageInit() {
     };
 
     menuOpen.addEventListener("click", toggle);
-    //menuBackground.addEventListener("click", toggle);
+    menuBackground.addEventListener("click", toggle);
 
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape" && !tl.reversed()) tl.timeScale(1).reverse(0);
