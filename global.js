@@ -175,7 +175,7 @@ function pageInit() {
         0.15
       )
       .to(menuTextOpen, { y: -12, duration: 0.25 }, 0.15)
-      .to(menuTextClose, { y: -12, duration: 0.25 }, 0.2);
+      .to(menuTextClose, { y: 0, duration: 0.25 }, 0.2);
       //.fromTo(menuItems, { y: 30, opacity: 0 }, { y: 0, opacity: 1, stagger: 0.075 },0.75);
 
     const toggle = () => {
