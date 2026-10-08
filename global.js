@@ -147,8 +147,8 @@ function pageInit() {
     const menuBackground = document.querySelector(".menu-background");
     const menuWrapper = document.querySelector(".menu-wrapper");
     const menuOpen = document.querySelector(".menu-button");
-    const menuTextOpen = document.querySelector(".[data-menu-open]");
-    const menuTextClose = document.querySelector(".[data-menu-close]");
+    const menuTextOpen = document.querySelector("[data-menu-open]");
+    const menuTextClose = document.querySelector("[data-menu-close]");
     
     //const menuItems = gsap.utils.toArray("[menu-item-stagger]");
 
