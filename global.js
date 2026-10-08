@@ -200,27 +200,21 @@ function pageInit() {
     const menu = document.querySelector(".menu");
     const menuBackground = document.querySelector(".menu-background");
     const menuWrapper = document.querySelector(".menu-wrapper");
-    const menuOpen = document.querySelector(".menu-button");
-    const menuTextWrapper = document.querySelector(".menu-text-wrapper");
+    const menuButton = document.querySelector(".menu-button");
     const menuTextOpen = document.querySelector("[data-menu-open]");
     const menuTextClose = document.querySelector("[data-menu-close]");
-    const container = document.querySelector('[data-barba="container"]');
 
-    if (!menu || !menuWrapper || !menuOpen || !menuBackground || !menuTextWrapper || !container) return;
-
-    const baseDark = container.dataset.navTheme === "dark";
-
-    // If the page is dark, menu text should be black
-    menuTextWrapper.style.color = baseDark ? "#000" : "#fff";
+    if (!menu || !menuWrapper || !menuButton || !menuBackground || !menuTextOpen || !menuTextClose) return;
+    if (menuButton.dataset.bound) return;
+    menuButton.dataset.bound = "true";
 
     gsap.set(menuTextOpen, { y: 0 });
     gsap.set(menuTextClose, { y: 12 });
 
     const tl = gsap.timeline({
       paused: true,
-      defaults: {
-        ease: "power2.inOut",
-      },
+      reversed: true,
+      defaults: { ease: "power2.inOut" },
     });
 
     tl
@@ -234,15 +228,24 @@ function pageInit() {
       tl.reversed() ? tl.play() : tl.timeScale(1).reverse(0);
     };
 
-    menuOpen.addEventListener("click", toggle);
+    menuButton.addEventListener("click", toggle);
     menuBackground.addEventListener("click", toggle);
 
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape" && !tl.reversed()) tl.timeScale(1).reverse(0);
     });
 
-    tl.eventCallback("onStart", () => lenis?.stop?.());
-    tl.eventCallback("onReverseComplete", () => lenis?.start?.());
+    tl.eventCallback("onStart", () => {
+      lenis?.stop?.();
+      const container = document.querySelector('[data-barba="container"]');
+      const baseDark = container?.dataset.navTheme === "dark";
+      menuButton.classList.toggle("dark", baseDark);
+    });
+
+    tl.eventCallback("onReverseComplete", () => {
+      lenis?.start?.();
+      menuButton.classList.remove("dark");
+    });
   }
   menuAnimation();
 
