@@ -116,14 +116,14 @@ function pageInit() {
 
   function menuAnimation() {
     const menu = document.querySelector(".menu");
-    //const menuBackground = document.querySelector(".menu__background");
-    const menuWrapper = document.querySelector(".menu__wrapper");
-    const menuOpen = document.querySelector(".menu__button");
+    const menuBackground = document.querySelector(".menu-background");
+    const menuWrapper = document.querySelector(".menu-wrapper");
+    const menuOpen = document.querySelector(".menu-button");
     //const menuItems = gsap.utils.toArray("[menu-item-stagger]");
 
-    if ( !menu || !menuWrapper || !menuOpen) return;
+    if ( !menu || !menuWrapper || !menuOpen || !menuBackground) return;
 
-    const menuTL = gsap.timeline({
+    const tl = gsap.timeline({
       paused: true,
       reversed: true,
       defaults: {
@@ -131,32 +131,33 @@ function pageInit() {
       },
     });
 
-    menuTL
+    tl
       .set(menu, { display: "flex" }, 0)
-      //.to(menuBackground, { autoAlpha: 1 }, 0.15)
+      .to(menuBackground, { opacity: 0.5, duration: 0.05 }, 0.1)
       .to(
         menuWrapper,
         {
           scale: 1,
           duration: 0.5,
+          ease: "power2.inOut"
         },
-        0.01
+        0.15
       );
       //.fromTo(menuItems, { y: 30, opacity: 0 }, { y: 0, opacity: 1, stagger: 0.075 },0.75);
 
     const toggle = () => {
-      menuTL.reversed() ? menuTL.play() : menuTL.timeScale(1).reverse(0);
+      tl.reversed() ? tl.play() : tl.timeScale(1).reverse(0);
     };
 
     menuOpen.addEventListener("click", toggle);
     //menuBackground.addEventListener("click", toggle);
 
     document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape" && !menuTL.reversed()) menuTL.timeScale(1).reverse(0);
+      if (e.key === "Escape" && !tl.reversed()) tl.timeScale(1).reverse(0);
     });
 
-    menuTL.eventCallback("onStart", () => lenis?.stop?.());
-    menuTL.eventCallback("onReverseComplete", () => lenis?.start?.());
+    tl.eventCallback("onStart", () => lenis?.stop?.());
+    tl.eventCallback("onReverseComplete", () => lenis?.start?.());
   }
   menuAnimation();
 
