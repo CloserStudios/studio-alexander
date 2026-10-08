@@ -154,8 +154,8 @@ function pageInit() {
 
     if ( !menu || !menuWrapper || !menuOpen || !menuBackground) return;
 
-    gsap.set(menuTextOpen, { yPercent: 0 });
-    gsap.set(menuTextClose, { yPercent: 100 });
+    gsap.set(menuTextOpen, { y: 0 });
+    gsap.set(menuTextClose, { y: 12 });
 
     const tl = gsap.timeline({
       paused: true,
@@ -177,8 +177,8 @@ function pageInit() {
         },
         0.15
       )
-      .to(menuTextOpen, { yPercent: -100, duration: 0.5 }, 0.15)
-      .to(menuTextClose, { yPercent: 0, duration: 0.5 }, 0.2);
+      .to(menuTextOpen, { y: -12, duration: 0.5 }, 0.15)
+      .to(menuTextClose, { y: 0, duration: 0.5 }, 0.2);
       //.fromTo(menuItems, { y: 30, opacity: 0 }, { y: 0, opacity: 1, stagger: 0.075 },0.75);
 
     const toggle = () => {
