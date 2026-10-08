@@ -4,6 +4,14 @@ let mm = gsap.matchMedia();
 let lenis;
 let resizeObserver = null;
 
+const getNav = () => document.querySelector(".nav");
+
+function navTheme(container) {
+  const nav = getNav();
+  if (!nav || !container) return;
+  nav.classList.toggle("dark", container.dataset.navTheme === "dark");
+}
+
 function globalInit() {
   lenis = new Lenis();
 
@@ -28,11 +36,288 @@ function pageInit() {
   ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
   mm.revert();
 
-  const nav = document.querySelector('.nav');
+  /*
+  function navColourChange() {
+    const nav = document.querySelector("nav");
+    const navTrigger = document.querySelector("[data-nav-trigger]");
+    if (!nav || !navTrigger) return;
 
-  function navTheme(container) {
-    nav.classList.toggle("dark", container.dataset.navTheme === "dark");
+    ScrollTrigger.create({
+      trigger: navTrigger,
+      start: "top top",
+      end: "bottom top",
+      toggleClass: { targets: nav, className: "dark" },
+    });
   }
+  navColourChange();
+  */
+
+  function navColourChange() {
+    const nav = getNav();
+    const navTrigger = document.querySelector("[data-nav-trigger]");
+    const container = document.querySelector('[data-barba="container"]');
+    if (!nav || !navTrigger || !container) return;
+
+    const baseDark = container.dataset.navTheme === "dark";
+
+    ScrollTrigger.create({
+      trigger: navTrigger,
+      start: "top top",
+      end: "bottom top",
+      onToggle: (self) => nav.classList.toggle("dark", self.isActive ? !baseDark : baseDark),
+    });
+  }
+  navColourChange();
+
+  function cmsHighlight() {
+    document.querySelectorAll('[data-p-subheading]').length
+
+    document.querySelectorAll('[data-p-subheading]').forEach(el => {
+    const raw = el.textContent;
+    const html = raw.replace(/\*([^*]+)\*/g, '<span class="h6__emphasis">$1</span>');
+    el.innerHTML = html;
+  });
+  }
+  cmsHighlight();
+
+  function bgColourChange() {
+    let bgColour = document.querySelector("[data-bg-colour]");
+    let bgTrigger = document.querySelector("[data-bg-trigger]");
+
+    if (!bgColour || !bgTrigger) return;
+
+    let tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: bgTrigger,
+        start: "top top",
+        end: "bottom bottom",
+        scrub: true,
+      },
+    });
+
+    tl.to(bgColour, { opacity: 0, ease: "power2.out" });
+  }
+  bgColourChange();
+
+  function teamAnimation() {
+    const teamWrapper = document.querySelector("[team-wrapper]");
+    const teamItems = document.querySelectorAll("[team-item]");
+  
+    if (!teamWrapper || !teamItems.length) return;
+  
+    const teamPanels = teamWrapper.querySelectorAll("[team-panel]");
+    if (!teamPanels.length) return;
+  
+    function setActiveItem(index) {
+      teamItems.forEach((item, i) => {
+        item.classList.toggle("is-active", i === index);
+      });
+    }
+  
+    function showPanel(index) {
+      gsap.set(teamPanels, { autoAlpha: 0 });
+      gsap.set(teamPanels[index], { autoAlpha: 1 });
+      setActiveItem(index);
+    }
+  
+    showPanel(0);
+  
+    teamItems.forEach((teamItem, index) => {
+      teamItem.addEventListener("mouseenter", () => {
+        showPanel(index);
+      });
+    });
+  }
+  teamAnimation();
+
+  function menuAnimation() {
+    const menu = document.querySelector(".menu");
+    //const menuBackground = document.querySelector(".menu__background");
+    const menuWrapper = document.querySelector(".menu__wrapper");
+    const menuOpen = document.querySelector(".menu__button");
+    //const menuItems = gsap.utils.toArray("[menu-item-stagger]");
+
+    if ( !menu || !menuWrapper || !menuOpen) return;
+
+    const menuTL = gsap.timeline({
+      paused: true,
+      reversed: true,
+      defaults: {
+        ease: "power2.inOut",
+      },
+    });
+
+    menuTL
+      .set(menu, { display: "flex" }, 0)
+      //.to(menuBackground, { autoAlpha: 1 }, 0.15)
+      .to(
+        menuWrapper,
+        {
+          scale: 1,
+          duration: 0.5,
+        },
+        0.01
+      );
+      //.fromTo(menuItems, { y: 30, opacity: 0 }, { y: 0, opacity: 1, stagger: 0.075 },0.75);
+
+    const toggle = () => {
+      menuTL.reversed() ? menuTL.play() : menuTL.timeScale(1).reverse(0);
+    };
+
+    menuOpen.addEventListener("click", toggle);
+    //menuBackground.addEventListener("click", toggle);
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && !menuTL.reversed()) menuTL.timeScale(1).reverse(0);
+    });
+
+    menuTL.eventCallback("onStart", () => lenis?.stop?.());
+    menuTL.eventCallback("onReverseComplete", () => lenis?.start?.());
+  }
+  menuAnimation();
+
+  function currentPage() {
+    const container = document.querySelector('[data-barba="container"]');
+    const pageTitle = container?.getAttribute("page-name");
+    const pageBreadcrumb = document.querySelector("[current-page]");
+  
+    if (!pageBreadcrumb || !pageTitle) return;
+  
+    pageBreadcrumb.textContent = pageTitle;
+  }
+  currentPage();
+
+  function copyright() {
+    const currentYear = new Date().getFullYear();
+    document.querySelectorAll('[data="year"]').forEach((el) => {
+      el.textContent = currentYear;
+    });
+  }
+  copyright();
+
+  function desktopAnimations() {
+    mm.add("(min-width: 992px)", () => {
+      function heroAnim() {
+        const root = document.querySelector('.home-hero');
+        if (!root) return;
+    
+        const pinHeight = root.querySelector('.pin-height');
+        const container = root.querySelector('.home-hero__wrapper');
+        const heroImage = root.querySelector('.home-hero__image');
+
+        let tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: pinHeight,
+            start: 'top top',
+            end: 'bottom bottom',
+            pin: container,
+            scrub: 1,
+          },
+        });
+
+        tl.to(heroImage, {scale: 1, ease: "sine.out",});
+        
+      }
+      heroAnim();
+
+      /*
+      function buttonAnimation() {
+        const buttons = gsap.utils.toArray("[buttonhover]");
+
+        buttons.forEach((buttonItem) => {
+          let button = buttonItem.querySelector("[buttonhovertarget]");
+          let buttonHover = gsap.timeline({
+            paused: true,
+          });
+
+          buttonHover
+            .to(button, { duration: 0.3, xPercent: 101, ease: "power2.inOut" })
+            .set(button, { xPercent: -101 })
+            .to(button, { duration: 0.5, xPercent: 0 });
+
+          buttonItem.addEventListener("mouseenter", () => buttonHover.play(0));
+        });
+      }
+      buttonAnimation();
+      */
+    });
+  }
+  desktopAnimations();
+ 
+}
+
+function initResizeObserver() {
+  if (resizeObserver) return;
+
+  resizeObserver = new ResizeObserver(() => {
+    ScrollTrigger.refresh();
+    lenis?.resize?.();
+  });
+
+  resizeObserver.observe(document.body);
+}
+
+function destroyResizeObserver() {
+  if (!resizeObserver) return;
+  resizeObserver.disconnect();
+  resizeObserver = null;
+}
+
+function init() {
+  globalInit();
+  pageInit();
+  initResizeObserver();
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", init);
+} else {
+  init();
+}
+
+barba.hooks.beforeEnter((data) => {
+  if (!data.current.container) navTheme(data.next.container);
+});
+
+barba.hooks.beforeLeave(() => {
+  destroyResizeObserver();
+});
+
+barba.hooks.afterEnter((data) => {
+  //window.FinsweetAttributes.modules.list.restart();
+});
+
+barba.hooks.after((data) => {
+  window.scrollTo(0, 0);
+  pageInit();
+  lenis.start();
+  initResizeObserver();
+});
+
+barba.init({
+  preventRunning: true,
+  transitions: [
+    {
+      name: "default-transition",
+
+      leave(data) {},
+
+      afterLeave(data) {
+        gsap.set(data.current.container, { visibility: "hidden" });
+      },
+
+      beforeEnter(data) {
+        gsap.set(data.next.container, { visibility: "hidden" });
+        navTheme(data.next.container);
+      },
+
+      enter(data) {
+        gsap.set(data.next.container, { visibility: "visible" });
+      },
+    },
+  ],
+});
+
 
    /*
   
@@ -306,268 +591,6 @@ function pageInit() {
   reasonsSwiper();
   */
 
-  function navColourChange() {
-    const nav = document.querySelector("nav");
-    const navTrigger = document.querySelector("[data-nav-trigger]");
-    if (!nav || !navTrigger) return;
-
-    ScrollTrigger.create({
-      trigger: navTrigger,
-      start: "top top",
-      end: "bottom top",
-      toggleClass: { targets: nav, className: "dark" },
-    });
-  }
-  navColourChange();
-
-  function cmsHighlight() {
-    document.querySelectorAll('[data-p-subheading]').length
-
-    document.querySelectorAll('[data-p-subheading]').forEach(el => {
-    const raw = el.textContent;
-    const html = raw.replace(/\*([^*]+)\*/g, '<span class="h6__emphasis">$1</span>');
-    el.innerHTML = html;
-  });
-  }
-  cmsHighlight();
-
-  function bgColourChange() {
-    let bgColour = document.querySelector("[data-bg-colour]");
-    let bgTrigger = document.querySelector("[data-bg-trigger]");
-
-    if (!bgColour || !bgTrigger) return;
-
-    let tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: bgTrigger,
-        start: "top top",
-        end: "bottom bottom",
-        scrub: true,
-      },
-    });
-
-    tl.to(bgColour, { opacity: 0, ease: "power2.out" });
-  }
-  bgColourChange();
-
-  function teamAnimation() {
-    const teamWrapper = document.querySelector("[team-wrapper]");
-    const teamItems = document.querySelectorAll("[team-item]");
-  
-    if (!teamWrapper || !teamItems.length) return;
-  
-    const teamPanels = teamWrapper.querySelectorAll("[team-panel]");
-    if (!teamPanels.length) return;
-  
-    function setActiveItem(index) {
-      teamItems.forEach((item, i) => {
-        item.classList.toggle("is-active", i === index);
-      });
-    }
-  
-    function showPanel(index) {
-      gsap.set(teamPanels, { autoAlpha: 0 });
-      gsap.set(teamPanels[index], { autoAlpha: 1 });
-      setActiveItem(index);
-    }
-  
-    showPanel(0);
-  
-    teamItems.forEach((teamItem, index) => {
-      teamItem.addEventListener("mouseenter", () => {
-        showPanel(index);
-      });
-    });
-  }
-  teamAnimation();
-
-  function menuAnimation() {
-    const menu = document.querySelector(".menu");
-    //const menuBackground = document.querySelector(".menu__background");
-    const menuWrapper = document.querySelector(".menu__wrapper");
-    const menuOpen = document.querySelector(".menu__button");
-    //const menuItems = gsap.utils.toArray("[menu-item-stagger]");
-
-    if ( !menu || !menuWrapper || !menuOpen) return;
-
-    const menuTL = gsap.timeline({
-      paused: true,
-      reversed: true,
-      defaults: {
-        ease: "power2.inOut",
-      },
-    });
-
-    menuTL
-      .set(menu, { display: "flex" }, 0)
-      //.to(menuBackground, { autoAlpha: 1 }, 0.15)
-      .to(
-        menuWrapper,
-        {
-          scale: 1,
-          duration: 0.5,
-        },
-        0.01
-      );
-      //.fromTo(menuItems, { y: 30, opacity: 0 }, { y: 0, opacity: 1, stagger: 0.075 },0.75);
-
-    const toggle = () => {
-      menuTL.reversed() ? menuTL.play() : menuTL.timeScale(1).reverse(0);
-    };
-
-    menuOpen.addEventListener("click", toggle);
-    //menuBackground.addEventListener("click", toggle);
-
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape" && !tl.reversed()) menuTL.timeScale(1).reverse(0);
-    });
-
-    menuTL.eventCallback("onStart", () => lenis?.stop?.());
-    menuTL.eventCallback("onReverseComplete", () => lenis?.start?.());
-  }
-  menuAnimation();
-
-  function currentPage() {
-    const container = document.querySelector('[data-barba="container"]');
-    const pageTitle = container?.getAttribute("page-name");
-    const pageBreadcrumb = document.querySelector("[current-page]");
-  
-    if (!pageBreadcrumb || !pageTitle) return;
-  
-    pageBreadcrumb.textContent = pageTitle;
-  }
-  currentPage();
-
-  function copyright() {
-    const currentYear = new Date().getFullYear();
-    document.querySelectorAll('[data="year"]').forEach((el) => {
-      el.textContent = currentYear;
-    });
-  }
-  copyright();
-
-  function desktopAnimations() {
-    mm.add("(min-width: 992px)", () => {
-      function heroAnim() {
-        const root = document.querySelector('.home-hero');
-        if (!root) return;
-    
-        const pinHeight = root.querySelector('.pin-height');
-        const container = root.querySelector('.home-hero__wrapper');
-        const heroImage = root.querySelector('.home-hero__image');
-
-        let tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: pinHeight,
-            start: 'top top',
-            end: 'bottom bottom',
-            pin: container,
-            scrub: 1,
-          },
-        });
-
-        tl.to(heroImage, {scale: 1, ease: "sine.out",});
-        
-      }
-      heroAnim();
-
-      /*
-      function buttonAnimation() {
-        const buttons = gsap.utils.toArray("[buttonhover]");
-
-        buttons.forEach((buttonItem) => {
-          let button = buttonItem.querySelector("[buttonhovertarget]");
-          let buttonHover = gsap.timeline({
-            paused: true,
-          });
-
-          buttonHover
-            .to(button, { duration: 0.3, xPercent: 101, ease: "power2.inOut" })
-            .set(button, { xPercent: -101 })
-            .to(button, { duration: 0.5, xPercent: 0 });
-
-          buttonItem.addEventListener("mouseenter", () => buttonHover.play(0));
-        });
-      }
-      buttonAnimation();
-      */
-    });
-  }
-  desktopAnimations();
- 
-}
-
-function initResizeObserver() {
-  if (resizeObserver) return;
-
-  resizeObserver = new ResizeObserver(() => {
-    ScrollTrigger.refresh();
-    lenis?.resize?.();
-  });
-
-  resizeObserver.observe(document.body);
-}
-
-function destroyResizeObserver() {
-  if (!resizeObserver) return;
-  resizeObserver.disconnect();
-  resizeObserver = null;
-}
-
-function init() {
-  globalInit();
-  pageInit();
-  initResizeObserver();
-}
-
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", init);
-} else {
-  init();
-}
-
-barba.hooks.beforeEnter((data) => {
-  if (!data.current.container) navTheme(data.next.container);
-});
-
-barba.hooks.beforeLeave(() => {
-  destroyResizeObserver();
-});
-
-barba.hooks.afterEnter((data) => {
-  //window.FinsweetAttributes.modules.list.restart();
-});
-
-barba.hooks.after((data) => {
-  window.scrollTo(0, 0);
-  pageInit();
-  lenis.start();
-  initResizeObserver();
-});
-
-barba.init({
-  preventRunning: true,
-  transitions: [
-    {
-      name: "default-transition",
-
-      leave(data) {},
-
-      afterLeave(data) {
-        gsap.set(data.current.container, { visibility: "hidden" });
-      },
-
-      beforeEnter(data) {
-        gsap.set(data.next.container, { visibility: "hidden" });
-        navTheme(data.next.container);
-      },
-
-      enter(data) {
-        gsap.set(data.next.container, { visibility: "visible" });
-      },
-    },
-  ],
-});
 
 //Closer Studios boilerplate
 /*
