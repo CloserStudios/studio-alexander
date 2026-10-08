@@ -39,22 +39,29 @@ function menuButtonHover() {
   const menuLineBottom = document.querySelector(".menu-line__bottom");
   const menuLineBottomHover = document.querySelector(".menu-line__bottom.hover");
 
-    let tl = gsap.timeline({
-      paused: true,
-      ease: 'power2.inOut'
-    });
+  if (
+    !menuButton ||
+    !menuLineTop ||
+    !menuLineTopHover ||
+    !menuLineBottom ||
+    !menuLineBottomHover
+  ) return;
 
-    tl
-      .to(menuLineTop, {duration: 0.2, xPercent: 200,}, 0)
-      .to(menuLineTopHover, {duration: 0.3, xPercent: 200,}, 0.1)
-      .to(menuLineBottom, {duration: 0.2, xPercent: 200,}, 0.2)
-      .to(menuLineBottomHover, {duration: 0.3, xPercent: 200,}, 0.3);
+  const tl = gsap.timeline({
+    paused: true,
+    defaults: {
+      ease: "power2.inOut",
+    },
+  });
 
+  tl
+    .to(menuLineTop, { duration: 0.2, xPercent: 200 }, 0)
+    .to(menuLineTopHover, { duration: 0.3, xPercent: 200 }, 0.1)
+    .to(menuLineBottom, { duration: 0.2, xPercent: 200 }, 0.2)
+    .to(menuLineBottomHover, { duration: 0.3, xPercent: 200 }, 0.3);
 
-    document.querySelectorAll(menuButton).forEach((wrapper) => {
-      wrapper.addEventListener("mouseenter", () => tl.play());
-      wrapper.addEventListener("mouseleave", () => tl.reverse());
-    });
+  menuButton.addEventListener("mouseenter", () => tl.play());
+  menuButton.addEventListener("mouseleave", () => tl.reverse());
 }
 
 function pageInit() {
