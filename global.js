@@ -133,7 +133,7 @@ function pageInit() {
 
     tl
       .set(menu, { display: "flex" }, 0)
-      .to(menuBackground, { opacity: 0.5, duration: 0.05 }, 0.1)
+      .to(menuBackground, { opacity: 0.5, duration: 0.5 }, 0.1)
       .to(
         menuWrapper,
         {
