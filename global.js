@@ -124,7 +124,7 @@ function menuAnimation() {
       .to(menuWrapper, { scale: 1, duration: 0.5 }, 0.15)
       .to(menuTextOpen, { y: -12, duration: 0.5 }, 0.15)
       .to(menuTextClose, { y: 0, duration: 0.5 }, 0.2)
-      .to(menuTextAnimate, { y: 0, duration: 0.5, stagger: 0.5, }, 0.25);
+      .to(menuTextAnimate, { y: 0, duration: 0.5, stagger: 0.5, }, 1);
 
     const toggle = () => {
       tl.reversed() ? tl.play() : tl.timeScale(1).reverse(0);
