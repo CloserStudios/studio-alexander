@@ -101,13 +101,16 @@ function menuAnimation() {
     const menuButton = document.querySelector(".menu-button");
     const menuTextOpen = document.querySelector("[data-menu-open]");
     const menuTextClose = document.querySelector("[data-menu-close]");
+    const menuTextAnimate = document.querySelector("[data-text-animate]");
+    const menuLinks = document.querySelectorAll(".menu-link");
 
-    if (!menu || !menuWrapper || !menuButton || !menuBackground || !menuTextOpen || !menuTextClose) return;
+    if (!menu || !menuWrapper || !menuButton || !menuBackground || !menuTextOpen || !menuTextClose || !menuTextAnimate) return;
     if (menuButton.dataset.bound) return;
     menuButton.dataset.bound = "true";
 
     gsap.set(menuTextOpen, { y: 0 });
     gsap.set(menuTextClose, { y: 12 });
+    gsap.set(menuTextAnimate, { y: -50 });
 
     const tl = gsap.timeline({
       paused: true,
@@ -120,7 +123,8 @@ function menuAnimation() {
       .to(menuBackground, { opacity: 0.5, duration: 0.5 }, 0.1)
       .to(menuWrapper, { scale: 1, duration: 0.5 }, 0.15)
       .to(menuTextOpen, { y: -12, duration: 0.5 }, 0.15)
-      .to(menuTextClose, { y: 0, duration: 0.5 }, 0.2);
+      .to(menuTextClose, { y: 0, duration: 0.5 }, 0.2)
+      .to(menuTextAnimate, { y: 0, duration: 0.5, stagger: 0.5, }, 0.25);
 
     const toggle = () => {
       tl.reversed() ? tl.play() : tl.timeScale(1).reverse(0);
@@ -128,6 +132,7 @@ function menuAnimation() {
 
     menuButton.addEventListener("click", toggle);
     menuBackground.addEventListener("click", toggle);
+    menuLinks.forEach(link => link.addEventListener("click", toggle));
 
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape" && !tl.reversed()) tl.timeScale(1).reverse(0);
