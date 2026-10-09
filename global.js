@@ -101,7 +101,7 @@ function menuAnimation() {
     const menuButton = document.querySelector(".menu-button");
     const menuTextOpen = document.querySelector("[data-menu-open]");
     const menuTextClose = document.querySelector("[data-menu-close]");
-    const menuTextAnimate = document.querySelector("[data-text-animate]");
+    const menuTextAnimate = document.querySelectorAll("[data-text-animate]");
     const menuLinks = document.querySelectorAll(".menu-link");
 
     if (!menu || !menuWrapper || !menuButton || !menuBackground || !menuTextOpen || !menuTextClose || !menuTextAnimate) return;
