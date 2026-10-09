@@ -30,6 +30,7 @@ function navCurrentProject(container) {
   el.classList.toggle("is-hidden", !show);
 }
 
+/*
 function navTheme(container) {
   const nav = getNav();
   if (!nav || !container) return;
@@ -40,6 +41,56 @@ function navTheme(container) {
   if (isWork && title) {
     const navTitle = nav.querySelector(".nav__title");
     if (navTitle) navTitle.textContent = title;
+  }
+
+  nav.classList.toggle("dark", container.dataset.navTheme === "dark");
+  navCurrentProject(container);
+}
+  */
+
+function navTheme(container) {
+  const nav = getNav();
+  if (!nav || !container) return;
+
+  const title = container.getAttribute("page-name");
+  const isWork = container.dataset.navProject === "true";
+  const navTitle = nav.querySelector(".nav__title");
+
+  if (navTitle) {
+    // Kill any in-flight animation from a previous transition
+    gsap.killTweensOf(navTitle);
+
+    if (isWork && title) {
+      // Entering / switching to a work page: swap text with animation
+      const tl = gsap.timeline();
+
+      if (navTitle.textContent !== title) {
+        tl.to(navTitle, {
+          autoAlpha: 0,
+          y: -10,
+          duration: 0.25,
+          ease: "power2.in",
+        })
+          .add(() => {
+            navTitle.textContent = title;
+          })
+          .fromTo(
+            navTitle,
+            { y: 10 },
+            { autoAlpha: 1, y: 0, duration: 0.4, ease: "power2.out" }
+          );
+      } else {
+        tl.to(navTitle, { autoAlpha: 1, y: 0, duration: 0.3 });
+      }
+    } else {
+      // Not a work page: hide the title
+      gsap.to(navTitle, {
+        autoAlpha: 0,
+        y: -10,
+        duration: 0.25,
+        ease: "power2.in",
+      });
+    }
   }
 
   nav.classList.toggle("dark", container.dataset.navTheme === "dark");
