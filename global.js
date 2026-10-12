@@ -186,7 +186,7 @@ function pageInit() {
   */
 
   function preLoader() {
-    const target = document.querySelector(".home-hero__image");
+    const target = document.querySelector(".h-hero-image");
 
     gsap.set(loaderInnerBg, { scale: 0.3, x: 0, y: 0, transformOrigin: "50% 50%" });
 
@@ -344,9 +344,9 @@ function pageInit() {
       if (!root) return;
 
       const pinHeight = root.querySelector('[data-pin-height]');
-      const container = root.querySelector('.home-hero__wrapper');
-      const mask = root.querySelector('.home-hero__mask');
-      const heroImage = root.querySelector('.home-hero__image');
+      const container = root.querySelector('.home-hero-wrapper');
+      const mask = root.querySelector('.home-hero-mask');
+      const heroImage = root.querySelector('.home-hero-image');
 
       const tl = gsap.timeline({
         scrollTrigger: {
