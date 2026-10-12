@@ -140,6 +140,7 @@ function pageInit() {
     const loader = document.querySelector('.preload-wrapper');
     if (!loader) return;
     const target = document.querySelector(".h-hero-mask");
+    const loaderLogo = document.querySelector('.preloader-logo-svg');
     const loaderInnerBg = document.querySelector('.preload-inner-bg');
     const loaderInnerImg = document.querySelector('.preload-inner-img');
     let loaderDuration = 1.5;
