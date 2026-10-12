@@ -187,7 +187,9 @@ function pageInit() {
 
   function preLoader() {
     const target = document.querySelector(".h-hero-mask");
+    const loaderInnerImg = document.querySelector('.preload-inner-image');
 
+    gsap.set(loaderInnerImg, { scale: 1.3, yPercent: 6, transformOrigin: '50% 50%' });
     gsap.set(loaderInnerBg, { scale: 0.3, x: 0, y: 0, transformOrigin: "50% 50%" });
 
     const getTargetState = () => {
@@ -349,7 +351,7 @@ function pageInit() {
         const mask = root.querySelector('.h-hero-mask');
         const heroImage = root.querySelector('.h-hero-image');
 
-        const RATIO = 16 / 9;
+        const ratio = 16 / 9;
         const startH = () => container.clientHeight * 0.4;
         const endH = () => container.clientHeight;
 
@@ -363,18 +365,18 @@ function pageInit() {
             end: 'bottom bottom',
             pin: container,
             scrub: 1,
-            invalidateOnRefresh: true, // recalculates the function values on resize
+            invalidateOnRefresh: true, 
           },
         });
 
         tl.fromTo(mask,
           {
             height: () => startH(),
-            width: () => startH() * RATIO,
+            width: () => startH() * ratio,
           },
           {
             height: () => endH(),
-            width: () => endH() * RATIO,
+            width: () => endH() * ratio,
           }, 0)
           .fromTo(heroImage,
             { scale: 1.3, yPercent: 6 },
