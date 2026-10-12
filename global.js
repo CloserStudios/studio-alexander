@@ -359,13 +359,21 @@ function pageInit() {
         });
 
         // Mask grows: width finishes first, height takes the full duration
-        tl.to(mask, { width: '100%', ease: 'power2.out', duration: 0.7 }, 0)
-          .to(mask, { height: '100%', ease: 'none', duration: 1 }, 0)
+        tl.to(mask, {
+                width: '100%',
+                ease: 'power2.out',
+                duration: 1
+              }, 0)
+              .to(heroImage, {
+                scale: 1,
+                ease: 'sine.out',
+                duration: 1
+              }, 0);
 
-          // Image settles inside the mask at its own pace (the parallax layer)
-          .to(heroImage, { scale: 1, ease: 'sine.out', duration: 1 }, 0);
-    }
-    heroAnim();
+        // Image settles inside the mask at its own pace (the parallax layer)
+        tl.to(heroImage, { scale: 1, ease: 'sine.out', duration: 1 }, 0);
+      }
+      heroAnim();
 
       /*
       function buttonAnimation() {
