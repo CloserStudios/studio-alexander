@@ -341,13 +341,13 @@ function pageInit() {
     mm.add("(min-width: 992px)", () => {
       
       function heroAnim() {
-        const root = document.querySelector('.home-hero');
+        const root = document.querySelector('.h-hero');
         if (!root) return;
 
         const pinHeight = root.querySelector('[data-pin-height]');
-        const container = root.querySelector('.home-hero__wrapper');
-        const mask = root.querySelector('.home-hero__mask');
-        const heroImage = root.querySelector('.home-hero__image');
+        const container = root.querySelector('.h-hero__wrapper');
+        const mask = root.querySelector('.h-hero__mask');
+        const heroImage = root.querySelector('.h-hero__image');
 
         const RATIO = 16 / 9;
         const startH = () => container.clientHeight * 0.6;
