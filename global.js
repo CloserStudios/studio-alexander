@@ -5,7 +5,6 @@ let lenis;
 let resizeObserver = null;
 
 const getNav = () => document.querySelector(".nav");
-const show = container.dataset.navProject === "true";
 
 /*
 function navTheme(container) {
@@ -224,62 +223,6 @@ function pageInit() {
     });
   }
   teamAnimation();
-
-  /*
-  function menuAnimation() {
-    const menu = document.querySelector(".menu");
-    const menuBackground = document.querySelector(".menu-background");
-    const menuWrapper = document.querySelector(".menu-wrapper");
-    const menuOpen = document.querySelector(".menu-button");
-    const menuTextOpen = document.querySelector("[data-menu-open]");
-    const menuTextClose = document.querySelector("[data-menu-close]");
-    
-    //const menuItems = gsap.utils.toArray("[menu-item-stagger]");
-
-    if ( !menu || !menuWrapper || !menuOpen || !menuBackground) return;
-
-    const tl = gsap.timeline({
-      paused: true,
-      reversed: true,
-      defaults: {
-        ease: "power2.inOut",
-      },
-    });
-
-    tl
-      .set(menu, { display: "flex" }, 0)
-      .to(menuBackground, { opacity: 0.5, duration: 0.5 }, 0.1)
-      .to(
-        menuWrapper,
-        {
-          scale: 1,
-          duration: 0.5,
-          ease: "power2.inOut"
-        },
-        0.15
-      )
-      .to(menuTextOpen, { y: -12, duration: 0.25 }, 0.15)
-      .to(menuTextClose, { y: 0, duration: 0.25 }, 0.2);
-      //.fromTo(menuItems, { y: 30, opacity: 0 }, { y: 0, opacity: 1, stagger: 0.075 },0.75);
-
-    const toggle = () => {
-      tl.reversed() ? tl.play() : tl.timeScale(1).reverse(0);
-    };
-
-    menuOpen.addEventListener("click", toggle);
-    menuBackground.addEventListener("click", toggle);
-
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape" && !tl.reversed()) tl.timeScale(1).reverse(0);
-    });
-
-    tl.eventCallback("onStart", () => lenis?.stop?.());
-    tl.eventCallback("onReverseComplete", () => lenis?.start?.());
-  }
-  menuAnimation();
-  */
-
-  
 
   function currentPage() {
     const container = document.querySelector('[data-barba="container"]');
