@@ -6,20 +6,6 @@ let resizeObserver = null;
 
 const getNav = () => document.querySelector(".nav");
 
-/*
-function navTheme(container) {
-  const nav = getNav();
-  if (!nav || !container) return;
-
-  const title = container.getAttribute("page-name");
-  if (isWork && title) nav.querySelector(".nav__title").textContent = title;
-
-  nav.classList.toggle("dark", container.dataset.navTheme === "dark");
-  navCurrentProject(container);
-}
-  */
-
-
 function navTheme(container) {
   const nav = getNav();
   if (!nav || !container) return;
@@ -141,27 +127,106 @@ function menuAnimation() {
     });
   }
   
-
 function pageInit() {
   ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
   mm.revert();
 
-  function navColourChange() {
-    const nav = getNav();
-    const navTrigger = document.querySelector("[data-nav-trigger]");
-    const container = document.querySelector('[data-barba="container"]');
-    if (!nav || !navTrigger || !container) return;
+  let loader = document.querySelector(".preload-wrapper");
+  let loaderInner = document.querySelector(".preload-inner-wrapper");
+  let loaderLogo = document.querySelector(".preloader-logo-svg");
+  let loaderImageWrap = document.querySelector(".preload-image-wrapper");
+  let loaderInnerBg = document.querySelector(".preload-inner-bg");
+  let loaderDuration = 1;
+  let pageLoadTl;
 
-    const baseDark = container.dataset.navTheme === "dark";
+  function pageLoad() {}
+  pageLoad();
 
-    ScrollTrigger.create({
-      trigger: navTrigger,
-      start: "top top",
-      end: "bottom top",
-      onToggle: (self) => nav.classList.toggle("dark", self.isActive ? !baseDark : baseDark),
+  function preLoader() {
+    let preloaderTl = gsap.timeline({
+      defaults: {
+        duration: loaderDuration,
+        ease: "power2.inOut",
+      },
+      onStart: () => {
+        lenis.stop();
+        loader.style.visibility = "visible";
+      },
+      onComplete: () => {
+        lenis.start();
+        sessionStorage.setItem("visited", "true");
+        //loader.style.visibility = "hidden";
+        document.documentElement.classList.remove("show-preloader");
+      },
     });
+
+    preloaderTl.fromTo(
+      loaderLogo,
+      {
+        opacity: 0,
+      },
+      {
+        delay: 0.5,
+        ease: "power2.inOut",
+        duration: loaderDuration,
+        opacity: 1,
+      }
+    );
+
+    preloaderTl.to(loaderInnerBg, {
+      clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
+      duration: loaderDuration,
+    });
+
+    preloaderTl.to(
+      loaderImageWrap,
+      {
+        clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
+        duration: loaderDuration,
+      },
+      "<15%"
+    );
+
+    preloaderTl.to(loaderInner, {
+      clipPath: "polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)",
+      duration: loaderDuration,
+    });
+
+    preloaderTl.to(
+      loader,
+      {
+        clipPath: "polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)",
+        duration: loaderDuration,
+      },
+      "<30%"
+    );
   }
-  navColourChange();
+
+  function checkPreloader() {
+    if (!sessionStorage.getItem("visited")) {
+      preLoader();
+    } else {
+      document.documentElement.classList.remove("show-preloader");
+    }
+  }
+  checkPreloader();
+
+    function navColourChange() {
+      const nav = getNav();
+      const navTrigger = document.querySelector("[data-nav-trigger]");
+      const container = document.querySelector('[data-barba="container"]');
+      if (!nav || !navTrigger || !container) return;
+
+      const baseDark = container.dataset.navTheme === "dark";
+
+      ScrollTrigger.create({
+        trigger: navTrigger,
+        start: "top top",
+        end: "bottom top",
+        onToggle: (self) => nav.classList.toggle("dark", self.isActive ? !baseDark : baseDark),
+      });
+    }
+    navColourChange();
 
   function cmsHighlight() {
     document.querySelectorAll('[data-p-subheading]').length
@@ -213,7 +278,6 @@ function pageInit() {
       gsap.set(teamPanels[index], { autoAlpha: 1 });
       setActiveItem(index);
     }
-  
     showPanel(0);
   
     teamItems.forEach((teamItem, index) => {
