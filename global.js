@@ -342,12 +342,13 @@ function pageInit() {
       function heroAnim() {
         const root = document.querySelector('.home-hero');
         if (!root) return;
-    
+
         const pinHeight = root.querySelector('[data-pin-height]');
         const container = root.querySelector('.home-hero__wrapper');
         const heroImage = root.querySelector('.home-hero__image');
 
-        let tl = gsap.timeline({
+        const tl = gsap.timeline({
+          defaults: { ease: 'sine.out' },
           scrollTrigger: {
             trigger: pinHeight,
             start: 'top top',
@@ -357,8 +358,14 @@ function pageInit() {
           },
         });
 
-        tl.to(heroImage, {scale: 1, ease: "sine.out",});
-        
+        // Start slightly zoomed out and shifted down, then scale up while drifting up
+        gsap.set(heroImage, { yPercent: 8, transformOrigin: 'center center' });
+
+        tl.to(heroImage, {
+          scale: 1,
+          yPercent: -8,
+          ease: 'none', // keep the parallax drift linear with scroll
+        }, 0);
       }
       heroAnim();
 
