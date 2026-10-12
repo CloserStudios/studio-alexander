@@ -187,7 +187,8 @@ function pageInit() {
 
   function preLoader() {
     const target = document.querySelector(".h-hero-mask");
-    const loaderInnerImg = document.querySelector('.preload-inner-image');
+    const loaderInnerBg = document.querySelector('.preload-inner-bg');
+    const loaderInnerImg = document.querySelector('.preload-inner-img');
 
     gsap.set(loaderInnerImg, { scale: 1.3, yPercent: 6, transformOrigin: '50% 50%' });
     gsap.set(loaderInnerBg, { scale: 0.3, x: 0, y: 0, transformOrigin: "50% 50%" });
