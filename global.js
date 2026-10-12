@@ -360,7 +360,7 @@ function pageInit() {
 
         // Mask grows: width finishes first, height takes the full duration
         tl.to(mask, {
-                width: '100%',
+                width: '100vw',
                 ease: 'power2.out',
                 duration: 1
               }, 0)
