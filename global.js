@@ -345,9 +345,9 @@ function pageInit() {
         if (!root) return;
 
         const pinHeight = root.querySelector('[data-pin-height]');
-        const container = root.querySelector('.h-hero__wrapper');
-        const mask = root.querySelector('.h-hero__mask');
-        const heroImage = root.querySelector('.h-hero__image');
+        const container = root.querySelector('.h-hero-wrapper');
+        const mask = root.querySelector('.h-hero-mask');
+        const heroImage = root.querySelector('.h-hero-image');
 
         const RATIO = 16 / 9;
         const startH = () => container.clientHeight * 0.6;
