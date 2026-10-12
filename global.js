@@ -186,7 +186,7 @@ function pageInit() {
   */
 
   function preLoader() {
-    const target = document.querySelector(".h-hero-image");
+    const target = document.querySelector(".h-hero-mask");
 
     gsap.set(loaderInnerBg, { scale: 0.3, x: 0, y: 0, transformOrigin: "50% 50%" });
 
@@ -241,22 +241,22 @@ function pageInit() {
   }
   checkPreloader();
 
-    function navColourChange() {
-      const nav = getNav();
-      const navTrigger = document.querySelector("[data-nav-trigger]");
-      const container = document.querySelector('[data-barba="container"]');
-      if (!nav || !navTrigger || !container) return;
+  function navColourChange() {
+    const nav = getNav();
+    const navTrigger = document.querySelector("[data-nav-trigger]");
+    const container = document.querySelector('[data-barba="container"]');
+    if (!nav || !navTrigger || !container) return;
 
-      const baseDark = container.dataset.navTheme === "dark";
+    const baseDark = container.dataset.navTheme === "dark";
 
-      ScrollTrigger.create({
-        trigger: navTrigger,
-        start: "top top",
-        end: "bottom top",
-        onToggle: (self) => nav.classList.toggle("dark", self.isActive ? !baseDark : baseDark),
-      });
-    }
-    navColourChange();
+    ScrollTrigger.create({
+      trigger: navTrigger,
+      start: "top top",
+      end: "bottom top",
+      onToggle: (self) => nav.classList.toggle("dark", self.isActive ? !baseDark : baseDark),
+    });
+  }
+  navColourChange();
 
   function cmsHighlight() {
     document.querySelectorAll('[data-p-subheading]').length
