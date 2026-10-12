@@ -339,39 +339,47 @@ function pageInit() {
 
   function desktopAnimations() {
     mm.add("(min-width: 992px)", () => {
+      
       function heroAnim() {
-        const root = document.querySelector('.h-hero');
+        const root = document.querySelector('.home-hero');
         if (!root) return;
 
         const pinHeight = root.querySelector('[data-pin-height]');
-        const container = root.querySelector('.h-hero-wrapper');
-        const mask = root.querySelector('.h-hero-mask');
-        const heroImage = root.querySelector('.h-hero-image');
+        const container = root.querySelector('.home-hero__wrapper');
+        const mask = root.querySelector('.home-hero__mask');
+        const heroImage = root.querySelector('.home-hero__image');
+
+        const RATIO = 16 / 9;
+        const startH = () => container.clientHeight * 0.6;
+        const endH = () => container.clientHeight;
+
+        // Centering handled by GSAP transforms, so growth is symmetrical
+        gsap.set(mask, { xPercent: -50, yPercent: -50 });
 
         const tl = gsap.timeline({
+          defaults: { ease: 'none' },
           scrollTrigger: {
             trigger: pinHeight,
             start: 'top top',
             end: 'bottom bottom',
             pin: container,
             scrub: 1,
+            invalidateOnRefresh: true, // recalculates the function values on resize
           },
         });
 
-        // Mask grows: width finishes first, height takes the full duration
-        tl.to(mask, {
-            height: '100vh',       // end covers full screen height
-            ease: 'power2.out',
-            duration: 1
+        tl.fromTo(mask,
+          {
+            height: () => startH(),
+            width: () => startH() * RATIO,
+          },
+          {
+            height: () => endH(),
+            width: () => endH() * RATIO,
           }, 0)
-          .to(heroImage, {
-            scale: 1,
-            ease: 'none',
-            duration: 1
-          }, 0);
-
-        // Image settles inside the mask at its own pace (the parallax layer)
-        tl.to(heroImage, { scale: 1, ease: 'sine.out', duration: 1 }, 0);
+          .fromTo(heroImage,
+            { scale: 1.3, yPercent: 6 },
+            { scale: 1, yPercent: 0 }, 0); // ends at rest, so no snap
       }
       heroAnim();
 
