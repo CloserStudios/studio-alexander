@@ -350,10 +350,9 @@ function pageInit() {
         const heroImage = root.querySelector('.h-hero-image');
 
         const RATIO = 16 / 9;
-        const startH = () => container.clientHeight * 0.6;
+        const startH = () => container.clientHeight * 0.4;
         const endH = () => container.clientHeight;
 
-        // Centering handled by GSAP transforms, so growth is symmetrical
         gsap.set(mask, { xPercent: -50, yPercent: -50 });
 
         const tl = gsap.timeline({
@@ -379,7 +378,7 @@ function pageInit() {
           }, 0)
           .fromTo(heroImage,
             { scale: 1.3, yPercent: 6 },
-            { scale: 1, yPercent: 0 }, 0); // ends at rest, so no snap
+            { scale: 1, yPercent: 0 }, 0); 
       }
       heroAnim();
 
