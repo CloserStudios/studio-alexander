@@ -340,34 +340,32 @@ function pageInit() {
   function desktopAnimations() {
     mm.add("(min-width: 992px)", () => {
       function heroAnim() {
-        const root = document.querySelector('.home-hero');
-        if (!root) return;
+      const root = document.querySelector('.home-hero');
+      if (!root) return;
 
-        const pinHeight = root.querySelector('[data-pin-height]');
-        const container = root.querySelector('.home-hero__wrapper');
-        const heroImage = root.querySelector('.home-hero__image');
+      const pinHeight = root.querySelector('[data-pin-height]');
+      const container = root.querySelector('.home-hero__wrapper');
+      const mask = root.querySelector('.home-hero__mask');
+      const heroImage = root.querySelector('.home-hero__image');
 
-        const tl = gsap.timeline({
-          defaults: { ease: 'sine.out' },
-          scrollTrigger: {
-            trigger: pinHeight,
-            start: 'top top',
-            end: 'bottom bottom',
-            pin: container,
-            scrub: 1,
-          },
-        });
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: pinHeight,
+          start: 'top top',
+          end: 'bottom bottom',
+          pin: container,
+          scrub: 1,
+        },
+      });
 
-        // Start slightly zoomed out and shifted down, then scale up while drifting up
-        gsap.set(heroImage, { yPercent: 8, transformOrigin: 'center center' });
+      // Mask grows: width finishes first, height takes the full duration
+      tl.to(mask, { width: '100%', ease: 'power2.out', duration: 0.7 }, 0)
+        .to(mask, { height: '100%', ease: 'none', duration: 1 }, 0)
 
-        tl.to(heroImage, {
-          scale: 1,
-          yPercent: -8,
-          ease: 'none', // keep the parallax drift linear with scroll
-        }, 0);
-      }
-      heroAnim();
+        // Image settles inside the mask at its own pace (the parallax layer)
+        .to(heroImage, { scale: 1, ease: 'sine.out', duration: 1 }, 0);
+    }
+    heroAnim();
 
       /*
       function buttonAnimation() {
