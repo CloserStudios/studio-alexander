@@ -142,6 +142,7 @@ function pageInit() {
   function pageLoad() {}
   pageLoad();
 
+  /*
   function preLoader() {
     let preloaderTl = gsap.timeline({
       defaults: {
@@ -178,10 +179,66 @@ function pageInit() {
       duration: loaderDuration,
     });
 
-    preloaderTl.to(loaderInnerBg, { scale: 1, duration: loaderDuration, }, ">");
+    preloaderTl.to(loaderInnerBg, { scale: 0.45, duration: loaderDuration, }, ">");
 
     preloaderTl.to(loader, { opacity: 0, duration: loaderDuration, }, ">");
   }
+  */
+
+  function preLoader() {
+  const target = document.querySelector(".home-hero__image");
+
+  let preloaderTl = gsap.timeline({
+    defaults: { duration: loaderDuration, ease: "power2.inOut" },
+    onStart: () => {
+      lenis.stop();
+      loader.style.visibility = "visible";
+    },
+    onComplete: () => {
+      lenis.start();
+      sessionStorage.setItem("visited", "true");
+      document.documentElement.classList.remove("show-preloader");
+    },
+  });
+
+  preloaderTl.fromTo(
+    loaderLogo,
+    { opacity: 0 },
+    { delay: 0.5, opacity: 1 }
+  );
+
+  preloaderTl.to(loaderInnerBg, {
+    clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
+  });
+
+  // Measure at the moment this tween starts, so it's accurate after layout/resize
+  preloaderTl.to(
+    loaderInnerBg,
+    {
+      scale: () => {
+        const t = target.getBoundingClientRect();
+        const l = loaderInnerBg.getBoundingClientRect();
+        return t.width / (l.width / gsap.getProperty(loaderInnerBg, "scale"));
+      },
+      x: () => {
+        const t = target.getBoundingClientRect();
+        const l = loaderInnerBg.getBoundingClientRect();
+        return gsap.getProperty(loaderInnerBg, "x") +
+          (t.left + t.width / 2) - (l.left + l.width / 2);
+      },
+      y: () => {
+        const t = target.getBoundingClientRect();
+        const l = loaderInnerBg.getBoundingClientRect();
+        return gsap.getProperty(loaderInnerBg, "y") +
+          (t.top + t.height / 2) - (l.top + l.height / 2);
+      },
+      invalidateOnRefresh: true,
+    },
+    ">"
+  );
+
+  preloaderTl.to(loader, { opacity: 0 }, ">");
+}
 
   function checkPreloader() {
     if (!sessionStorage.getItem("visited")) {
