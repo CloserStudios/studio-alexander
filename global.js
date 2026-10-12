@@ -130,65 +130,19 @@ function menuAnimation() {
 function pageInit() {
   ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
   mm.revert();
-
-  let loader = document.querySelector(".preload-wrapper");
-  let loaderInner = document.querySelector(".preload-inner-wrapper");
-  let loaderLogo = document.querySelector(".preloader-logo-svg");
-  let loaderImageWrap = document.querySelector(".preload-image-wrapper");
-  let loaderInnerBg = document.querySelector(".preload-inner-bg");
-  let loaderDuration = 1.5;
+  
   let pageLoadTl;
 
   function pageLoad() {}
   pageLoad();
 
-  /*
   function preLoader() {
-    let preloaderTl = gsap.timeline({
-      defaults: {
-        duration: loaderDuration,
-        ease: "power2.inOut",
-      },
-      onStart: () => {
-        lenis.stop();
-        loader.style.visibility = "visible";
-      },
-      onComplete: () => {
-        lenis.start();
-        sessionStorage.setItem("visited", "true");
-        //loader.style.visibility = "hidden";
-        document.documentElement.classList.remove("show-preloader");
-      },
-    });
-
-    preloaderTl.fromTo(
-      loaderLogo,
-      {
-        opacity: 0,
-      },
-      {
-        delay: 0.5,
-        ease: "power2.inOut",
-        duration: loaderDuration,
-        opacity: 1,
-      }
-    );
-
-    preloaderTl.to(loaderInnerBg, {
-      clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
-      duration: loaderDuration,
-    });
-
-    preloaderTl.to(loaderInnerBg, { scale: 0.45, duration: loaderDuration, }, ">");
-
-    preloaderTl.to(loader, { opacity: 0, duration: loaderDuration, }, ">");
-  }
-  */
-
-  function preLoader() {
+    const loader = document.querySelector('.preload-wrapper');
+    if (!loader) return;
     const target = document.querySelector(".h-hero-mask");
     const loaderInnerBg = document.querySelector('.preload-inner-bg');
     const loaderInnerImg = document.querySelector('.preload-inner-img');
+    let loaderDuration = 1.5;
 
     gsap.set(loaderInnerImg, { scale: 1.3, yPercent: 6, transformOrigin: '50% 50%' });
     gsap.set(loaderInnerBg, { scale: 0.3, x: 0, y: 0, transformOrigin: "50% 50%" });
