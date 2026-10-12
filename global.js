@@ -340,30 +340,30 @@ function pageInit() {
   function desktopAnimations() {
     mm.add("(min-width: 992px)", () => {
       function heroAnim() {
-      const root = document.querySelector('.home-hero');
-      if (!root) return;
+        const root = document.querySelector('.h-hero');
+        if (!root) return;
 
-      const pinHeight = root.querySelector('[data-pin-height]');
-      const container = root.querySelector('.home-hero-wrapper');
-      const mask = root.querySelector('.home-hero-mask');
-      const heroImage = root.querySelector('.home-hero-image');
+        const pinHeight = root.querySelector('[data-pin-height]');
+        const container = root.querySelector('.h-hero-wrapper');
+        const mask = root.querySelector('.h-hero-mask');
+        const heroImage = root.querySelector('.h-hero-image');
 
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: pinHeight,
-          start: 'top top',
-          end: 'bottom bottom',
-          pin: container,
-          scrub: 1,
-        },
-      });
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: pinHeight,
+            start: 'top top',
+            end: 'bottom bottom',
+            pin: container,
+            scrub: 1,
+          },
+        });
 
-      // Mask grows: width finishes first, height takes the full duration
-      tl.to(mask, { width: '100%', ease: 'power2.out', duration: 0.7 }, 0)
-        .to(mask, { height: '100%', ease: 'none', duration: 1 }, 0)
+        // Mask grows: width finishes first, height takes the full duration
+        tl.to(mask, { width: '100%', ease: 'power2.out', duration: 0.7 }, 0)
+          .to(mask, { height: '100%', ease: 'none', duration: 1 }, 0)
 
-        // Image settles inside the mask at its own pace (the parallax layer)
-        .to(heroImage, { scale: 1, ease: 'sine.out', duration: 1 }, 0);
+          // Image settles inside the mask at its own pace (the parallax layer)
+          .to(heroImage, { scale: 1, ease: 'sine.out', duration: 1 }, 0);
     }
     heroAnim();
 
