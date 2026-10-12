@@ -360,15 +360,16 @@ function pageInit() {
 
         // Mask grows: width finishes first, height takes the full duration
         tl.to(mask, {
-                width: '100vh',
-                ease: 'power2.out',
-                duration: 1
-              }, 0)
-              .to(heroImage, {
-                scale: 1,
-                ease: 'sine.out',
-                duration: 1
-              }, 0);
+            height: '100vh',       // end covers full screen height
+            ease: 'power2.out',
+            duration: 1
+          }, 0)
+          .to(heroImage, {
+            scale: 1,
+            yPercent: -6,          // optional slight parallax drift
+            ease: 'none',
+            duration: 1
+          }, 0);
 
         // Image settles inside the mask at its own pace (the parallax layer)
         tl.to(heroImage, { scale: 1, ease: 'sine.out', duration: 1 }, 0);
