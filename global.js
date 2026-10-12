@@ -138,7 +138,6 @@ function pageInit() {
 
   function preLoader() {
     const loader = document.querySelector('.preload-wrapper');
-    if (!loader) return;
     const target = document.querySelector(".h-hero-mask");
     const loaderLogo = document.querySelector('.preloader-logo-svg');
     const loaderInnerBg = document.querySelector('.preload-inner-bg');
@@ -415,6 +414,8 @@ barba.hooks.after((data) => {
   lenis.start();
   initResizeObserver();
 });
+
+console.log("wrapper?", !!document.querySelector('[data-barba="wrapper"]'));
 
 barba.init({
   preventRunning: true,
