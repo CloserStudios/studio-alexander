@@ -366,7 +366,6 @@ function pageInit() {
           }, 0)
           .to(heroImage, {
             scale: 1,
-            yPercent: -6,          // optional slight parallax drift
             ease: 'none',
             duration: 1
           }, 0);
