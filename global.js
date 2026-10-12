@@ -136,7 +136,7 @@ function pageInit() {
   let loaderLogo = document.querySelector(".preloader-logo-svg");
   let loaderImageWrap = document.querySelector(".preload-image-wrapper");
   let loaderInnerBg = document.querySelector(".preload-inner-bg");
-  let loaderDuration = 1;
+  let loaderDuration = 3;
   let pageLoadTl;
 
   function pageLoad() {}
@@ -178,9 +178,9 @@ function pageInit() {
       duration: loaderDuration,
     });
 
-    preloaderTl.to(loaderInnerBg, { scale: 1, duration: loaderDuration, }, "<30%");
+    preloaderTl.to(loaderInnerBg, { scale: 1, duration: loaderDuration, }, ">");
 
-    preloaderTl.to(loader, { opacity: 0, duration: loaderDuration, }, "<30%");
+    preloaderTl.to(loader, { opacity: 0, duration: loaderDuration, }, ">");
   }
 
   function checkPreloader() {
