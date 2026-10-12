@@ -178,12 +178,9 @@ function pageInit() {
       duration: loaderDuration,
     });
 
-    preloaderTl.to(loader, {
-        opacity: 0,
-        duration: loaderDuration,
-      },
-      "<30%"
-    );
+    preloaderTl.to(loaderInnerBg, { scale: 0.45, duration: loaderDuration, }, "<30%");
+
+    preloaderTl.to(loader, { opacity: 0, duration: loaderDuration, }, "<30%");
   }
 
   function checkPreloader() {
