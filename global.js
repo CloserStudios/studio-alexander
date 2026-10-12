@@ -188,6 +188,20 @@ function pageInit() {
   function preLoader() {
   const target = document.querySelector(".home-hero__image");
 
+  // GSAP owns the start state, so there's no CSS/GSAP mismatch
+  gsap.set(loaderInnerBg, { scale: 0.3, x: 0, y: 0, transformOrigin: "50% 50%" });
+
+  const getTargetState = () => {
+    const t = target.getBoundingClientRect();   // includes the hero's own 0.45 scale
+    const l = loaderInnerBg.getBoundingClientRect();
+    return {
+      // offsetWidth is the untransformed layout width
+      scale: t.width / loaderInnerBg.offsetWidth,
+      x: gsap.getProperty(loaderInnerBg, "x") + (t.left + t.width / 2) - (l.left + l.width / 2),
+      y: gsap.getProperty(loaderInnerBg, "y") + (t.top + t.height / 2) - (l.top + l.height / 2),
+    };
+  };
+
   let preloaderTl = gsap.timeline({
     defaults: { duration: loaderDuration, ease: "power2.inOut" },
     onStart: () => {
@@ -201,38 +215,18 @@ function pageInit() {
     },
   });
 
-  preloaderTl.fromTo(
-    loaderLogo,
-    { opacity: 0 },
-    { delay: 0.5, opacity: 1 }
-  );
+  preloaderTl.fromTo(loaderLogo, { opacity: 0 }, { delay: 0.5, opacity: 1 });
 
   preloaderTl.to(loaderInnerBg, {
     clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
   });
 
-  // Measure at the moment this tween starts, so it's accurate after layout/resize
   preloaderTl.to(
     loaderInnerBg,
     {
-      scale: () => {
-        const t = target.getBoundingClientRect();
-        const l = loaderInnerBg.getBoundingClientRect();
-        return t.width / (l.width / gsap.getProperty(loaderInnerBg, "scale"));
-      },
-      x: () => {
-        const t = target.getBoundingClientRect();
-        const l = loaderInnerBg.getBoundingClientRect();
-        return gsap.getProperty(loaderInnerBg, "x") +
-          (t.left + t.width / 2) - (l.left + l.width / 2);
-      },
-      y: () => {
-        const t = target.getBoundingClientRect();
-        const l = loaderInnerBg.getBoundingClientRect();
-        return gsap.getProperty(loaderInnerBg, "y") +
-          (t.top + t.height / 2) - (l.top + l.height / 2);
-      },
-      invalidateOnRefresh: true,
+      scale: () => getTargetState().scale,
+      x: () => getTargetState().x,
+      y: () => getTargetState().y,
     },
     ">"
   );
