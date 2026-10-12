@@ -178,24 +178,8 @@ function pageInit() {
       duration: loaderDuration,
     });
 
-    preloaderTl.to(
-      loaderImageWrap,
-      {
-        clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
-        duration: loaderDuration,
-      },
-      "<15%"
-    );
-
-    preloaderTl.to(loaderInner, {
-      clipPath: "polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)",
-      duration: loaderDuration,
-    });
-
-    preloaderTl.to(
-      loader,
-      {
-        clipPath: "polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)",
+    preloaderTl.to(loader, {
+        opacity: 0,
         duration: loaderDuration,
       },
       "<30%"
