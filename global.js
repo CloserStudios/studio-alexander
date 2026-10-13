@@ -6,21 +6,23 @@ let resizeObserver = null;
 
 const getNav = () => document.querySelector(".nav");
 
-function navTheme(container) {
-  const nav = getNav();
-  if (!nav || !container) return;
+/*
+  function navTheme(container) {
+    const nav = getNav();
+    if (!nav || !container) return;
 
-  const title = container.getAttribute("page-name");
-  const isWork = container.dataset.navProject === "true";
+    const title = container.getAttribute("page-name");
+    const isWork = container.dataset.navProject === "true";
 
-  if (isWork && title) {
-    const navTitle = nav.querySelector(".nav__title");
-    if (navTitle) navTitle.textContent = title;
+    if (isWork && title) {
+      const navTitle = nav.querySelector(".nav__title");
+      if (navTitle) navTitle.textContent = title;
+    }
+
+    nav.classList.toggle("dark", container.dataset.navTheme === "dark");
+    navCurrentProject(container);
   }
-
-  nav.classList.toggle("dark", container.dataset.navTheme === "dark");
-  navCurrentProject(container);
-}
+*/
 
 function globalInit() {
   lenis = new Lenis();
