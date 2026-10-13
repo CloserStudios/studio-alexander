@@ -217,6 +217,7 @@ function pageInit() {
     const trigger = document.querySelector("[data-project-trigger]");
     if (!projectName || !connectingLine || !trigger) return;
 
+    gsap.set(projectName, { opacity: 0 });
     gsap.set(connectingLine, { xPercent: -150 });
 
     let tl = gsap.timeline({
