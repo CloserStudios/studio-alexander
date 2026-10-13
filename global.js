@@ -211,6 +211,30 @@ function pageInit() {
   }
   navColourChange();
 
+  function currentProject() {
+    const projectName = document.querySelector("[data-project-name]");
+    const connectingLine = document.querySelector("[data-connecting-line]");
+    const trigger = document.querySelector("[data-project-trigger]");
+    if (!projectName || !connectingLine || !trigger) return;
+
+    gsap.set(connectingLine, { xPercent: -150 });
+
+    let tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: trigger,
+        start: "top top",
+        end: "bottom top",
+        ease: "power2.out",
+      },
+    });
+
+    tl
+      .to(projectName, { opacity: 1 })
+      .to(connectingLine, { xPercent: 0 }, ">");
+
+  }
+  currentProject();
+
   function cmsHighlight() {
     document.querySelectorAll('[data-p-subheading]').length
 
