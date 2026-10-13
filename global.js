@@ -211,6 +211,7 @@ function pageInit() {
   }
   navColourChange();
 
+  /*
   function heroAnim() {
     const root = document.querySelector('.h-hero');
     if (!root) return;
@@ -223,8 +224,6 @@ function pageInit() {
     const ratio = 16 / 9;
     const startH = () => container.clientHeight * 0.4;
     const endH = () => container.clientHeight;
-
-    //gsap.set(mask, { xPercent: -50, yPercent: -50 });
 
     const tl = gsap.timeline({
       defaults: { ease: 'none' },
@@ -250,6 +249,65 @@ function pageInit() {
       .fromTo(heroImage,
         { scale: 1.3, yPercent: 6 },
         { scale: 1, yPercent: 0 }, 0);
+  }
+  heroAnim();
+  */
+
+  function heroAnim() {
+    const root = document.querySelector('.h-hero');
+    if (!root) return;
+
+    const nav = getNav();
+    const barba = document.querySelector('[data-barba="container"]');
+    const baseDark = barba?.dataset.navTheme === 'dark';
+
+    const pinHeight = root.querySelector('[data-pin-height]');
+    const container = root.querySelector('.h-hero-wrapper');
+    const mask = root.querySelector('.h-hero-mask');
+    const heroImage = root.querySelector('.h-hero-image');
+
+    const ratio = 16 / 9;
+    const startH = () => container.clientHeight * 0.4;
+    const endH = () => container.clientHeight;
+
+    const NAV_TOGGLE_AT = 0.8;
+
+    const tl = gsap.timeline({
+      defaults: { ease: 'none' },
+      scrollTrigger: {
+        trigger: pinHeight,
+        start: 'top top',
+        end: 'bottom bottom',
+        pin: container,
+        scrub: 1,
+        invalidateOnRefresh: true,
+      },
+    });
+
+    tl.fromTo(mask,
+      {
+        height: () => startH(),
+        width: () => startH() * ratio,
+      },
+      {
+        height: () => endH(),
+        width: () => endH() * ratio,
+      }, 0)
+      .fromTo(heroImage,
+        { scale: 1.3, yPercent: 6 },
+        { scale: 1, yPercent: 0 }, 0);
+
+    // Separate trigger on the same range so the nav flips at 80% of the scroll
+    ScrollTrigger.create({
+      trigger: pinHeight,
+      start: 'top top',
+      end: 'bottom bottom',
+      onUpdate: (self) => {
+        if (!nav) return;
+        const past = self.progress >= NAV_TOGGLE_AT;
+        nav.classList.toggle('dark', past ? !baseDark : baseDark);
+      },
+    });
   }
   heroAnim();
 
