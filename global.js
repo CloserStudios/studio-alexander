@@ -1,4 +1,3 @@
-//Studio Alexander
 gsap.registerPlugin(ScrollTrigger, SplitText);
 let mm = gsap.matchMedia();
 let lenis;
@@ -29,23 +28,6 @@ function pageInit() {
   mm.revert();
 }
 
-function initResizeObserver() {
-  if (resizeObserver) return;
-
-  resizeObserver = new ResizeObserver(() => {
-    ScrollTrigger.refresh();
-    lenis?.resize?.();
-  });
-
-  resizeObserver.observe(document.body);
-}
-
-function destroyResizeObserver() {
-  if (!resizeObserver) return;
-  resizeObserver.disconnect();
-  resizeObserver = null;
-}
-
 function init() {
   globalInit();
   pageInit();
@@ -58,22 +40,23 @@ if (document.readyState === "loading") {
   init();
 }
 
-barba.hooks.beforeEnter((data) => {
+barba.hooks.beforeEnter(() => {
 });
 
-barba.hooks.beforeLeave(() => {
-  destroyResizeObserver();
-});
 
-barba.hooks.afterEnter((data) => {
+barba.hooks.afterEnter(() => {
   //window.FinsweetAttributes.modules.list.restart();
 });
 
-barba.hooks.after((data) => {
+barba.hooks.after(() => {
   window.scrollTo(0, 0);
   pageInit();
   lenis.start();
-  initResizeObserver();
+
+  requestAnimationFrame(() => {
+    ScrollTrigger.refresh();
+    lenis?.resize?.();
+  });
 });
 
 barba.init({
