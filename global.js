@@ -34,14 +34,7 @@ function updateConditionalNav(namespace) {
   // item.classList.toggle("is-hidden", !shouldShow);
 }
 
-barba.hooks.afterEnter((data) => {
-  updateConditionalNav(data.next.namespace);
-});
 
-// run once on first load too
-barba.hooks.once((data) => {
-  updateConditionalNav(data.next.namespace);
-});
 
 function globalInit() {
   lenis = new Lenis();
@@ -406,6 +399,7 @@ barba.hooks.beforeLeave(() => {
 
 barba.hooks.afterEnter((data) => {
   //window.FinsweetAttributes.modules.list.restart();
+  updateConditionalNav(data.next.namespace);
 });
 
 barba.hooks.after((data) => {
@@ -413,6 +407,10 @@ barba.hooks.after((data) => {
   pageInit();
   lenis.start();
   initResizeObserver();
+});
+
+barba.hooks.once((data) => {
+  updateConditionalNav(data.next.namespace);
 });
 
 barba.init({
