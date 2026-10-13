@@ -2,6 +2,7 @@ gsap.registerPlugin(ScrollTrigger, SplitText);
 let mm = gsap.matchMedia();
 let lenis;
 let resizeObserver = null;
+const getNav = () => document.querySelector('nav');
 
 
 function globalInit() {
