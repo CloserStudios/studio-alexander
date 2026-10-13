@@ -4,6 +4,20 @@ let lenis;
 let resizeObserver = null;
 const getNav = () => document.querySelector('nav');
 
+function navTheme(container) {
+  const nav = getNav();
+  if (!nav || !container) return;
+
+  const title = container.getAttribute("page-name");
+
+  if (title) {
+    const navTitle = nav.querySelector(".nav__title");
+    if (navTitle) navTitle.textContent = title;
+  }
+
+  nav.classList.toggle("dark", container.dataset.navTheme === "dark");
+}
+
 
 function globalInit() {
   lenis = new Lenis();
