@@ -211,6 +211,48 @@ function pageInit() {
   }
   navColourChange();
 
+  function heroAnim() {
+    const root = document.querySelector('.h-hero');
+    if (!root) return;
+
+    const pinHeight = root.querySelector('[data-pin-height]');
+    const container = root.querySelector('.h-hero-wrapper');
+    const mask = root.querySelector('.h-hero-mask');
+    const heroImage = root.querySelector('.h-hero-image');
+
+    const ratio = 16 / 9;
+    const startH = () => container.clientHeight * 0.4;
+    const endH = () => container.clientHeight;
+
+    //gsap.set(mask, { xPercent: -50, yPercent: -50 });
+
+    const tl = gsap.timeline({
+      defaults: { ease: 'none' },
+      scrollTrigger: {
+        trigger: pinHeight,
+        start: 'top top',
+        end: 'bottom bottom',
+        pin: container,
+        scrub: 1,
+        invalidateOnRefresh: true,
+      },
+    });
+
+    tl.fromTo(mask,
+      {
+        height: () => startH(),
+        width: () => startH() * ratio,
+      },
+      {
+        height: () => endH(),
+        width: () => endH() * ratio,
+      }, 0)
+      .fromTo(heroImage,
+        { scale: 1.3, yPercent: 6 },
+        { scale: 1, yPercent: 0 }, 0);
+  }
+  heroAnim();
+
   function currentProject() {
     const projectName = document.querySelector("[data-project-name]");
     const connectingLine = document.querySelector("[data-connecting-line]");
@@ -318,48 +360,6 @@ function pageInit() {
 
   function desktopAnimations() {
     mm.add("(min-width: 992px)", () => {
-      function heroAnim() {
-        const root = document.querySelector('.h-hero');
-        if (!root) return;
-
-        const pinHeight = root.querySelector('[data-pin-height]');
-        const container = root.querySelector('.h-hero-wrapper');
-        const mask = root.querySelector('.h-hero-mask');
-        const heroImage = root.querySelector('.h-hero-image');
-
-        const ratio = 16 / 9;
-        const startH = () => container.clientHeight * 0.4;
-        const endH = () => container.clientHeight;
-
-        gsap.set(mask, { xPercent: -50, yPercent: -50 });
-
-        const tl = gsap.timeline({
-          defaults: { ease: 'none' },
-          scrollTrigger: {
-            trigger: pinHeight,
-            start: 'top top',
-            end: 'bottom bottom',
-            pin: container,
-            scrub: 1,
-            invalidateOnRefresh: true,
-          },
-        });
-
-        tl.fromTo(mask,
-          {
-            height: () => startH(),
-            width: () => startH() * ratio,
-          },
-          {
-            height: () => endH(),
-            width: () => endH() * ratio,
-          }, 0)
-          .fromTo(heroImage,
-            { scale: 1.3, yPercent: 6 },
-            { scale: 1, yPercent: 0 }, 0);
-      }
-      heroAnim();
-
     });
   }
   desktopAnimations();
