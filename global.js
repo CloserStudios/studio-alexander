@@ -20,10 +20,16 @@ function navTheme(container) {
   nav.classList.toggle("dark", container.dataset.navTheme === "dark");
 }
 
-function updateConditionalNav(namespace) {
-  const item = getConditionalItem();
+function updateConditionalNav(namespace, container) {
+  const item = document.querySelector("[data-nav-conditional]");
   if (!item) return;
-  item.classList.toggle("is-visible", SHOW_ON.has(namespace));
+
+  const show = SHOW_ON.has(namespace);
+  item.classList.toggle("is-visible", show);
+
+  const nameEl = item.querySelector("[data-nav-project-name]");
+  const title = container?.getAttribute("page-name");
+  if (show && nameEl && title) nameEl.textContent = title;
 }
 
 function getCurrentNamespace() {
@@ -387,8 +393,8 @@ if (document.readyState === "loading") {
 
 barba.hooks.beforeEnter((data) => {
   navTheme(data.next.container);
+  updateConditionalNav(data.next.namespace, data.next.container);
 });
-
 
 barba.hooks.beforeLeave(() => {
   destroyResizeObserver();
@@ -396,7 +402,7 @@ barba.hooks.beforeLeave(() => {
 
 barba.hooks.afterEnter((data) => {
   //window.FinsweetAttributes.modules.list.restart();
-  updateConditionalNav(data.next.namespace);
+  //updateConditionalNav(data.next.namespace);
 });
 
 barba.hooks.after((data) => {
@@ -407,7 +413,7 @@ barba.hooks.after((data) => {
 });
 
 barba.hooks.once((data) => {
-  updateConditionalNav(data.next.namespace);
+  updateConditionalNav(data.next.namespace, data.next.container);
 });
 
 barba.init({
