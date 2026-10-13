@@ -371,11 +371,10 @@ if (document.readyState === "loading") {
   init();
 }
 
-/*
 barba.hooks.beforeEnter((data) => {
   if (!data.current.container) navTheme(data.next.container);
 });
-*/
+
 
 barba.hooks.beforeLeave(() => {
   destroyResizeObserver();
