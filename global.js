@@ -136,7 +136,7 @@ function menuAnimation() {
   tl.eventCallback("onStart", () => {
     lenis?.stop?.();
     const container = document.querySelector('[data-barba="container"]');
-    const baseDark = container?.dataset.navTheme === "dark";
+    /*const baseDark = container?.dataset.navTheme === "dark";*/
     menuButton.classList.toggle("dark", baseDark);
   });
 
@@ -434,7 +434,7 @@ barba.init({
 
       beforeEnter(data) {
         gsap.set(data.next.container, { visibility: "hidden" });
-        navTheme(data.next.container);
+        /*navTheme(data.next.container);*/
       },
 
       enter(data) {
