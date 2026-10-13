@@ -18,7 +18,6 @@ function navTheme(container) {
   nav.classList.toggle("dark", container.dataset.navTheme === "dark");
 }
 
-
 function globalInit() {
   lenis = new Lenis();
 
@@ -405,7 +404,7 @@ barba.init({
 
       beforeEnter(data) {
         gsap.set(data.next.container, { visibility: "hidden" });
-        /*navTheme(data.next.container);*/
+        navTheme(data.next.container);
       },
 
       enter(data) {
