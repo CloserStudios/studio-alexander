@@ -180,6 +180,83 @@ function pageInit() {
   function pageLoad() { }
   pageLoad();
 
+  function navColourChange() {
+    const nav = getNav();
+    const navTrigger = document.querySelector("[data-nav-trigger]");
+    const container = document.querySelector('[data-barba="container"]');
+    if (!nav || !navTrigger || !container) return;
+
+    const baseDark = container.dataset.navTheme === "dark";
+
+    ScrollTrigger.create({
+      trigger: navTrigger,
+      start: "top top",
+      end: "bottom top",
+      onToggle: (self) => nav.classList.toggle("dark", self.isActive ? !baseDark : baseDark),
+    });
+  }
+  navColourChange();
+
+  function cmsHighlight() {
+    document.querySelectorAll('[data-p-subheading]').length
+
+    document.querySelectorAll('[data-p-subheading]').forEach(el => {
+      const raw = el.textContent;
+      const html = raw.replace(/\*([^*]+)\*/g, '<span class="h6__emphasis">$1</span>');
+      el.innerHTML = html;
+    });
+  }
+  cmsHighlight();
+
+  function bgColourChange() {
+    let bgColour = document.querySelector("[data-bg-colour]");
+    let bgTrigger = document.querySelector("[data-bg-trigger]");
+
+    if (!bgColour || !bgTrigger) return;
+
+    let tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: bgTrigger,
+        start: "top top",
+        end: "bottom bottom",
+        scrub: true,
+      },
+    });
+
+    tl.to(bgColour, { opacity: 0, ease: "power2.out" });
+  }
+  bgColourChange();
+
+  function teamAnimation() {
+    const teamWrapper = document.querySelector("[team-wrapper]");
+    const teamItems = document.querySelectorAll("[team-item]");
+
+    if (!teamWrapper || !teamItems.length) return;
+
+    const teamPanels = teamWrapper.querySelectorAll("[team-panel]");
+    if (!teamPanels.length) return;
+
+    function setActiveItem(index) {
+      teamItems.forEach((item, i) => {
+        item.classList.toggle("is-active", i === index);
+      });
+    }
+
+    function showPanel(index) {
+      gsap.set(teamPanels, { autoAlpha: 0 });
+      gsap.set(teamPanels[index], { autoAlpha: 1 });
+      setActiveItem(index);
+    }
+    showPanel(0);
+
+    teamItems.forEach((teamItem, index) => {
+      teamItem.addEventListener("mouseenter", () => {
+        showPanel(index);
+      });
+    });
+  }
+  teamAnimation();
+
   function currentPage() {
     const container = document.querySelector('[data-barba="container"]');
     const pageTitle = container?.getAttribute("page-name");
