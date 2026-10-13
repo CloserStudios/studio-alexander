@@ -4,8 +4,7 @@ let lenis;
 let resizeObserver = null;
 const getNav = () => document.querySelector('nav');
 const getConditionalItem = () => document.querySelector("[data-nav-conditional]");
-
-const SHOW_ON = new Set(["project"]); // namespaces where item is visible
+const SHOW_ON = new Set(["project"]);
 
 function navTheme(container) {
   const nav = getNav();
@@ -24,17 +23,15 @@ function navTheme(container) {
 function updateConditionalNav(namespace) {
   const item = getConditionalItem();
   if (!item) return;
-
-  const shouldShow = SHOW_ON.has(namespace);
-
-  // Option A: semantic
-  item.hidden = !shouldShow;
-
-  // Option B: class-based
-  // item.classList.toggle("is-hidden", !shouldShow);
+  item.classList.toggle("is-visible", SHOW_ON.has(namespace));
 }
 
+function getCurrentNamespace() {
+  return document.querySelector('[data-barba="container"]')?.dataset?.barbaNamespace;
+}
 
+// initial hard refresh
+updateConditionalNav(getCurrentNamespace());
 
 function globalInit() {
   lenis = new Lenis();
@@ -389,7 +386,7 @@ if (document.readyState === "loading") {
 }
 
 barba.hooks.beforeEnter((data) => {
-  if (!data.current.container) navTheme(data.next.container);
+  navTheme(data.next.container);
 });
 
 
