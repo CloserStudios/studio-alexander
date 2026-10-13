@@ -217,7 +217,7 @@ function pageInit() {
     const trigger = document.querySelector("[data-project-trigger]");
     if (!projectName || !connectingLine || !trigger) return;
 
-    gsap.set(projectName, { opacity: 0 });
+    gsap.set(projectName, { y: 12 });
     gsap.set(connectingLine, { xPercent: -150 });
 
     let tl = gsap.timeline({
@@ -231,8 +231,8 @@ function pageInit() {
     });
 
     tl
-      .to(projectName, { opacity: 1 })
-      .to(connectingLine, { xPercent: 0 }, ">");
+      .to(projectName, { y: 0 }, 0)
+      .to(connectingLine, { xPercent: 0 }, 0.2);
 
   }
   currentProject();
