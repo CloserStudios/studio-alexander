@@ -3,8 +3,6 @@ let mm = gsap.matchMedia();
 let lenis;
 let resizeObserver = null;
 const getNav = () => document.querySelector('nav');
-const getConditionalItem = () => document.querySelector("[data-nav-conditional]");
-const SHOW_ON = new Set(["project"]);
 
 function navTheme(container) {
   const nav = getNav();
@@ -19,25 +17,6 @@ function navTheme(container) {
 
   nav.classList.toggle("dark", container.dataset.navTheme === "dark");
 }
-
-function updateConditionalNav(namespace, container) {
-  const item = document.querySelector("[data-nav-conditional]");
-  if (!item) return;
-
-  const show = SHOW_ON.has(namespace);
-  item.classList.toggle("is-visible", show);
-
-  const nameEl = item.querySelector("[data-nav-project-name]");
-  const title = container?.getAttribute("page-name");
-  if (show && nameEl && title) nameEl.textContent = title;
-}
-
-function getCurrentNamespace() {
-  return document.querySelector('[data-barba="container"]')?.dataset?.barbaNamespace;
-}
-
-// initial hard refresh
-updateConditionalNav(getCurrentNamespace());
 
 function globalInit() {
   lenis = new Lenis();
@@ -393,7 +372,6 @@ if (document.readyState === "loading") {
 
 barba.hooks.beforeEnter((data) => {
   navTheme(data.next.container);
-  updateConditionalNav(data.next.namespace, data.next.container);
 });
 
 barba.hooks.beforeLeave(() => {
@@ -402,7 +380,6 @@ barba.hooks.beforeLeave(() => {
 
 barba.hooks.afterEnter((data) => {
   //window.FinsweetAttributes.modules.list.restart();
-  //updateConditionalNav(data.next.namespace);
 });
 
 barba.hooks.after((data) => {
@@ -410,10 +387,6 @@ barba.hooks.after((data) => {
   pageInit();
   lenis.start();
   initResizeObserver();
-});
-
-barba.hooks.once((data) => {
-  updateConditionalNav(data.next.namespace, data.next.container);
 });
 
 barba.init({
