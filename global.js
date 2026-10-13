@@ -418,6 +418,14 @@ barba.hooks.after((data) => {
   initResizeObserver();
 });
 
+window.__barbaRunCount = (window.__barbaRunCount || 0) + 1;
+console.log("[barba-run]", window.__barbaRunCount, {
+  readyState: document.readyState,
+  wrapper: !!document.querySelector('[data-barba="wrapper"]'),
+  containerCount: document.querySelectorAll('[data-barba="container"]').length,
+  time: performance.now().toFixed(1)
+});
+
 barba.init({
   preventRunning: true,
   transitions: [
