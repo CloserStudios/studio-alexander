@@ -3,6 +3,9 @@ let mm = gsap.matchMedia();
 let lenis;
 let resizeObserver = null;
 const getNav = () => document.querySelector('nav');
+const getConditionalItem = () => document.querySelector("[data-nav-conditional]");
+
+const SHOW_ON = new Set(["project"]); // namespaces where item is visible
 
 function navTheme(container) {
   const nav = getNav();
@@ -17,6 +20,28 @@ function navTheme(container) {
 
   nav.classList.toggle("dark", container.dataset.navTheme === "dark");
 }
+
+function updateConditionalNav(namespace) {
+  const item = getConditionalItem();
+  if (!item) return;
+
+  const shouldShow = SHOW_ON.has(namespace);
+
+  // Option A: semantic
+  item.hidden = !shouldShow;
+
+  // Option B: class-based
+  // item.classList.toggle("is-hidden", !shouldShow);
+}
+
+barba.hooks.afterEnter((data) => {
+  updateConditionalNav(data.next.namespace);
+});
+
+// run once on first load too
+barba.hooks.once((data) => {
+  updateConditionalNav(data.next.namespace);
+});
 
 function globalInit() {
   lenis = new Lenis();
