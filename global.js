@@ -265,12 +265,13 @@ function pageInit() {
     const container = root.querySelector('.h-hero-wrapper');
     const mask = root.querySelector('.h-hero-mask');
     const heroImage = root.querySelector('.h-hero-image');
+    const heroText = root.querySelector('.h-hero-text');
 
     const ratio = 16 / 9;
     const startH = () => container.clientHeight * 0.4;
     const endH = () => container.clientHeight;
 
-    const NAV_TOGGLE_AT = 0.8;
+    const navToggle = 0.8;
 
     const tl = gsap.timeline({
       defaults: { ease: 'none' },
@@ -297,15 +298,25 @@ function pageInit() {
         { scale: 1.3, yPercent: 6 },
         { scale: 1, yPercent: 0 }, 0);
 
-    // Separate trigger on the same range so the nav flips at 80% of the scroll
     ScrollTrigger.create({
       trigger: pinHeight,
       start: 'top top',
       end: 'bottom bottom',
       onUpdate: (self) => {
         if (!nav) return;
-        const past = self.progress >= NAV_TOGGLE_AT;
+        const past = self.progress >= navToggle;
         nav.classList.toggle('dark', past ? !baseDark : baseDark);
+      },
+    });
+
+    ScrollTrigger.create({
+      trigger: pinHeight,
+      start: 'top top',
+      end: 'bottom bottom',
+      onUpdate: (self) => {
+        if (!nav) return;
+        const past = self.progress >= navToggle;
+        heroText.classList.toggle('dark', past ? !baseDark : baseDark);
       },
     });
   }
