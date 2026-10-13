@@ -113,6 +113,68 @@ function pageInit() {
   ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
   mm.revert();
 
+  function preLoader() {
+    const loader = document.querySelector('.preload-wrapper');
+    const target = document.querySelector(".h-hero-mask");
+    const loaderLogo = document.querySelector('.preloader-logo-svg');
+    const loaderInnerBg = document.querySelector('.preload-inner-bg');
+    const loaderInnerImg = document.querySelector('.preload-inner-img');
+    let loaderDuration = 1.5;
+
+    gsap.set(loaderInnerImg, { scale: 1.3, yPercent: 6, transformOrigin: '50% 50%' });
+    gsap.set(loaderInnerBg, { scale: 0.3, x: 0, y: 0, transformOrigin: "50% 50%" });
+
+    const getTargetState = () => {
+      const t = target.getBoundingClientRect();
+      const l = loaderInnerBg.getBoundingClientRect();
+      return {
+        scale: t.width / loaderInnerBg.offsetWidth,
+        x: gsap.getProperty(loaderInnerBg, "x") + (t.left + t.width / 2) - (l.left + l.width / 2),
+        y: gsap.getProperty(loaderInnerBg, "y") + (t.top + t.height / 2) - (l.top + l.height / 2),
+      };
+    };
+
+    let preloaderTl = gsap.timeline({
+      defaults: { duration: loaderDuration, ease: "power2.inOut" },
+      onStart: () => {
+        lenis.stop();
+        loader.style.visibility = "visible";
+      },
+      onComplete: () => {
+        lenis.start();
+        sessionStorage.setItem("visited", "true");
+        document.documentElement.classList.remove("show-preloader");
+      },
+    });
+
+    preloaderTl.fromTo(loaderLogo, { opacity: 0 }, { delay: 0.5, opacity: 1 });
+
+    preloaderTl.to(loaderInnerBg, {
+      clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
+    });
+
+    preloaderTl.to(
+      loaderInnerBg,
+      {
+        scale: () => getTargetState().scale,
+        x: () => getTargetState().x,
+        y: () => getTargetState().y,
+      },
+      ">"
+    );
+
+    preloaderTl.to(loader, { opacity: 0 }, ">");
+  }
+
+  function checkPreloader() {
+    if (!sessionStorage.getItem("visited")) {
+      preLoader();
+    } else {
+      document.documentElement.classList.remove("show-preloader");
+    }
+  }
+  checkPreloader();
+
   let pageLoadTl;
 
   function pageLoad() { }
@@ -139,7 +201,6 @@ function pageInit() {
 
   function desktopAnimations() {
     mm.add("(min-width: 992px)", () => {
-
       function heroAnim() {
         const root = document.querySelector('.h-hero');
         if (!root) return;
@@ -208,6 +269,8 @@ function init() {
   globalInit();
   pageInit();
   initResizeObserver();
+  menuButtonHover();
+  menuAnimation();
 }
 
 if (document.readyState === "loading") {
