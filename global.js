@@ -225,7 +225,8 @@ function pageInit() {
         trigger: trigger,
         start: "top top",
         end: "bottom top",
-        ease: "power2.out",
+        toggleActions: "play none none reverse",
+        ease: "power2.inOut",
       },
     });
 
