@@ -1,6 +1,8 @@
 gsap.registerPlugin(ScrollTrigger, SplitText);
 let mm = gsap.matchMedia();
 let lenis;
+let appStarted = false;
+let barbaStarted = false;
 let resizeObserver = null;
 
 function globalInit() {
@@ -28,55 +30,81 @@ function pageInit() {
   mm.revert();
 }
 
+function initResizeObserver() {
+  if (resizeObserver) return;
+
+  resizeObserver = new ResizeObserver(() => {
+    ScrollTrigger.refresh();
+    lenis?.resize?.();
+  });
+
+  resizeObserver.observe(document.body);
+}
+
+function destroyResizeObserver() {
+  if (!resizeObserver) return;
+  resizeObserver.disconnect();
+  resizeObserver = null;
+}
+
 function init() {
   globalInit();
   pageInit();
   initResizeObserver();
 }
 
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", init);
-} else {
-  init();
+function setupBarba() {
+  if (barbaStarted) return;
+  barbaStarted = true;
+
+  barba.hooks.beforeEnter((data) => {
+    if (!data.current.container) navTheme(data.next.container);
+  });
+
+  barba.hooks.beforeLeave(() => {
+    destroyResizeObserver();
+  });
+
+  barba.hooks.after((data) => {
+    // On first load, init() already ran pageInit()
+    if (!data.current.container) return;
+
+    window.scrollTo(0, 0);
+    pageInit();
+    lenis?.start?.();
+    initResizeObserver();
+  });
+
+  barba.init({
+    preventRunning: true,
+    transitions: [
+      {
+        name: "default-transition",
+        afterLeave(data) {
+          gsap.set(data.current.container, { visibility: "hidden" });
+        },
+        beforeEnter(data) {
+          gsap.set(data.next.container, { visibility: "hidden" });
+          navTheme(data.next.container);
+        },
+        enter(data) {
+          gsap.set(data.next.container, { visibility: "visible" });
+        },
+      },
+    ],
+  });
 }
 
-barba.hooks.beforeEnter(() => {
-});
+function startApp() {
+  if (appStarted) return;
+  appStarted = true;
 
+  init();        // globalInit/menu/pageInit/observer
+  setupBarba();  // hooks + init in one place
+}
 
-barba.hooks.afterEnter(() => {
-  //window.FinsweetAttributes.modules.list.restart();
-});
-
-barba.hooks.after(() => {
-  window.scrollTo(0, 0);
-  pageInit();
-  lenis.start();
-
-  requestAnimationFrame(() => {
-    ScrollTrigger.refresh();
-    lenis?.resize?.();
-  });
-});
-
-barba.init({
-  preventRunning: true,
-  transitions: [
-    {
-      name: "default-transition",
-
-      afterLeave(data) {
-        gsap.set(data.current.container, { visibility: "hidden" });
-      },
-
-      beforeEnter(data) {
-        gsap.set(data.next.container, { visibility: "hidden" });
-        navTheme(data.next.container);
-      },
-
-      enter(data) {
-        gsap.set(data.next.container, { visibility: "visible" });
-      },
-    },
-  ],
-});
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", startApp, { once: true });
+} else {
+  startApp();
+}
