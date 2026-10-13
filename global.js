@@ -65,8 +65,6 @@ barba.init({
     {
       name: "default-transition",
 
-      leave(data) { },
-
       afterLeave(data) {
         gsap.set(data.current.container, { visibility: "hidden" });
       },
