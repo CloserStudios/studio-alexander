@@ -224,7 +224,7 @@ function pageInit() {
     const startH = () => container.clientHeight * 0.4;
     const endH = () => container.clientHeight;
 
-    gsap.set(mask, { xPercent: -50, yPercent: -50 });
+    //gsap.set(mask, { xPercent: -50, yPercent: -50 });
 
     const tl = gsap.timeline({
       defaults: { ease: 'none' },
