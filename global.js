@@ -371,8 +371,25 @@ function pageInit() {
       isOpen ? closeFilter() : openFilter();
     });
   }
-
   filterReveal();
+
+  function viewToggle() {
+    document.addEventListener('click', e => {
+      const btn = e.target.closest('[data-view]');
+      if (!btn) return;
+
+      const isList = btn.dataset.view === 'list';
+
+      document.querySelectorAll('.work-list').forEach(list => {
+        list.classList.toggle('is-list', isList);
+      });
+
+      document.querySelectorAll('[data-view]').forEach(b => {
+        b.classList.toggle('is-active', b === btn);
+      });
+    });
+  }
+  viewToggle();
 
   function currentProject() {
     const projectName = document.querySelector("[data-project-name]");
