@@ -347,9 +347,9 @@ function pageInit() {
 
       tl
         .to(filterOptions, { height: "auto", duration: 0.5, transformOrigin: "top center" }, 0)
-        .to(filterIcon, { rotation: -135, transformOrigin: "center center", duration: 0.5 }, 0.05)
-        .to(filterType, { y: 0, stagger: 0.1, duration: 0.5 }, 0.5)
-        .to(filterOption, { y: 0, stagger: 0.1, duration: 0.5 }, 0.5);
+        .to(filterIcon, { rotation: -135, transformOrigin: "center center", duration: 0.5 }, 0)
+        .to(filterType, { y: 0, stagger: 0.05, duration: 0.5 }, 0.25)
+        .to(filterOption, { y: 0, stagger: 0.05, duration: 0.5 }, 0.25);
     }
 
     function closeFilter() {
@@ -359,10 +359,10 @@ function pageInit() {
       tl = gsap.timeline({ defaults: { ease: "expo.inOut" } });
 
       tl
-        .to(filterType, { y: -12, stagger: { each: 0.05, from: "end" }, duration: 0.4 }, 0)
-        .to(filterOption, { y: -50, stagger: { each: 0.05, from: "end" }, duration: 0.4 }, 0)
-        .to(filterOptions, { height: 0, duration: 0.5, transformOrigin: "top center" }, 0.3)
-        .to(filterIcon, { rotation: 0, transformOrigin: "center center", duration: 0.5 }, 0.3)
+        .to(filterType, { y: -12, stagger: { each: 0.05, from: "end" }, duration: 0.25 }, 0)
+        .to(filterOption, { y: -50, stagger: { each: 0.05, from: "end" }, duration: 0.25 }, 0)
+        .to(filterOptions, { height: 0, duration: 0.5, transformOrigin: "top center" }, 0.25)
+        .to(filterIcon, { rotation: 0, transformOrigin: "center center", duration: 0.5 }, 0.25)
         .set(filterType, { y: 12 })
         .set(filterOption, { y: 50 });
     }
