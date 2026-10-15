@@ -404,28 +404,35 @@ function pageInit() {
 
   function listHover() {
     const listItems = document.querySelectorAll('.work-list.is-list .work-item');
+    const listImageWrappers = document.querySelectorAll('.work-list.is-list .work-item .work-image-wrapper');
+    const listImages = document.querySelectorAll('.work-list.is-list .work-item .work-image');
+
     if (!listItems.length) return;
 
     listItems.forEach((item, index) => {
-      const listImageWrapper = document.querySelectorAll('.work-list.is-list .work-item .work-image-wrapper');
-      const listImage = document.querySelectorAll('.work-list.is-list .work-item .work-image');
+      const wrapper = listImageWrappers[index];
+      const image = listImages[index];
 
-      gsap.set(listImage[index], { clipPath: "polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)" });
+      if (!wrapper || !image) return;
 
-      let tl = gsap.timeline({
-        defaults: { ease: "power2.inOut" }
+      gsap.set(image, {
+        clipPath: 'polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)'
       });
 
-      tl.to(listImageWrapper[index], { visibility: "visible" });
-      tl.to(listImage[index], { visibility: "visible", clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)" });
-
-      listItems[index].addEventListener('mouseenter', () => {
-        tl.play();
+      const tl = gsap.timeline({
+        paused: true,
+        defaults: { ease: 'power2.inOut' }
       });
 
-      listItems[index].addEventListener('mouseleave', () => {
-        tl.reverse();
+      tl.to(wrapper, { visibility: 'visible', duration: 0.01 });
+      tl.to(image, {
+        visibility: 'visible',
+        clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)',
+        duration: 0.4
       });
+
+      item.addEventListener('mouseenter', () => tl.play());
+      item.addEventListener('mouseleave', () => tl.reverse());
     });
   }
   listHover();
