@@ -676,7 +676,7 @@ barba.hooks.beforeLeave(() => {
 });
 
 barba.hooks.afterEnter((data) => {
-  window.FinsweetAttributes.modules.list.restart();
+  //window.FinsweetAttributes.modules.list.restart();
 });
 
 barba.hooks.after((data) => {
