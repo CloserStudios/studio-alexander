@@ -402,6 +402,34 @@ function pageInit() {
   }
   viewToggle();
 
+  function listHover() {
+    const listItems = document.querySelectorAll('.work-list.is-list .work-item');
+    if (!listItems.length) return;
+
+    listItems.forEach((item, index) => {
+      const listImageWrapper = document.querySelectorAll('.work-list.is-list .work-item .work-image-wrapper');
+      const listImage = document.querySelectorAll('.work-list.is-list .work-item .work-image');
+
+      gsap.set(listImage[index], { clipPath: "polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)" });
+
+      let tl = gsap.timeline({
+        defaults: { ease: "power2.inOut" }
+      });
+
+      tl.to(listImageWrapper[index], { visibility: "visible" });
+      tl.to(listImage[index], { visibility: "visible", clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)" });
+
+      listItems[index].addEventListener('mouseenter', () => {
+        tl.play();
+      });
+
+      listItems[index].addEventListener('mouseleave', () => {
+        tl.reverse();
+      });
+    });
+  }
+  listHover();
+
   function currentProject() {
     const projectName = document.querySelector("[data-project-name]");
     const connectingLine = document.querySelector("[data-connecting-line]");
