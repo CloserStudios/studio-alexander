@@ -53,7 +53,6 @@ function arrowIn(item) {
   if (!arrow) return;
 
   gsap.killTweensOf(arrow);
-  gsap.set(arrow, { xPercent: -101 });
   gsap.to(arrow,
     { xPercent: 0, duration: 0.5, ease: 'expo.in' }
   );
