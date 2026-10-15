@@ -385,8 +385,9 @@ function pageInit() {
         b.classList.toggle('is-active', b.dataset.view === view);
       });
 
-      if (window.FinsweetAttributes?.modules?.list?.restart) {
-        window.FinsweetAttributes.modules.list.restart();
+      if (!isList) {
+        preview.classList.remove('on');
+        preview.replaceChildren();
       }
     }
 
@@ -403,31 +404,52 @@ function pageInit() {
   viewToggle();
 
   function listHover() {
-    document.querySelectorAll('.work-list.is-list .work-item').forEach(item => {
-      if (item.dataset.hoverInit) return;
-      item.dataset.hoverInit = 'true';
+    const preview = document.querySelector('[data-work-preview]');
+    const CLIP_HIDDEN = 'polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)';
+    const CLIP_SHOWN = 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)';
 
-      const wrapper = item.querySelector('.work-image-wrapper');
-      const image = item.querySelector('.work-image');
-      if (!wrapper || !image) return;
+    function getItemSrc(item) {
+      return item.dataset.image || item.querySelector('.work-image')?.getAttribute('src');
+    }
 
-      gsap.set(wrapper, { visibility: 'hidden' });
-      gsap.set(image, {
-        clipPath: 'polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)',
-        visibility: 'hidden'
-      });
+    function createMedia(src) {
+      const div = document.createElement('div');
+      const img = document.createElement('img');
+      img.src = src;
+      div.appendChild(img);
+      preview.appendChild(div);
 
-      const tl = gsap.timeline({ paused: true, defaults: { ease: 'power2.inOut' } });
+      // Each new image wipes in on top of the previous one
+      gsap.fromTo(div,
+        { clipPath: CLIP_HIDDEN },
+        { clipPath: CLIP_SHOWN, duration: 0.6, ease: 'expo.inOut' }
+      );
 
-      tl.set(wrapper, { visibility: 'visible' })
-        .set(image, { visibility: 'visible' })
-        .to(image, {
-          clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)',
-          duration: 0.4
-        });
+      // Remove older layers once the new one has covered them
+      while (preview.children.length > 3) {
+        preview.children[0].remove();
+      }
+    }
 
-      item.addEventListener('mouseenter', () => tl.play());
-      item.addEventListener('mouseleave', () => tl.reverse());
+    // Enter an item: show the preview and add its image
+    document.addEventListener('mouseover', e => {
+      const item = e.target.closest('.work-list.is-list .work-item');
+      if (!item || item.contains(e.relatedTarget)) return;
+
+      const src = getItemSrc(item);
+      if (!src) return;
+
+      preview.classList.add('on');
+      createMedia(src);
+    });
+
+    // Leave the whole list: hide and empty the preview
+    document.addEventListener('mouseout', e => {
+      const list = e.target.closest('.work-list.is-list');
+      if (!list || list.contains(e.relatedTarget)) return;
+
+      preview.classList.remove('on');
+      preview.replaceChildren();
     });
   }
   listHover();
