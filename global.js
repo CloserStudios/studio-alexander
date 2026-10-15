@@ -343,7 +343,7 @@ function pageInit() {
       isOpen = true;
       if (tl) tl.kill();
 
-      tl = gsap.timeline({ defaults: { ease: "expo.inOut" } });
+      tl = gsap.timeline({ defaults: { ease: "expo.out" } });
 
       tl
         .to(filterOptions, { height: "auto", duration: 0.5, transformOrigin: "top center" }, 0)
@@ -356,13 +356,13 @@ function pageInit() {
       isOpen = false;
       if (tl) tl.kill();
 
-      tl = gsap.timeline({ defaults: { ease: "expo.inOut" } });
+      tl = gsap.timeline({ defaults: { ease: "expo.in" } });
 
       tl
-        .to(filterType, { y: -12, stagger: { each: 0.05, from: "end" }, duration: 0.25 }, 0)
-        .to(filterOption, { y: -50, stagger: { each: 0.05, from: "end" }, duration: 0.25 }, 0)
-        .to(filterOptions, { height: 0, duration: 0.5, transformOrigin: "top center" }, 0.25)
-        .to(filterIcon, { rotation: 0, transformOrigin: "center center", duration: 0.5 }, 0.25)
+        .to(filterType, { y: -12, stagger: { each: 0.05, from: "end" }, duration: 0.5 }, 0)
+        .to(filterOption, { y: -50, stagger: { each: 0.05, from: "end" }, duration: 0.5 }, 0)
+        .to(filterOptions, { height: 0, duration: 0.5, transformOrigin: "top center" }, 0.5)
+        .to(filterIcon, { rotation: 0, transformOrigin: "center center", duration: 0.5 }, 0.5)
         .set(filterType, { y: 12 })
         .set(filterOption, { y: 50 });
     }
