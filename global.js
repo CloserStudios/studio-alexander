@@ -390,6 +390,16 @@ function pageInit() {
         preview.replaceChildren();
       }
     }
+
+    document.addEventListener('click', e => {
+      const btn = e.target.closest('[data-view]');
+      if (!btn) return;
+      setView(btn.dataset.view);
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      setView('grid');
+    });
   }
   viewToggle();
 
