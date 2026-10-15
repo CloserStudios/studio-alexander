@@ -335,15 +335,15 @@ function pageInit() {
     gsap.set(filterOption, { y: 50 });
 
     let tl = gsap.timeline({
-      ease: "power2.inOut",
+      ease: "expo.inOut",
       reversed: true,
     });
 
     tl
-      .from(filterOptions, { height: 0, duration: 0.25, transformOrigin: "top center", }, 0)
-      .to(filterIcon, { rotation: -135, transformOrigin: "center center", }, 0)
-      .to(filterType, { y: 0, stagger: 0.05, }, 0.05)
-      .to(filterOption, { y: 0, stagger: 0.05, }, 0.05);
+      .from(filterOptions, { height: 0, duration: 0.5, transformOrigin: "top center", }, 0)
+      .to(filterIcon, { rotation: -135, transformOrigin: "center center", }, 0.05)
+      .to(filterType, { y: 0, stagger: 0.1, }, 0.5)
+      .to(filterOption, { y: 0, stagger: 0.1, }, 0.5);
 
     filterButton.addEventListener("click", function () {
       tl.reversed() ? tl.play() : tl.timeScale(1.5).reverse();
