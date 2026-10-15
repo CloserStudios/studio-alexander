@@ -443,7 +443,8 @@ function pageInit() {
   }
   filterReveal();
 
-
+  /*View toggle start*/
+  setView('grid');
 
   /*
   function viewToggle() {
@@ -656,6 +657,7 @@ function destroyResizeObserver() {
 function init() {
   globalInit();
   pageInit();
+  initListListeners();
   initResizeObserver();
   menuButtonHover();
   menuAnimation();
