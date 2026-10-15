@@ -377,8 +377,8 @@ function pageInit() {
     function setView(view) {
       const isList = view === 'list';
 
-      document.querySelectorAll('.work-list, .work-list-header').forEach(el => {
-        el.classList.toggle('is-list', isList);
+      document.querySelectorAll('.work-list').forEach(list => {
+        list.classList.toggle('is-list', isList);
       });
 
       document.querySelectorAll('[data-view]').forEach(b => {
