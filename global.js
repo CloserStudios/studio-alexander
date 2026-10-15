@@ -53,9 +53,12 @@ function arrowIn(item) {
   if (!arrow) return;
 
   gsap.killTweensOf(arrow);
-  gsap.to(arrow,
-    { xPercent: 0, duration: 0.5, ease: 'expo.in' }
-  );
+  gsap.to(arrow, {
+    xPercent: 0,
+    duration: 0.25,
+    ease: 'expo.in',
+    overwrite: true
+  });
 }
 
 function arrowOut(item) {
@@ -63,7 +66,13 @@ function arrowOut(item) {
   if (!arrow) return;
 
   gsap.killTweensOf(arrow);
-  gsap.to(arrow, { xPercent: 101, duration: 0.5, ease: 'expo.out' });
+  gsap.to(arrow, {
+    xPercent: 101,
+    duration: 0.25,
+    ease: 'expo.out',
+    overwrite: true,
+    onComplete: () => gsap.set(arrow, { xPercent: -101 })
+  });
 }
 
 function initListListeners() {
