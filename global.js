@@ -328,7 +328,7 @@ function pageInit() {
     const filterIcon = document.querySelector(".plus-svg");
 
     let filterReveal = gsap.timeline({
-      ease: "power2.inOut",
+      ease: "power1.inOut",
       reversed: true,
     });
 
