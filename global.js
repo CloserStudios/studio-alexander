@@ -326,29 +326,52 @@ function pageInit() {
     const filterButton = document.querySelector(".filter-button");
     const filterOptions = document.querySelector(".filter-options");
     const filterIcon = document.querySelector(".plus-svg");
-    const filterType = document.querySelector("[data-filter-type]");
+    const filterType = document.querySelectorAll("[data-filter-type]");
     const filterOption = document.querySelectorAll("[data-filter-option]");
 
-    if (!filterButton || !filterOptions || !filterIcon || !filterType || !filterOption) return;
+    if (!filterButton || !filterOptions || !filterIcon || !filterType.length || !filterOption.length) return;
 
+    let isOpen = false;
+    let tl = null;
+
+    // Initial state
+    gsap.set(filterOptions, { height: 0, overflow: "hidden" });
     gsap.set(filterType, { y: 12 });
     gsap.set(filterOption, { y: 50 });
 
-    let tl = gsap.timeline({
-      ease: "expo.inOut",
-      reversed: true,
-    });
+    function openFilter() {
+      isOpen = true;
+      if (tl) tl.kill();
 
-    tl
-      .from(filterOptions, { height: 0, duration: 0.5, transformOrigin: "top center", }, 0)
-      .to(filterIcon, { rotation: -135, transformOrigin: "center center", }, 0.05)
-      .to(filterType, { y: 0, stagger: 0.1, }, 0.5)
-      .to(filterOption, { y: 0, stagger: 0.1, }, 0.5);
+      tl = gsap.timeline({ defaults: { ease: "expo.inOut" } });
 
-    filterButton.addEventListener("click", function () {
-      tl.reversed() ? tl.play() : tl.timeScale(1.5).reverse();
+      tl
+        .to(filterOptions, { height: "auto", duration: 0.5, transformOrigin: "top center" }, 0)
+        .to(filterIcon, { rotation: -135, transformOrigin: "center center", duration: 0.5 }, 0.05)
+        .to(filterType, { y: 0, stagger: 0.1, duration: 0.5 }, 0.5)
+        .to(filterOption, { y: 0, stagger: 0.1, duration: 0.5 }, 0.5);
+    }
+
+    function closeFilter() {
+      isOpen = false;
+      if (tl) tl.kill();
+
+      tl = gsap.timeline({ defaults: { ease: "expo.inOut" } });
+
+      tl
+        .to(filterType, { y: -12, stagger: { each: 0.05, from: "end" }, duration: 0.4 }, 0)
+        .to(filterOption, { y: -50, stagger: { each: 0.05, from: "end" }, duration: 0.4 }, 0)
+        .to(filterOptions, { height: 0, duration: 0.5, transformOrigin: "top center" }, 0.3)
+        .to(filterIcon, { rotation: 0, transformOrigin: "center center", duration: 0.5 }, 0.3)
+        .set(filterType, { y: 12 })
+        .set(filterOption, { y: 50 });
+    }
+
+    filterButton.addEventListener("click", () => {
+      isOpen ? closeFilter() : openFilter();
     });
   }
+
   filterReveal();
 
   function currentProject() {
