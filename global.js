@@ -374,19 +374,26 @@ function pageInit() {
   filterReveal();
 
   function viewToggle() {
-    document.addEventListener('click', e => {
-      const btn = e.target.closest('[data-view]');
-      if (!btn) return;
-
-      const isList = btn.dataset.view === 'list';
+    function setView(view) {
+      const isList = view === 'list';
 
       document.querySelectorAll('.work-list').forEach(list => {
         list.classList.toggle('is-list', isList);
       });
 
       document.querySelectorAll('[data-view]').forEach(b => {
-        b.classList.toggle('is-active', b === btn);
+        b.classList.toggle('is-active', b.dataset.view === view);
       });
+    }
+
+    document.addEventListener('click', e => {
+      const btn = e.target.closest('[data-view]');
+      if (!btn) return;
+      setView(btn.dataset.view);
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      setView('grid');
     });
   }
   viewToggle();
