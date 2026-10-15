@@ -326,8 +326,13 @@ function pageInit() {
     const filterButton = document.querySelector(".filter-button");
     const filterOptions = document.querySelector(".filter-options");
     const filterIcon = document.querySelector(".plus-svg");
+    const filterType = document.querySelector("[data-filter-type]");
+    const filterOption = document.querySelectorAll("[data-filter-option]");
 
-    if (!filterButton || !filterOptions || !filterIcon) return;
+    if (!filterButton || !filterOptions || !filterIcon || !filterType || !filterOption) return;
+
+    gsap.set(filterType, { y: 12 });
+    gsap.set(filterOption, { y: 50 });
 
     let tl = gsap.timeline({
       ease: "power2.inOut",
@@ -336,9 +341,9 @@ function pageInit() {
 
     tl
       .from(filterOptions, { height: 0, duration: 0.25, transformOrigin: "top center", }, 0)
-      .to(filterIcon, { rotation: -135, transformOrigin: "center center", x: "-=45", }, 0);
-    //.to(".p-standard.dark.filter", { x: "-=40", }, 0.05)
-    //.from(".work-checkbox-field", { opacity: 0, y: -30, stagger: 0.05, }, 0.05);
+      .to(filterIcon, { rotation: -135, transformOrigin: "center center", }, 0)
+      .to(filterType, { y: 12, }, 0.05)
+      .from(filterOption, { y: 50, stagger: 0.05, }, 0.05);
 
     filterButton.addEventListener("click", function () {
       tl.reversed() ? tl.play() : tl.timeScale(1.5).reverse();
