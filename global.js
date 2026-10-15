@@ -322,6 +322,28 @@ function pageInit() {
   }
   heroAnim();
 
+  function filterReveal() {
+    const filterButton = document.querySelector(".filter-button");
+    const filterOptions = document.querySelector(".filter-options");
+    const filterIcon = document.querySelector(".plus-svg");
+
+    let filterReveal = gsap.timeline({
+      ease: "power2.inOut",
+      reversed: true,
+    });
+
+    filterReveal
+      .from(filterOptions, { height: 0, duration: 0.2, transformOrigin: "top center", }, 0)
+      .to(filterIcon, { rotation: -135, transformOrigin: "center center", x: "-=45", }, 0);
+    //.to(".p-standard.dark.filter", { x: "-=40", }, 0.05)
+    //.from(".work-checkbox-field", { opacity: 0, y: -30, stagger: 0.05, }, 0.05);
+
+    filterButton.addEventListener("click", function () {
+      filterReveal.reversed() ? filterReveal.play() : filterReveal.timeScale(1.5).reverse();
+    });
+  }
+  filterReveal();
+
   function currentProject() {
     const projectName = document.querySelector("[data-project-name]");
     const connectingLine = document.querySelector("[data-connecting-line]");
