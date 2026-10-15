@@ -377,8 +377,8 @@ function pageInit() {
     function setView(view) {
       const isList = view === 'list';
 
-      document.querySelectorAll('.work-list').forEach(list => {
-        list.classList.toggle('is-list', isList);
+      document.querySelectorAll('.work-list, .work-list-header').forEach(el => {
+        el.classList.toggle('is-list', isList);
       });
 
       document.querySelectorAll('[data-view]').forEach(b => {
@@ -390,16 +390,6 @@ function pageInit() {
         preview.replaceChildren();
       }
     }
-
-    document.addEventListener('click', e => {
-      const btn = e.target.closest('[data-view]');
-      if (!btn) return;
-      setView(btn.dataset.view);
-    });
-
-    document.addEventListener('DOMContentLoaded', () => {
-      setView('grid');
-    });
   }
   viewToggle();
 
@@ -419,19 +409,16 @@ function pageInit() {
       div.appendChild(img);
       preview.appendChild(div);
 
-      // Each new image wipes in on top of the previous one
       gsap.fromTo(div,
         { clipPath: CLIP_HIDDEN },
         { clipPath: CLIP_SHOWN, duration: 0.6, ease: 'expo.inOut' }
       );
 
-      // Remove older layers once the new one has covered them
       while (preview.children.length > 3) {
         preview.children[0].remove();
       }
     }
 
-    // Enter an item: show the preview and add its image
     document.addEventListener('mouseover', e => {
       const item = e.target.closest('.work-list.is-list .work-item');
       if (!item || item.contains(e.relatedTarget)) return;
@@ -443,7 +430,6 @@ function pageInit() {
       createMedia(src);
     });
 
-    // Leave the whole list: hide and empty the preview
     document.addEventListener('mouseout', e => {
       const list = e.target.closest('.work-list.is-list');
       if (!list || list.contains(e.relatedTarget)) return;
