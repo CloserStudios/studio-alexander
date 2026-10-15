@@ -48,31 +48,16 @@ function createMedia(preview, src) {
   while (preview.children.length > 3) preview.children[0].remove();
 }
 
-function arrowIn(item) {
+function arrowHover(item) {
   const arrow = item.querySelector('.arrow-svg');
   if (!arrow) return;
 
   gsap.killTweensOf(arrow);
-  gsap.to(arrow, {
-    xPercent: 0,
-    duration: 0.25,
-    ease: 'expo.in',
-    overwrite: true
-  });
-}
 
-function arrowOut(item) {
-  const arrow = item.querySelector('.arrow-svg');
-  if (!arrow) return;
-
-  gsap.killTweensOf(arrow);
-  gsap.to(arrow, {
-    xPercent: 101,
-    duration: 0.25,
-    ease: 'expo.out',
-    overwrite: true,
-    onComplete: () => gsap.set(arrow, { xPercent: -101 })
-  });
+  gsap.timeline()
+    .to(arrow, { duration: 0.3, xPercent: 101, ease: 'power2.inOut' })
+    .set(arrow, { xPercent: -101 })
+    .to(arrow, { duration: 0.5, xPercent: 0, ease: 'power2.inOut' });
 }
 
 function initListListeners() {
@@ -85,7 +70,7 @@ function initListListeners() {
     const item = e.target.closest('.work-list.is-list .work-item');
     if (!item || item.contains(e.relatedTarget)) return;
 
-    arrowIn(item);
+    arrowHover(item);
 
     const preview = getPreview();
     const src = getItemSrc(item);
@@ -97,9 +82,6 @@ function initListListeners() {
   });
 
   document.addEventListener('mouseout', e => {
-    const item = e.target.closest('.work-list.is-list .work-item');
-    if (item && !item.contains(e.relatedTarget)) arrowOut(item);
-
     const list = e.target.closest('.work-list.is-list');
     if (!list || list.contains(e.relatedTarget)) return;
     clearPreview();
