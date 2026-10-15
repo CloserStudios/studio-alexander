@@ -3,6 +3,76 @@ let mm = gsap.matchMedia();
 let lenis;
 let resizeObserver = null;
 const getNav = () => document.querySelector('nav');
+const getPreview = () => document.querySelector('[data-work-preview]');
+const CLIP_HIDDEN = 'polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)';
+const CLIP_SHOWN = 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)';
+
+/*Grid to list*/
+function setView(view) {
+  const isList = view === 'list';
+
+  document.querySelectorAll('.work-list, .work-list-header').forEach(el => {
+    el.classList.toggle('is-list', isList);
+  });
+
+  document.querySelectorAll('[data-view]').forEach(b => {
+    b.classList.toggle('is-active', b.dataset.view === view);
+  });
+
+  if (!isList) clearPreview();
+}
+
+/*List hover start*/
+function clearPreview() {
+  const preview = getPreview();
+  preview?.classList.remove('on');
+  preview?.replaceChildren();
+}
+
+function getItemSrc(item) {
+  return item.dataset.image || item.querySelector('.work-image')?.getAttribute('src');
+}
+
+function createMedia(preview, src) {
+  const div = document.createElement('div');
+  const img = document.createElement('img');
+  img.src = src;
+  div.appendChild(img);
+  preview.appendChild(div);
+
+  gsap.fromTo(div,
+    { clipPath: CLIP_HIDDEN },
+    { clipPath: CLIP_SHOWN, duration: 0.6, ease: 'expo.inOut' }
+  );
+
+  while (preview.children.length > 3) preview.children[0].remove();
+}
+
+function initListListeners() {
+  document.addEventListener('click', e => {
+    const btn = e.target.closest('[data-view]');
+    if (btn) setView(btn.dataset.view);
+  });
+
+  document.addEventListener('mouseover', e => {
+    const item = e.target.closest('.work-list.is-list .work-item');
+    if (!item || item.contains(e.relatedTarget)) return;
+
+    const preview = getPreview();
+    const src = getItemSrc(item);
+    if (!preview || !src) return;
+
+    preview.classList.add('on');
+    createMedia(preview, src);
+  });
+
+  document.addEventListener('mouseout', e => {
+    const list = e.target.closest('.work-list.is-list');
+    if (!list || list.contains(e.relatedTarget)) return;
+    clearPreview();
+  });
+}
+/*List hover end*/
 
 function navTheme(container) {
   const nav = getNav();
@@ -373,6 +443,9 @@ function pageInit() {
   }
   filterReveal();
 
+
+
+  /*
   function viewToggle() {
     function setView(view) {
       const isList = view === 'list';
@@ -449,6 +522,7 @@ function pageInit() {
     });
   }
   listHover();
+  */
 
   function currentProject() {
     const projectName = document.querySelector("[data-project-name]");
