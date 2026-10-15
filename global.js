@@ -403,33 +403,28 @@ function pageInit() {
   viewToggle();
 
   function listHover() {
-    const listItems = document.querySelectorAll('.work-list.is-list .work-item');
-    const listImageWrappers = document.querySelectorAll('.work-list.is-list .work-item .work-image-wrapper');
-    const listImages = document.querySelectorAll('.work-list.is-list .work-item .work-image');
+    document.querySelectorAll('.work-list.is-list .work-item').forEach(item => {
+      if (item.dataset.hoverInit) return;
+      item.dataset.hoverInit = 'true';
 
-    if (!listItems.length) return;
-
-    listItems.forEach((item, index) => {
-      const wrapper = listImageWrappers[index];
-      const image = listImages[index];
-
+      const wrapper = item.querySelector('.work-image-wrapper');
+      const image = item.querySelector('.work-image');
       if (!wrapper || !image) return;
 
+      gsap.set(wrapper, { visibility: 'hidden' });
       gsap.set(image, {
-        clipPath: 'polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)'
+        clipPath: 'polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)',
+        visibility: 'hidden'
       });
 
-      const tl = gsap.timeline({
-        paused: true,
-        defaults: { ease: 'power2.inOut' }
-      });
+      const tl = gsap.timeline({ paused: true, defaults: { ease: 'power2.inOut' } });
 
-      tl.to(wrapper, { visibility: 'visible', duration: 0.01 });
-      tl.to(image, {
-        visibility: 'visible',
-        clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)',
-        duration: 0.4
-      });
+      tl.set(wrapper, { visibility: 'visible' })
+        .set(image, { visibility: 'visible' })
+        .to(image, {
+          clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)',
+          duration: 0.4
+        });
 
       item.addEventListener('mouseenter', () => tl.play());
       item.addEventListener('mouseleave', () => tl.reverse());
