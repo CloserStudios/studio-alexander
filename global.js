@@ -384,6 +384,10 @@ function pageInit() {
       document.querySelectorAll('[data-view]').forEach(b => {
         b.classList.toggle('is-active', b.dataset.view === view);
       });
+
+      if (window.FinsweetAttributes?.modules?.list?.restart) {
+        window.FinsweetAttributes.modules.list.restart();
+      }
     }
 
     document.addEventListener('click', e => {
