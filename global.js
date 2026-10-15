@@ -342,8 +342,8 @@ function pageInit() {
     tl
       .from(filterOptions, { height: 0, duration: 0.25, transformOrigin: "top center", }, 0)
       .to(filterIcon, { rotation: -135, transformOrigin: "center center", }, 0)
-      .to(filterType, { y: 12, }, 0.05)
-      .from(filterOption, { y: 50, stagger: 0.05, }, 0.05);
+      .to(filterType, { y: 0, stagger: 0.05, }, 0.05)
+      .to(filterOption, { y: 0, stagger: 0.05, }, 0.05);
 
     filterButton.addEventListener("click", function () {
       tl.reversed() ? tl.play() : tl.timeScale(1.5).reverse();
