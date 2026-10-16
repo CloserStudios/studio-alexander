@@ -93,6 +93,8 @@ function initListListeners() {
     const item = e.target.closest('.ap-item');
     if (!item || item.contains(e.relatedTarget)) return;
 
+    arrowHover(item);
+
     const preview = getPreview(); // or a separate preview container if needed
     const src = getItemSrc(item);  // reuses data-image / .work-image
     if (!preview || !src) return;
