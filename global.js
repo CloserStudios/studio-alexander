@@ -573,7 +573,6 @@ function pageInit() {
 
     setActiveIndex(0);
 
-    /*
     function showPanel(index) {
       if (index === currentIndex) return;
 
@@ -615,50 +614,6 @@ function pageInit() {
           { autoAlpha: 1, duration: 0.5, ease: "expo.out", stagger: 0.2 },
           0.3
         );
-    }
-        */
-    function showPanel(index) {
-      if (index === currentIndex) return;
-
-      const prevPanel = teamPanels[currentIndex];
-      const nextPanel = teamPanels[index];
-      const { image, texts } = getParts(nextPanel);
-      const { texts: prevTexts } = getParts(prevPanel);
-
-      const previousIndex = currentIndex;
-      currentIndex = index;
-
-      setActiveIndex(index);
-
-      gsap.set(nextPanel, { zIndex: ++zCounter });
-      gsap.set(image, { clipPath: CLIP_HIDDEN });
-      gsap.set(texts, { autoAlpha: 0 });
-
-      const tl = gsap.timeline({
-        onComplete: () => {
-          teamPanels.forEach((panel, i) => {
-            if (i !== currentIndex && i !== previousIndex) {
-              gsap.set(getParts(panel).texts, { autoAlpha: 0 });
-              gsap.set(panel, { autoAlpha: 0 });
-            }
-          });
-        },
-      });
-
-      tl.to(image, {
-        clipPath: CLIP_SHOWN,
-        duration: 0.6,
-        ease: "expo.inOut",
-      }).to(
-        texts,
-        {
-          autoAlpha: 1,
-          duration: 0.5,
-          ease: "expo.out",
-          stagger: 0.2,
-        },
-        "-=0.3"
-      );
     }
 
     teamItems.forEach((teamItem, index) => {
