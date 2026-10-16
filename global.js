@@ -591,8 +591,8 @@ function pageInit() {
     let currentIndex = 0;
     let zCounter = 1;
 
-    gsap.set(teamPanels, { clipPath: CLIP_HIDDEN });
-    gsap.set(teamPanels[0], { clipPath: CLIP_SHOWN, zIndex: zCounter });
+    gsap.set(teamPanels, { autoAlpha: 0, clipPath: CLIP_HIDDEN });
+    gsap.set(teamPanels[0], { autoAlpha: 1, clipPath: CLIP_SHOWN, zIndex: zCounter });
     gsap.set(teamRole, { autoAlpha: 0 });
     gsap.set(teamRole[0], { autoAlpha: 1 });
     gsap.set(teamBio, { autoAlpha: 0 });
@@ -608,7 +608,9 @@ function pageInit() {
 
       setActiveIndex(index);
 
-      gsap.set(nextPanel, { clipPath: CLIP_HIDDEN, zIndex: ++zCounter });
+      gsap.killTweensOf(nextPanel);
+
+      gsap.set(nextPanel, { autoAlpha: 1, clipPath: CLIP_HIDDEN, zIndex: ++zCounter });
       gsap.to(nextPanel, { clipPath: CLIP_SHOWN, duration: 0.75, ease: "expo.out" });
 
     }
