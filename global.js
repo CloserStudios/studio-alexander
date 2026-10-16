@@ -574,16 +574,27 @@ function pageInit() {
   */
 
   function teamAnimation() {
-    const teamWrapper = document.querySelector("[team-wrapper]");
-    const teamItems = document.querySelectorAll("[team-item]");
+    const teamWrapper = document.querySelector("[data-team-wrapper]");
+    const teamItems = document.querySelectorAll("[data-team-item]");
+    const teamPanels = document.querySelectorAll("[data-team-panel]");
+    const teamRole = document.querySelectorAll("[data-team-role]");
+    const teamBio = document.querySelectorAll("[data-team-bio]");
 
-    if (!teamWrapper || !teamItems.length) return;
+    if (!teamWrapper || !teamItems.length || !teamRole.length || !teamBio.length) return;
 
+    function setActiveIndex(index) {
+      teamItems.forEach((item, i) => {
+        item.classList.toggle("is-active", i === index);
+      });
+    }
+
+    gsap.set(teamPanels, { clipPath: CLIP_HIDDEN });
+    //gsap.set(teamPanels[0], { clipPath: CLIP_VISIBLE });
+
+
+    /*
     const teamPanels = teamWrapper.querySelectorAll("[team-panel]");
     if (!teamPanels.length) return;
-
-    let currentIndex = 0;
-    let zCounter = 1;
 
     function setActiveItem(index) {
       teamItems.forEach((item, i) => {
@@ -591,50 +602,126 @@ function pageInit() {
       });
     }
 
-    // Initial state: only the first panel is visible, no animation
-    gsap.set(teamPanels, { autoAlpha: 0, clipPath: CLIP_HIDDEN });
-    gsap.set(teamPanels[0], { autoAlpha: 1, clipPath: CLIP_SHOWN, zIndex: zCounter });
-    setActiveItem(0);
-
     function showPanel(index) {
-      if (index === currentIndex) return;
-
-      const prevPanel = teamPanels[currentIndex];
-      const nextPanel = teamPanels[index];
-      currentIndex = index;
-
+      gsap.set(teamPanels, { autoAlpha: 0 });
+      gsap.set(teamPanels[index], { autoAlpha: 1 });
       setActiveItem(index);
-
-      // Stop any in-flight tweens on the incoming panel
-      gsap.killTweensOf(nextPanel);
-
-      // Put the incoming panel on top and reset it to hidden
-      gsap.set(nextPanel, {
-        autoAlpha: 1,
-        zIndex: ++zCounter,
-        clipPath: CLIP_HIDDEN,
-      });
-
-      gsap.to(nextPanel, {
-        clipPath: CLIP_SHOWN,
-        duration: 0.6,
-        ease: "expo.inOut",
-        onComplete: () => {
-          // Hide every panel except the active one once the reveal is done
-          teamPanels.forEach((panel, i) => {
-            if (i !== currentIndex) {
-              gsap.set(panel, { autoAlpha: 0, clipPath: CLIP_HIDDEN });
-            }
-          });
-        },
-      });
     }
+    showPanel(0);
 
     teamItems.forEach((teamItem, index) => {
-      teamItem.addEventListener("mouseenter", () => showPanel(index));
+      teamItem.addEventListener("mouseenter", () => {
+        showPanel(index);
+      });
     });
+    */
   }
   teamAnimation();
+
+
+  /*
+  function heroSwiper() {
+    const heroTrigger = document.querySelector("[hero-trigger]");
+    const heroPanels = gsap.utils.toArray("[hero-panels]");
+    const heroSegments = heroPanels.length - 1;
+    const heroText = gsap.utils.toArray("[hero-text]");
+    const subText = gsap.utils.toArray("[sub-text]");
+
+    const heroTL = gsap.timeline({
+      scrollTrigger: {
+        trigger: heroTrigger,
+        start: "top top",
+        end: "+=" + heroSegments * 100 + "%",
+        scrub: 1,
+        pin: true,
+        anticipatePin: 1,
+      },
+    });
+
+    heroPanels.forEach((heroPanel, i) => {
+      gsap.set(heroPanel, { zIndex: heroPanels.length - i });
+    });
+
+    heroPanels.slice(0, -1).forEach((heroPanel, i) => {
+      heroTL.to(
+        heroPanel,
+        {
+          clipPath: "inset(0% 0% 100% 0%)",
+          ease: "none",
+          duration: 1,
+        },
+        i
+      );
+    });
+
+    gsap.set(heroText, { autoAlpha: 0, y: 30 });
+    gsap.set(subText, { autoAlpha: 0, y: 30 });
+
+    gsap.set(heroText[0], { autoAlpha: 1, y: 0 });
+    gsap.set(subText[0], { autoAlpha: 1, y: 0 });
+
+    let activeIndex = 0;
+
+    function showText(nextIndex, direction) {
+      if (nextIndex === activeIndex) return;
+
+      const prevIndex = activeIndex;
+      activeIndex = nextIndex;
+
+      gsap.killTweensOf(heroText);
+      gsap.killTweensOf(subText);
+
+      const outY = direction > 0 ? -30 : 30;
+      const inY = direction > 0 ? 30 : -30;
+
+      // Out
+      gsap.to([heroText[prevIndex], subText[prevIndex]], {
+        autoAlpha: 0,
+        y: outY,
+        duration: 0.75,
+        ease: "power2.out",
+        stagger: 0.05,
+        overwrite: true,
+      });
+
+      // In
+      gsap.fromTo(
+        [heroText[nextIndex], subText[nextIndex]],
+        { autoAlpha: 0, y: inY },
+        {
+          autoAlpha: 1,
+          y: 0,
+          duration: 0.75,
+          stagger: 0.05,
+          ease: "power2.out",
+          overwrite: true,
+        }
+      );
+    }
+
+    // Callbacks
+    for (let i = 0; i < heroText.length - 1; i++) {
+      const t = i + 0.85;
+
+      heroTL.add(() => showText(i + 1, 1), t);
+      heroTL.add(() => showText(i, -1), t - 0.001);
+    }
+    //Parallax
+    const Parallax = -5; // tweak amount of parallax
+    heroPanels.forEach((heroPanel) => {
+      const inner = heroPanel.querySelector(".hero__image");
+      if (!inner) return;
+
+      heroTL.fromTo(
+        inner,
+        { yPercent: 0 },
+        { yPercent: Parallax, ease: "none", duration: heroSegments },
+        0
+      );
+    });
+  }
+    /*
+
 
   /*Global*/
   function currentPage() {
