@@ -541,99 +541,6 @@ function pageInit() {
   }
   lazyImage();
 
-  /*
-  function teamAnimation() {
-    const teamWrapper = document.querySelector("[team-wrapper]");
-    const teamItems = document.querySelectorAll("[team-item]");
-
-    if (!teamWrapper || !teamItems.length) return;
-
-    const teamPanels = teamWrapper.querySelectorAll("[team-panel]");
-    if (!teamPanels.length) return;
-
-    function setActiveItem(index) {
-      teamItems.forEach((item, i) => {
-        item.classList.toggle("is-active", i === index);
-      });
-    }
-
-    function showPanel(index) {
-      gsap.set(teamPanels, { autoAlpha: 0 });
-      gsap.set(teamPanels[index], { autoAlpha: 1 });
-      setActiveItem(index);
-    }
-    showPanel(0);
-
-    teamItems.forEach((teamItem, index) => {
-      teamItem.addEventListener("mouseenter", () => {
-        showPanel(index);
-      });
-    });
-  }
-  teamAnimation();
-  */
-
-  /*
-  function teamAnimation() {
-    const teamItems = document.querySelectorAll("[data-team-item]");
-    const teamPanels = document.querySelectorAll("[data-team-panel]");
-    const teamImages = document.querySelectorAll("[data-team-image]");
-    const teamRole = document.querySelectorAll("[data-team-role]");
-    const teamBio = document.querySelectorAll("[data-team-bio]");
-
-    if (!teamItems.length || !teamImages.length || !teamRole.length || !teamBio.length) return;
-
-    function setActiveIndex(index) {
-      teamItems.forEach((item, i) => {
-        item.classList.toggle("is-active", i === index);
-      });
-    }
-
-    let currentIndex = 0;
-    let zCounter = 1;
-
-    gsap.set(teamPanels, { autoAlpha: 0, });
-    gsap.set(teamPanels[0], { autoAlpha: 1, zIndex: zCounter });
-    gsap.set(teamImages, { autoAlpha: 0, clipPath: CLIP_HIDDEN });
-    gsap.set(teamImages[0], { autoAlpha: 1, clipPath: CLIP_SHOWN, });
-    gsap.set(teamRole, { autoAlpha: 0 });
-    gsap.set(teamRole[0], { autoAlpha: 1 });
-    gsap.set(teamBio, { autoAlpha: 0 });
-    gsap.set(teamBio[0], { autoAlpha: 1 });
-
-    setActiveIndex(0);
-
-    function showPanel(index) {
-      if (index === currentIndex) return;
-      let previousPanel = teamPanels[currentIndex];
-      let nextPanel = teamPanels[index];
-      currentIndex = index;
-
-      setActiveIndex(index);
-
-      gsap.killTweensOf(nextPanel);
-
-      gsap.set(nextPanel, { autoAlpha: 1, zIndex: ++zCounter });
-      gsap.to(nextPanel, {
-        onComplete: () => {
-          teamPanels.forEach((panel, i) => {
-            if (i !== currentIndex) {
-              gsap.set(panel, { autoAlpha: 0 });
-            }
-          })
-        }
-      });
-    }
-
-    teamItems.forEach((teamItem, index) => {
-      teamItem.addEventListener('mouseenter', () => {
-        showPanel(index);
-      });
-    });
-  }
-  teamAnimation();
-  */
-
   function teamAnimation() {
     const teamItems = document.querySelectorAll("[data-team-item]");
     const teamPanels = document.querySelectorAll("[data-team-panel]");
@@ -659,7 +566,7 @@ function pageInit() {
       const { image, texts } = getParts(panel);
       const isFirst = i === 0;
 
-      gsap.set(panel, { autoAlpha: isFirst ? 1 : 0, zIndex: isFirst ? zCounter : 0 });
+      gsap.set(panel, { zIndex: isFirst ? zCounter : 0 });
       gsap.set(image, { clipPath: isFirst ? CLIP_SHOWN : CLIP_HIDDEN });
       gsap.set(texts, { autoAlpha: isFirst ? 1 : 0 });
     });
@@ -677,16 +584,18 @@ function pageInit() {
 
       if (activeTl) activeTl.kill();
 
-      gsap.set(nextPanel, { autoAlpha: 1, zIndex: ++zCounter });
+      gsap.set(nextPanel, { zIndex: ++zCounter });
       gsap.set(image, { clipPath: CLIP_HIDDEN });
       gsap.set(texts, { autoAlpha: 0 });
 
       activeTl = gsap.timeline({
+        /*
         onComplete: () => {
           teamPanels.forEach((panel, i) => {
             if (i !== currentIndex) gsap.set(panel, { autoAlpha: 0 });
           });
         },
+        */
       });
 
       activeTl
@@ -713,6 +622,10 @@ function pageInit() {
   }
   teamAnimation();
 
+  function listAnimation() {
+
+  }
+  listAnimation();
 
   /*
   function heroSwiper() {
