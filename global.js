@@ -652,6 +652,12 @@ function pageInit() {
         );
     }
 
+    teamPanels.forEach((panel, i) => {
+      if (i !== index && i !== currentPrevIndex) {
+        gsap.set(getParts(panel).texts, { autoAlpha: 0 });
+      }
+    });
+
     teamItems.forEach((teamItem, index) => {
       teamItem.addEventListener("mouseenter", () => showPanel(index));
     });
