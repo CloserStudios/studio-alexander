@@ -632,6 +632,12 @@ function pageInit() {
       gsap.set(image, { clipPath: CLIP_HIDDEN });
       gsap.set(texts, { autoAlpha: 0 });
 
+      teamPanels.forEach((panel, i) => {
+        if (i !== index && i !== currentPrevIndex) {
+          gsap.set(getParts(panel).texts, { autoAlpha: 0 });
+        }
+      });
+
       activeTl = gsap.timeline({
         onComplete: () => {
           teamPanels.forEach((panel, i) => {
@@ -651,12 +657,6 @@ function pageInit() {
           0.3
         );
     }
-
-    teamPanels.forEach((panel, i) => {
-      if (i !== index && i !== currentPrevIndex) {
-        gsap.set(getParts(panel).texts, { autoAlpha: 0 });
-      }
-    });
 
     teamItems.forEach((teamItem, index) => {
       teamItem.addEventListener("mouseenter", () => showPanel(index));
