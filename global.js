@@ -573,6 +573,7 @@ function pageInit() {
 
     setActiveIndex(0);
 
+    /*
     function showPanel(index) {
       if (index === currentIndex) return;
 
@@ -611,6 +612,43 @@ function pageInit() {
             stagger: 0.2,
           },
           "-=0.3" // start the text before the image finishes
+        );
+    }
+        */
+    function showPanel(index) {
+      if (index === currentIndex) return;
+
+      const prevPanel = teamPanels[currentIndex];
+      const nextPanel = teamPanels[index];
+      const { image, texts } = getParts(nextPanel);
+      const { texts: prevTexts } = getParts(prevPanel);
+      currentIndex = index;
+
+      setActiveIndex(index);
+
+      if (activeTl) activeTl.kill();
+
+      gsap.set(nextPanel, { zIndex: ++zCounter });
+      gsap.set(image, { clipPath: CLIP_HIDDEN });
+      gsap.set(texts, { autoAlpha: 0 });
+
+      activeTl = gsap.timeline({
+        onComplete: () => {
+          teamPanels.forEach((panel, i) => {
+            if (i !== currentIndex) {
+              gsap.set(getParts(panel).texts, { autoAlpha: 0 });
+            }
+          });
+        },
+      });
+
+      activeTl
+        .to(prevTexts, { autoAlpha: 0, duration: 0.3, ease: "power2.out" }, 0)
+        .to(image, { clipPath: CLIP_SHOWN, duration: 0.6, ease: "expo.inOut" }, 0)
+        .to(
+          texts,
+          { autoAlpha: 1, duration: 0.5, ease: "expo.out", stagger: 0.2 },
+          0.3
         );
     }
 
