@@ -633,52 +633,23 @@ function pageInit() {
     const teamPanels = teamWrapper.querySelectorAll("[team-panel]");
     if (!teamPanels.length) return;
 
-    let currentIndex = 0;
-    let zCounter = 1;
-
     function setActiveItem(index) {
       teamItems.forEach((item, i) => {
         item.classList.toggle("is-active", i === index);
       });
     }
 
-    gsap.set(teamPanels, { autoAlpha: 0, zIndex: 0 });
-    gsap.set(teamPanels[0], { autoAlpha: 1, zIndex: zCounter });
-    setActiveItem(0);
-
     function showPanel(index) {
-      if (index === currentIndex) return;
-
-      const nextPanel = teamPanels[index];
-      currentIndex = index;
-
+      gsap.set(teamPanels, { autoAlpha: 0 });
+      gsap.set(teamPanels[index], { autoAlpha: 1 });
       setActiveItem(index);
-
-      gsap.killTweensOf(nextPanel);
-
-      // Start the incoming panel transparent, on top of everything
-      gsap.set(nextPanel, { autoAlpha: 0, zIndex: ++zCounter });
-
-      gsap.to(nextPanel, {
-        autoAlpha: 1,
-        duration: 0.6,
-        ease: "expo.inOut",
-        onComplete: () => {
-          // Ignore stale tweens from earlier hovers
-          if (index !== currentIndex) return;
-
-          teamPanels.forEach((panel, i) => {
-            if (i !== currentIndex) {
-              gsap.killTweensOf(panel);
-              gsap.set(panel, { autoAlpha: 0 });
-            }
-          });
-        },
-      });
     }
+    showPanel(0);
 
     teamItems.forEach((teamItem, index) => {
-      teamItem.addEventListener("mouseenter", () => showPanel(index));
+      teamItem.addEventListener("mouseenter", () => {
+        showPanel(index);
+      });
     });
   }
   teamAnimation();
