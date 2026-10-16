@@ -525,16 +525,19 @@ function pageInit() {
     const lazy = document.querySelector("[data-lazy-image]");
     if (!lazy) return;
 
+    gsap.set(lazy, { y: 200 });
+
     let tl = gsap.timeline({
       scrollTrigger: {
         trigger: lazy,
         start: "top center",
         end: "bottom top",
+        ease: "expo.inOut",
         scrub: 1,
       }
     });
 
-    tl.fromTo(lazy, { y: 200 }, { y: -200 });
+    tl.to(lazy, { y: -200 });
   }
   lazyImage();
 
