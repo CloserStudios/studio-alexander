@@ -634,6 +634,7 @@ function pageInit() {
       teamItem.addEventListener("mouseenter", () => showPanel(index));
     });
   }
+  teamAnimation();
 
   /*Global*/
   function currentPage() {
