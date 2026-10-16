@@ -573,14 +573,15 @@ function pageInit() {
   teamAnimation();
   */
 
+  /*
   function teamAnimation() {
-    const teamWrapper = document.querySelector("[data-team-wrapper]");
     const teamItems = document.querySelectorAll("[data-team-item]");
     const teamPanels = document.querySelectorAll("[data-team-panel]");
+    const teamImages = document.querySelectorAll("[data-team-image]");
     const teamRole = document.querySelectorAll("[data-team-role]");
     const teamBio = document.querySelectorAll("[data-team-bio]");
 
-    if (!teamWrapper || !teamItems.length || !teamRole.length || !teamBio.length) return;
+    if (!teamItems.length || !teamImages.length || !teamRole.length || !teamBio.length) return;
 
     function setActiveIndex(index) {
       teamItems.forEach((item, i) => {
@@ -591,8 +592,10 @@ function pageInit() {
     let currentIndex = 0;
     let zCounter = 1;
 
-    gsap.set(teamPanels, { autoAlpha: 0, clipPath: CLIP_HIDDEN });
-    gsap.set(teamPanels[0], { autoAlpha: 1, clipPath: CLIP_SHOWN, zIndex: zCounter });
+    gsap.set(teamPanels, { autoAlpha: 0, });
+    gsap.set(teamPanels[0], { autoAlpha: 1, zIndex: zCounter });
+    gsap.set(teamImages, { autoAlpha: 0, clipPath: CLIP_HIDDEN });
+    gsap.set(teamImages[0], { autoAlpha: 1, clipPath: CLIP_SHOWN, });
     gsap.set(teamRole, { autoAlpha: 0 });
     gsap.set(teamRole[0], { autoAlpha: 1 });
     gsap.set(teamBio, { autoAlpha: 0 });
@@ -610,20 +613,16 @@ function pageInit() {
 
       gsap.killTweensOf(nextPanel);
 
-      gsap.set(nextPanel, { autoAlpha: 1, clipPath: CLIP_HIDDEN, zIndex: ++zCounter });
+      gsap.set(nextPanel, { autoAlpha: 1, zIndex: ++zCounter });
       gsap.to(nextPanel, {
-        clipPath: CLIP_SHOWN,
-        duration: 0.6,
-        ease: "expo.inOut",
         onComplete: () => {
           teamPanels.forEach((panel, i) => {
             if (i !== currentIndex) {
-              gsap.set(panel, { autoAlpha: 0, clipPath: CLIP_HIDDEN });
+              gsap.set(panel, { autoAlpha: 0 });
             }
           })
         }
       });
-
     }
 
     teamItems.forEach((teamItem, index) => {
@@ -631,31 +630,90 @@ function pageInit() {
         showPanel(index);
       });
     });
+  }
+  teamAnimation();
+  */
 
+  function teamAnimation() {
+    const teamItems = document.querySelectorAll("[data-team-item]");
+    const teamPanels = document.querySelectorAll("[data-team-panel]");
 
-    /*
-    const teamPanels = teamWrapper.querySelectorAll("[team-panel]");
-    if (!teamPanels.length) return;
+    if (!teamItems.length || !teamPanels.length) return;
 
-    function setActiveItem(index) {
+    // Query children per panel, so each panel's elements stay grouped
+    const getParts = (panel) => ({
+      image: panel.querySelector("[data-team-image]"),
+      texts: panel.querySelectorAll("[data-team-role], [data-team-bio]"),
+    });
+
+    function setActiveIndex(index) {
       teamItems.forEach((item, i) => {
         item.classList.toggle("is-active", i === index);
       });
     }
 
+    let currentIndex = 0;
+    let zCounter = 1;
+    let activeTl = null;
+
+    // Initial state
+    teamPanels.forEach((panel, i) => {
+      const { image, texts } = getParts(panel);
+      const isFirst = i === 0;
+
+      gsap.set(panel, { autoAlpha: isFirst ? 1 : 0, zIndex: isFirst ? zCounter : 0 });
+      gsap.set(image, { clipPath: isFirst ? CLIP_SHOWN : CLIP_HIDDEN });
+      gsap.set(texts, { autoAlpha: isFirst ? 1 : 0 });
+    });
+
+    setActiveIndex(0);
+
     function showPanel(index) {
-      gsap.set(teamPanels, { autoAlpha: 0 });
-      gsap.set(teamPanels[index], { autoAlpha: 1 });
-      setActiveItem(index);
+      if (index === currentIndex) return;
+
+      const nextPanel = teamPanels[index];
+      const { image, texts } = getParts(nextPanel);
+      currentIndex = index;
+
+      setActiveIndex(index);
+
+      // Stop the previous reveal if it is still running
+      if (activeTl) activeTl.kill();
+
+      // Reset the incoming panel, then put it on top
+      gsap.set(nextPanel, { autoAlpha: 1, zIndex: ++zCounter });
+      gsap.set(image, { clipPath: CLIP_HIDDEN });
+      gsap.set(texts, { autoAlpha: 0 });
+
+      activeTl = gsap.timeline({
+        onComplete: () => {
+          teamPanels.forEach((panel, i) => {
+            if (i !== currentIndex) gsap.set(panel, { autoAlpha: 0 });
+          });
+        },
+      });
+
+      activeTl
+        .to(image, {
+          clipPath: CLIP_SHOWN,
+          duration: 0.6,
+          ease: "expo.inOut",
+        })
+        .to(
+          texts,
+          {
+            autoAlpha: 1,
+            duration: 0.4,
+            ease: "power2.out",
+            stagger: 0.1,
+          },
+          "-=0.3" // start the text before the image finishes
+        );
     }
-    showPanel(0);
 
     teamItems.forEach((teamItem, index) => {
-      teamItem.addEventListener("mouseenter", () => {
-        showPanel(index);
-      });
+      teamItem.addEventListener("mouseenter", () => showPanel(index));
     });
-    */
   }
   teamAnimation();
 
