@@ -614,7 +614,7 @@ function pageInit() {
       gsap.to(nextPanel, {
         clipPath: CLIP_SHOWN,
         duration: 0.6,
-        ease: "expo.inOut"
+        ease: "expo.inOut",
         onComplete: () => {
           teamPanels.forEach((panel, i) => {
             if (i !== currentIndex) {
