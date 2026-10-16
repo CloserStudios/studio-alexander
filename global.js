@@ -66,6 +66,7 @@ function initListListeners() {
     if (btn) setView(btn.dataset.view);
   });
 
+  /*Work list hover*/
   document.addEventListener('mouseover', e => {
     const item = e.target.closest('.work-list.is-list .work-item');
     if (!item || item.contains(e.relatedTarget)) return;
@@ -85,6 +86,26 @@ function initListListeners() {
     const list = e.target.closest('.work-list.is-list');
     if (!list || list.contains(e.relatedTarget)) return;
     clearPreview();
+  });
+
+  /*Ap list hover*/
+  document.addEventListener('mouseover', e => {
+    const item = e.target.closest('.ap-item');
+    if (!item || item.contains(e.relatedTarget)) return;
+
+    const preview = getPreview(); // or a separate preview container if needed
+    const src = getItemSrc(item);  // reuses data-image / .work-image
+    if (!preview || !src) return;
+
+    preview.classList.add('on');
+    createMedia(preview, src);
+  });
+
+  document.addEventListener('mouseout', e => {
+    const apList = e.target.closest('.ap-list'); // change to your real wrapper
+    if (apList && !apList.contains(e.relatedTarget)) {
+      clearPreview();
+    }
   });
 }
 /*List hover end*/
