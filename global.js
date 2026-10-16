@@ -633,7 +633,7 @@ function pageInit() {
       gsap.set(texts, { autoAlpha: 0 });
 
       teamPanels.forEach((panel, i) => {
-        if (i !== index && i !== currentPrevIndex) {
+        if (i !== index && i !== currentIndex) {
           gsap.set(getParts(panel).texts, { autoAlpha: 0 });
         }
       });
