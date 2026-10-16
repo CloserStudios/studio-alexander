@@ -338,6 +338,7 @@ function pageInit() {
   heroAnim();
   */
 
+  /*Home page*/
   function heroAnim() {
     const root = document.querySelector('.h-hero');
     if (!root) return;
@@ -407,6 +408,7 @@ function pageInit() {
   }
   heroAnim();
 
+  /*Work page*/
   function filterReveal() {
     const filterButton = document.querySelector(".filter-button");
     const filterOptions = document.querySelector(".filter-options");
@@ -432,7 +434,7 @@ function pageInit() {
 
       tl
         .to(filterOptions, { height: "auto", duration: 0.5, transformOrigin: "top center" }, 0)
-        .to(filterIcon, { rotation: -135, transformOrigin: "center center", duration: 0.5 }, 0)
+        .to(filterIcon, { rotation: -45, transformOrigin: "center center", duration: 0.5 }, 0)
         .to(filterType, { y: 0, stagger: 0.05, duration: 0.5 }, 0.25)
         .to(filterOption, { y: 0, stagger: 0.05, duration: 0.5 }, 0.25);
     }
