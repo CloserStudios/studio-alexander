@@ -611,7 +611,18 @@ function pageInit() {
       gsap.killTweensOf(nextPanel);
 
       gsap.set(nextPanel, { autoAlpha: 1, clipPath: CLIP_HIDDEN, zIndex: ++zCounter });
-      gsap.to(nextPanel, { clipPath: CLIP_SHOWN, duration: 0.75, ease: "expo.out" });
+      gsap.to(nextPanel, {
+        clipPath: CLIP_SHOWN,
+        duration: 0.6,
+        ease: "expo.inOut"
+        onComplete: () => {
+          teamPanels.forEach((panel, i) => {
+            if (i !== currentIndex) {
+              gsap.set(panel, { autoAlpha: 0, clipPath: CLIP_HIDDEN });
+            }
+          })
+        }
+      });
 
     }
 
