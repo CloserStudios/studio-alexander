@@ -463,85 +463,7 @@ function pageInit() {
   /*View toggle start*/
   setView('grid');
 
-  /*
-  function viewToggle() {
-    function setView(view) {
-      const isList = view === 'list';
-
-      document.querySelectorAll('.work-list, .work-list-header').forEach(el => {
-        el.classList.toggle('is-list', isList);
-      });
-
-      document.querySelectorAll('[data-view]').forEach(b => {
-        b.classList.toggle('is-active', b.dataset.view === view);
-      });
-
-      if (!isList) {
-        preview.classList.remove('on');
-        preview.replaceChildren();
-      }
-    }
-
-    document.addEventListener('click', e => {
-      const btn = e.target.closest('[data-view]');
-      if (!btn) return;
-      setView(btn.dataset.view);
-    });
-
-    document.addEventListener('DOMContentLoaded', () => {
-      setView('grid');
-    });
-  }
-  viewToggle();
-
-  function listHover() {
-    const preview = document.querySelector('[data-work-preview]');
-    const CLIP_HIDDEN = 'polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)';
-    const CLIP_SHOWN = 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)';
-
-    function getItemSrc(item) {
-      return item.dataset.image || item.querySelector('.work-image')?.getAttribute('src');
-    }
-
-    function createMedia(src) {
-      const div = document.createElement('div');
-      const img = document.createElement('img');
-      img.src = src;
-      div.appendChild(img);
-      preview.appendChild(div);
-
-      gsap.fromTo(div,
-        { clipPath: CLIP_HIDDEN },
-        { clipPath: CLIP_SHOWN, duration: 0.6, ease: 'expo.inOut' }
-      );
-
-      while (preview.children.length > 3) {
-        preview.children[0].remove();
-      }
-    }
-
-    document.addEventListener('mouseover', e => {
-      const item = e.target.closest('.work-list.is-list .work-item');
-      if (!item || item.contains(e.relatedTarget)) return;
-
-      const src = getItemSrc(item);
-      if (!src) return;
-
-      preview.classList.add('on');
-      createMedia(src);
-    });
-
-    document.addEventListener('mouseout', e => {
-      const list = e.target.closest('.work-list.is-list');
-      if (!list || list.contains(e.relatedTarget)) return;
-
-      preview.classList.remove('on');
-      preview.replaceChildren();
-    });
-  }
-  listHover();
-  */
-
+  /*Project page*/
   function currentProject() {
     const projectName = document.querySelector("[data-project-name]");
     const connectingLine = document.querySelector("[data-connecting-line]");
@@ -598,6 +520,24 @@ function pageInit() {
   }
   bgColourChange();
 
+  /*Studio page*/
+  function lazyImage() {
+    const lazy = document.querySelector("[data-lazy-image]");
+    if (!lazy) return;
+
+    let tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: lazy,
+        start: "top center",
+        end: "bottom top",
+        scrub: 1,
+      }
+    });
+
+    tl.fromTo(lazy, { y: 200 }, { y: -200 });
+  }
+  lazyImage();
+
   function teamAnimation() {
     const teamWrapper = document.querySelector("[team-wrapper]");
     const teamItems = document.querySelectorAll("[team-item]");
@@ -628,6 +568,7 @@ function pageInit() {
   }
   teamAnimation();
 
+  /*Global*/
   function currentPage() {
     const container = document.querySelector('[data-barba="container"]');
     const pageTitle = container?.getAttribute("page-name");
