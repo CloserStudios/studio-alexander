@@ -23,10 +23,22 @@ function setView(view) {
 }
 
 /*List hover start*/
+/*
 function clearPreview() {
   const preview = getPreview();
   preview?.classList.remove('on');
   preview?.replaceChildren();
+}
+  */
+
+function clearPreview() {
+  const preview = getPreview();
+  previewVisible = false;
+  if (preview) {
+    gsap.killTweensOf(preview);
+    preview.classList.remove('on');
+    preview.replaceChildren();
+  }
 }
 
 function getItemSrc(item) {
@@ -50,27 +62,60 @@ function createMedia(preview, src) {
 }
   */
 
-function createMedia(preview, src) {
-  const div = document.createElement("div");
-  const img = document.createElement("img");
-  img.src = src;
-  div.appendChild(img);
+let previewVisible = false;
 
-  preview.appendChild(div);
+function showPreview(preview) {
+  if (previewVisible) return;
+  previewVisible = true;
 
-  gsap.set(div, { clipPath: CLIP_HIDDEN, zIndex: preview.children.length });
+  preview.classList.add('on');
+  gsap.killTweensOf(preview);
+  gsap.fromTo(
+    preview,
+    { clipPath: CLIP_HIDDEN },
+    { clipPath: CLIP_SHOWN, duration: 0.6, ease: 'expo.inOut' }
+  );
+}
 
-  gsap.to(div, {
-    clipPath: CLIP_SHOWN,
-    duration: 0.6,
-    ease: "expo.inOut",
+function hidePreview() {
+  const preview = getPreview();
+  if (!preview || !previewVisible) return;
+  previewVisible = false;
+
+  gsap.killTweensOf(preview);
+  gsap.to(preview, {
+    clipPath: CLIP_HIDDEN,
+    duration: 0.4,
+    ease: 'expo.inOut',
     onComplete: () => {
-      while (preview.children.length > 3) {
-        preview.children[0].remove();
-      }
+      // Only clear if the user hasn't re-entered in the meantime
+      if (previewVisible) return;
+      preview.classList.remove('on');
+      preview.replaceChildren();
     },
   });
 }
+
+function createMedia(preview, src) {
+  // Same image as the current top one: nothing to do
+  const top = preview.lastElementChild;
+  if (top?.dataset.src === src) return;
+
+  const div = document.createElement('div');
+  div.dataset.src = src;
+  const img = document.createElement('img');
+  img.src = src;
+  div.appendChild(img);
+  preview.appendChild(div);
+
+  // Newest layer sits on top, instantly visible, no clip-path
+  gsap.set(div, { autoAlpha: 1, zIndex: ++mediaZ });
+
+  // Keep the DOM small: remove layers hidden underneath
+  while (preview.children.length > 2) preview.children[0].remove();
+}
+
+let mediaZ = 1;
 
 function arrowHover(item) {
   const arrow = item.querySelector('.arrow-svg');
@@ -90,7 +135,27 @@ function initListListeners() {
     if (btn) setView(btn.dataset.view);
   });
 
-  /*Work list hover*/
+  document.addEventListener('mouseover', e => {
+    const item = e.target.closest('.work-list.is-list .work-item, .ap-item');
+    if (!item || item.contains(e.relatedTarget)) return;
+
+    arrowHover(item);
+
+    const preview = getPreview();
+    const src = getItemSrc(item);
+    if (!preview || !src) return;
+
+    createMedia(preview, src);
+    showPreview(preview); // only animates the first time
+  });
+
+  document.addEventListener('mouseout', e => {
+    const list = e.target.closest('.work-list.is-list, .ap-list');
+    if (!list || list.contains(e.relatedTarget)) return;
+    hidePreview();
+  });
+
+  /*
   document.addEventListener('mouseover', e => {
     const item = e.target.closest('.work-list.is-list .work-item');
     if (!item || item.contains(e.relatedTarget)) return;
@@ -111,28 +176,7 @@ function initListListeners() {
     if (!list || list.contains(e.relatedTarget)) return;
     clearPreview();
   });
-
-  /*Ap list hover*/
-  document.addEventListener('mouseover', e => {
-    const item = e.target.closest('.ap-item');
-    if (!item || item.contains(e.relatedTarget)) return;
-
-    arrowHover(item);
-
-    const preview = getPreview(); // or a separate preview container if needed
-    const src = getItemSrc(item);  // reuses data-image / .work-image
-    if (!preview || !src) return;
-
-    preview.classList.add('on');
-    createMedia(preview, src);
-  });
-
-  document.addEventListener('mouseout', e => {
-    const apList = e.target.closest('.ap-list'); // change to your real wrapper
-    if (apList && !apList.contains(e.relatedTarget)) {
-      clearPreview();
-    }
-  });
+  */
 }
 /*List hover end*/
 
