@@ -588,16 +588,36 @@ function pageInit() {
       });
     }
 
-    let activezIndex = 1;
+    let currentIndex = 0;
+    let zCounter = 1;
 
     gsap.set(teamPanels, { clipPath: CLIP_HIDDEN });
-    gsap.set(teamPanels[0], { clipPath: CLIP_SHOWN, zIndex: activezIndex });
+    gsap.set(teamPanels[0], { clipPath: CLIP_SHOWN, zIndex: zCounter });
     gsap.set(teamRole, { autoAlpha: 0 });
     gsap.set(teamRole[0], { autoAlpha: 1 });
     gsap.set(teamBio, { autoAlpha: 0 });
     gsap.set(teamBio[0], { autoAlpha: 1 });
 
     setActiveIndex(0);
+
+    function showPanel(index) {
+      if (index === currentIndex) return;
+      let previousPanel = teamPanels[currentIndex];
+      let nextPanel = teamPanels[index];
+      currentIndex = index;
+
+      setActiveIndex(index);
+
+      gsap.set(nextPanel, { clipPath: CLIP_SHOWN, zIndex: ++zCounter });
+      gsap.to(nextPanel, { clipPath: CLIP_SHOWN, duration: 0.5, ease: "expo.inOut" });
+
+    }
+
+    teamItems.forEach((teamItem, index) => {
+      teamItem.addEventListener('mouseenter', () => {
+        showPanel(index);
+      });
+    });
 
 
     /*
