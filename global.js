@@ -625,12 +625,12 @@ function pageInit() {
   */
 
   function teamAnimation() {
-    const teamWrapper = document.querySelector("[team-wrapper]");
-    const teamItems = document.querySelectorAll("[team-item]");
+    const teamWrapper = document.querySelector("[data-team-wrapper]");
+    const teamItems = document.querySelectorAll("[data-team-item]");
 
     if (!teamWrapper || !teamItems.length) return;
 
-    const teamPanels = teamWrapper.querySelectorAll("[team-panel]");
+    const teamPanels = teamWrapper.querySelectorAll("[data-team-panel]");
     if (!teamPanels.length) return;
 
     function setActiveItem(index) {
@@ -653,11 +653,6 @@ function pageInit() {
     });
   }
   teamAnimation();
-
-  function listAnimation() {
-
-  }
-  listAnimation();
 
   /*
   function heroSwiper() {
