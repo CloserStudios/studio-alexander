@@ -608,7 +608,7 @@ function pageInit() {
 
       setActiveIndex(index);
 
-      gsap.set(nextPanel, { clipPath: CLIP_SHOWN, zIndex: ++zCounter });
+      gsap.set(nextPanel, { clipPath: CLIP_HIDDEN, zIndex: ++zCounter });
       gsap.to(nextPanel, { clipPath: CLIP_SHOWN, duration: 0.5, ease: "expo.inOut" });
 
     }
