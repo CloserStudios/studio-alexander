@@ -541,6 +541,7 @@ function pageInit() {
   }
   lazyImage();
 
+  /*
   function teamAnimation() {
     const teamWrapper = document.querySelector("[team-wrapper]");
     const teamItems = document.querySelectorAll("[team-item]");
@@ -570,6 +571,69 @@ function pageInit() {
     });
   }
   teamAnimation();
+  */
+
+  function teamAnimation() {
+    const teamWrapper = document.querySelector("[team-wrapper]");
+    const teamItems = document.querySelectorAll("[team-item]");
+
+    if (!teamWrapper || !teamItems.length) return;
+
+    const teamPanels = teamWrapper.querySelectorAll("[team-panel]");
+    if (!teamPanels.length) return;
+
+    let currentIndex = 0;
+    let zCounter = 1;
+
+    function setActiveItem(index) {
+      teamItems.forEach((item, i) => {
+        item.classList.toggle("is-active", i === index);
+      });
+    }
+
+    // Initial state: only the first panel is visible, no animation
+    gsap.set(teamPanels, { autoAlpha: 0, clipPath: CLIP_HIDDEN });
+    gsap.set(teamPanels[0], { autoAlpha: 1, clipPath: CLIP_SHOWN, zIndex: zCounter });
+    setActiveItem(0);
+
+    function showPanel(index) {
+      if (index === currentIndex) return;
+
+      const prevPanel = teamPanels[currentIndex];
+      const nextPanel = teamPanels[index];
+      currentIndex = index;
+
+      setActiveItem(index);
+
+      // Stop any in-flight tweens on the incoming panel
+      gsap.killTweensOf(nextPanel);
+
+      // Put the incoming panel on top and reset it to hidden
+      gsap.set(nextPanel, {
+        autoAlpha: 1,
+        zIndex: ++zCounter,
+        clipPath: CLIP_HIDDEN,
+      });
+
+      gsap.to(nextPanel, {
+        clipPath: CLIP_SHOWN,
+        duration: 0.6,
+        ease: "expo.inOut",
+        onComplete: () => {
+          // Hide every panel except the active one once the reveal is done
+          teamPanels.forEach((panel, i) => {
+            if (i !== currentIndex) {
+              gsap.set(panel, { autoAlpha: 0, clipPath: CLIP_HIDDEN });
+            }
+          });
+        },
+      });
+    }
+
+    teamItems.forEach((teamItem, index) => {
+      teamItem.addEventListener("mouseenter", () => showPanel(index));
+    });
+  }
 
   /*Global*/
   function currentPage() {
