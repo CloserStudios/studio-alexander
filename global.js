@@ -640,7 +640,6 @@ function pageInit() {
 
     if (!teamItems.length || !teamPanels.length) return;
 
-    // Query children per panel, so each panel's elements stay grouped
     const getParts = (panel) => ({
       image: panel.querySelector("[data-team-image]"),
       texts: panel.querySelectorAll("[data-team-role], [data-team-bio]"),
@@ -656,7 +655,6 @@ function pageInit() {
     let zCounter = 1;
     let activeTl = null;
 
-    // Initial state
     teamPanels.forEach((panel, i) => {
       const { image, texts } = getParts(panel);
       const isFirst = i === 0;
@@ -677,10 +675,8 @@ function pageInit() {
 
       setActiveIndex(index);
 
-      // Stop the previous reveal if it is still running
       if (activeTl) activeTl.kill();
 
-      // Reset the incoming panel, then put it on top
       gsap.set(nextPanel, { autoAlpha: 1, zIndex: ++zCounter });
       gsap.set(image, { clipPath: CLIP_HIDDEN });
       gsap.set(texts, { autoAlpha: 0 });
@@ -703,9 +699,9 @@ function pageInit() {
           texts,
           {
             autoAlpha: 1,
-            duration: 0.4,
-            ease: "power2.out",
-            stagger: 0.1,
+            duration: 0.5,
+            ease: "expo.out",
+            stagger: 0.2,
           },
           "-=0.3" // start the text before the image finishes
         );
