@@ -584,7 +584,7 @@ function pageInit() {
 
       setActiveIndex(index);
 
-      if (activeTl) activeTl.kill();
+      //if (activeTl) activeTl.kill();
 
       gsap.set(nextPanel, { zIndex: ++zCounter });
       gsap.set(image, { clipPath: CLIP_HIDDEN });
