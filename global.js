@@ -589,13 +589,11 @@ function pageInit() {
       gsap.set(texts, { autoAlpha: 0 });
 
       activeTl = gsap.timeline({
-        /*
         onComplete: () => {
-          teamPanels.forEach((panel, i) => {
-            if (i !== currentIndex) gsap.set(panel, { autoAlpha: 0 });
+          texts.forEach((text, i) => {
+            if (i !== currentIndex) gsap.set(text, { autoAlpha: 0 });
           });
         },
-        */
       });
 
       activeTl
