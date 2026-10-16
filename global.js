@@ -577,47 +577,6 @@ function pageInit() {
     function showPanel(index) {
       if (index === currentIndex) return;
 
-      const nextPanel = teamPanels[index];
-      const { image, texts } = getParts(nextPanel);
-      currentIndex = index;
-
-      setActiveIndex(index);
-
-      if (activeTl) activeTl.kill();
-
-      gsap.set(nextPanel, { zIndex: ++zCounter });
-      gsap.set(image, { clipPath: CLIP_HIDDEN });
-      gsap.set(texts, { autoAlpha: 0 });
-
-      activeTl = gsap.timeline({
-        onComplete: () => {
-          texts.forEach((text, i) => {
-            if (i !== currentIndex) gsap.set(text, { autoAlpha: 0 });
-          });
-        },
-      });
-
-      activeTl
-        .to(image, {
-          clipPath: CLIP_SHOWN,
-          duration: 0.6,
-          ease: "expo.inOut",
-        })
-        .to(
-          texts,
-          {
-            autoAlpha: 1,
-            duration: 0.5,
-            ease: "expo.out",
-            stagger: 0.2,
-          },
-          "-=0.3" // start the text before the image finishes
-        );
-    }
-        */
-    function showPanel(index) {
-      if (index === currentIndex) return;
-
       const prevPanel = teamPanels[currentIndex];
       const nextPanel = teamPanels[index];
       const { image, texts } = getParts(nextPanel);
@@ -657,6 +616,50 @@ function pageInit() {
           0.3
         );
     }
+        */
+    function showPanel(index) {
+      if (index === currentIndex) return;
+
+      const prevPanel = teamPanels[currentIndex];
+      const nextPanel = teamPanels[index];
+      const { image, texts } = getParts(nextPanel);
+      const { texts: prevTexts } = getParts(prevPanel);
+
+      const previousIndex = currentIndex;
+      currentIndex = index;
+
+      setActiveIndex(index);
+
+      gsap.set(nextPanel, { zIndex: ++zCounter });
+      gsap.set(image, { clipPath: CLIP_HIDDEN });
+      gsap.set(texts, { autoAlpha: 0 });
+
+      const tl = gsap.timeline({
+        onComplete: () => {
+          teamPanels.forEach((panel, i) => {
+            if (i !== currentIndex && i !== previousIndex) {
+              gsap.set(getParts(panel).texts, { autoAlpha: 0 });
+              gsap.set(panel, { autoAlpha: 0 });
+            }
+          });
+        },
+      });
+
+      tl.to(image, {
+        clipPath: CLIP_SHOWN,
+        duration: 0.6,
+        ease: "expo.inOut",
+      }).to(
+        texts,
+        {
+          autoAlpha: 1,
+          duration: 0.5,
+          ease: "expo.out",
+          stagger: 0.2,
+        },
+        "-=0.3"
+      );
+    }
 
     teamItems.forEach((teamItem, index) => {
       teamItem.addEventListener("mouseenter", () => showPanel(index));
@@ -676,7 +679,7 @@ function pageInit() {
     const heroSegments = heroPanels.length - 1;
     const heroText = gsap.utils.toArray("[hero-text]");
     const subText = gsap.utils.toArray("[sub-text]");
-
+  
     const heroTL = gsap.timeline({
       scrollTrigger: {
         trigger: heroTrigger,
@@ -687,11 +690,11 @@ function pageInit() {
         anticipatePin: 1,
       },
     });
-
+  
     heroPanels.forEach((heroPanel, i) => {
       gsap.set(heroPanel, { zIndex: heroPanels.length - i });
     });
-
+  
     heroPanels.slice(0, -1).forEach((heroPanel, i) => {
       heroTL.to(
         heroPanel,
@@ -703,27 +706,27 @@ function pageInit() {
         i
       );
     });
-
+  
     gsap.set(heroText, { autoAlpha: 0, y: 30 });
     gsap.set(subText, { autoAlpha: 0, y: 30 });
-
+  
     gsap.set(heroText[0], { autoAlpha: 1, y: 0 });
     gsap.set(subText[0], { autoAlpha: 1, y: 0 });
-
+  
     let activeIndex = 0;
-
+  
     function showText(nextIndex, direction) {
       if (nextIndex === activeIndex) return;
-
+  
       const prevIndex = activeIndex;
       activeIndex = nextIndex;
-
+  
       gsap.killTweensOf(heroText);
       gsap.killTweensOf(subText);
-
+  
       const outY = direction > 0 ? -30 : 30;
       const inY = direction > 0 ? 30 : -30;
-
+  
       // Out
       gsap.to([heroText[prevIndex], subText[prevIndex]], {
         autoAlpha: 0,
@@ -733,7 +736,7 @@ function pageInit() {
         stagger: 0.05,
         overwrite: true,
       });
-
+  
       // In
       gsap.fromTo(
         [heroText[nextIndex], subText[nextIndex]],
@@ -748,11 +751,11 @@ function pageInit() {
         }
       );
     }
-
+  
     // Callbacks
     for (let i = 0; i < heroText.length - 1; i++) {
       const t = i + 0.85;
-
+  
       heroTL.add(() => showText(i + 1, 1), t);
       heroTL.add(() => showText(i, -1), t - 0.001);
     }
@@ -761,7 +764,7 @@ function pageInit() {
     heroPanels.forEach((heroPanel) => {
       const inner = heroPanel.querySelector(".hero__image");
       if (!inner) return;
-
+  
       heroTL.fromTo(
         inner,
         { yPercent: 0 },
@@ -771,8 +774,8 @@ function pageInit() {
     });
   }
     /*
-
-
+  
+  
   /*Global*/
   function currentPage() {
     const container = document.querySelector('[data-barba="container"]');
