@@ -588,12 +588,16 @@ function pageInit() {
       });
     }
 
+    let activezIndex = 1;
+
     gsap.set(teamPanels, { clipPath: CLIP_HIDDEN });
-    gsap.set(teamPanels[0], { clipPath: CLIP_VISIBLE });
+    gsap.set(teamPanels[0], { clipPath: CLIP_SHOWN, zIndex: activezIndex });
     gsap.set(teamRole, { autoAlpha: 0 });
     gsap.set(teamRole[0], { autoAlpha: 1 });
     gsap.set(teamBio, { autoAlpha: 0 });
     gsap.set(teamBio[0], { autoAlpha: 1 });
+
+    setActiveIndex(0);
 
 
     /*
