@@ -22,15 +22,6 @@ function setView(view) {
   if (!isList) clearPreview();
 }
 
-/*List hover start*/
-/*
-function clearPreview() {
-  const preview = getPreview();
-  preview?.classList.remove('on');
-  preview?.replaceChildren();
-}
-  */
-
 function clearPreview() {
   const preview = getPreview();
   previewVisible = false;
@@ -44,23 +35,6 @@ function clearPreview() {
 function getItemSrc(item) {
   return item.dataset.image || item.querySelector('.work-image')?.getAttribute('src');
 }
-
-/*
-function createMedia(preview, src) {
-  const div = document.createElement('div');
-  const img = document.createElement('img');
-  img.src = src;
-  div.appendChild(img);
-  preview.appendChild(div);
-
-  gsap.fromTo(div,
-    { clipPath: CLIP_HIDDEN },
-    { clipPath: CLIP_SHOWN, duration: 0.6, ease: 'expo.inOut' }
-  );
-
-  while (preview.children.length > 3) preview.children[0].remove();
-}
-  */
 
 let previewVisible = false;
 
@@ -154,29 +128,6 @@ function initListListeners() {
     if (!list || list.contains(e.relatedTarget)) return;
     hidePreview();
   });
-
-  /*
-  document.addEventListener('mouseover', e => {
-    const item = e.target.closest('.work-list.is-list .work-item');
-    if (!item || item.contains(e.relatedTarget)) return;
-
-    arrowHover(item);
-
-    const preview = getPreview();
-    const src = getItemSrc(item);
-    if (!preview || !src) return;
-
-    preview.classList.add('on');
-    createMedia(preview, src);
-
-  });
-
-  document.addEventListener('mouseout', e => {
-    const list = e.target.closest('.work-list.is-list');
-    if (!list || list.contains(e.relatedTarget)) return;
-    clearPreview();
-  });
-  */
 }
 /*List hover end*/
 
@@ -850,6 +801,28 @@ function pageInit() {
   
   
   /*Global*/
+  function paraEffect() {
+    const paraWrappers = document.querySelectorAll("[data-para-wrap]");
+    if (!paraWrappers.length) return;
+
+    paraWrappers.forEach((wrapper) => {
+      const image = wrapper.querySelector("[data-para-image]");
+      if (!image) return;
+
+      gsap.timeline({
+        scrollTrigger: {
+          trigger: wrapper,
+          scrub: 1,
+        },
+        defaults: {
+          ease: "none"
+        }
+      })
+        .fromTo(image, { backgroundPosition: "50% 100%" }, { backgroundPosition: "50% 0%", duration: 1 });
+    });
+  }
+  paraEffect();
+
   function currentPage() {
     const container = document.querySelector('[data-barba="container"]');
     const pageTitle = container?.getAttribute("page-name");
