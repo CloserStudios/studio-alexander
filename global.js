@@ -33,6 +33,7 @@ function getItemSrc(item) {
   return item.dataset.image || item.querySelector('.work-image')?.getAttribute('src');
 }
 
+/*
 function createMedia(preview, src) {
   const div = document.createElement('div');
   const img = document.createElement('img');
@@ -46,6 +47,29 @@ function createMedia(preview, src) {
   );
 
   while (preview.children.length > 3) preview.children[0].remove();
+}
+  */
+
+function createMedia(preview, src) {
+  const div = document.createElement("div");
+  const img = document.createElement("img");
+  img.src = src;
+  div.appendChild(img);
+
+  preview.appendChild(div);
+
+  gsap.set(div, { clipPath: CLIP_HIDDEN, zIndex: preview.children.length });
+
+  gsap.to(div, {
+    clipPath: CLIP_SHOWN,
+    duration: 0.6,
+    ease: "expo.inOut",
+    onComplete: () => {
+      while (preview.children.length > 3) {
+        preview.children[0].remove();
+      }
+    },
+  });
 }
 
 function arrowHover(item) {
