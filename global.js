@@ -254,6 +254,29 @@ function pageInit() {
   ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
   mm.revert();
 
+  function splitA() {
+    const texts = gsap.utils.toArray("[data-split-a]");
+
+    if (texts.length) {
+      SplitText.create(texts, {
+        type: "lines",
+        mask: "lines",
+        autoSplit: true,
+        onSplit: (self) => {
+          texts = gsap.from(self.lines, {
+            y: 30,
+            autoAlpha: 0,
+            stagger: 0.1,
+            duration: 1.5,
+            clearProps: "transform",
+          });
+        },
+      });
+    }
+
+
+  }
+
   function preLoader() {
     const loader = document.querySelector('.preload-wrapper');
     const target = document.querySelector(".h-hero-mask");
@@ -666,43 +689,27 @@ function pageInit() {
   teamAnimation();
   */
 
+  /*
   function teamAnimation() {
     const teamWrapper = document.querySelector("[data-team-wrapper]");
     const teamItems = document.querySelectorAll("[data-team-item]");
-    const teamImageArray = [];
-    const teamRoleArray = [];
-    const teamBioArray = [];
 
     if (!teamWrapper || !teamItems.length) return;
 
     const teamPanels = teamWrapper.querySelectorAll("[data-team-panel]");
     if (!teamPanels.length) return;
 
-    teamPanels.forEach((panel, index) => {
-      const teamImage = panel.querySelector("[data-team-image]");
-      teamImage && (teamImageArray[index] = teamImage);
-
-      const teamRole = panel.querySelectorAll("[data-team-role]");
-      teamRole && (teamRoleArray[index] = teamRole);
-
-      const teamBio = panel.querySelectorAll("[data-team-bio]");
-      teamBio && (teamBioArray[index] = teamBio);
-
-
-    });
-
     function setActiveItem(index) {
       teamItems.forEach((item, i) => {
         item.classList.toggle("is-active", i === index);
+        const teamRole = gsap.utils.toArray("[data-team-role]", i === index);
       });
     }
 
     function showPanel(index) {
       gsap.set(teamPanels, { autoAlpha: 0 });
       gsap.set(teamPanels[index], { autoAlpha: 1 });
-      gsap.to(teamImageArray[index], { autoAlpha: 1, ease: "expo.inOut" }, 0);
-      gsap.from(teamRoleArray[index], { y: 12, duration: 0.2, ease: "expo.inOut" }, 0);
-      gsap.from(teamBioArray[index], { y: 12, duration: 0.2, ease: "expo.inOut" }, ">");
+      gsap.add(teamRole, { splitA });
       setActiveItem(index);
     }
     showPanel(0);
@@ -711,6 +718,76 @@ function pageInit() {
       teamItem.addEventListener("mouseenter", () => {
         showPanel(index);
       });
+    });
+  }
+  teamAnimation();
+  */
+
+  function teamAnimation() {
+    const teamWrapper = document.querySelector("[data-team-wrapper]");
+    const teamItems = document.querySelectorAll("[data-team-item]");
+
+    if (!teamWrapper || !teamItems.length) return;
+
+    const teamPanels = teamWrapper.querySelectorAll("[data-team-panel]");
+    if (!teamPanels.length) return;
+
+    // One paused tween per panel, built from that panel's role text
+    const roleTweens = [];
+
+    teamPanels.forEach((panel, i) => {
+      const role = panel.querySelector("[data-team-role]");
+      if (!role) return;
+
+      SplitText.create(role, {
+        type: "lines",
+        mask: "lines",
+        autoSplit: true,
+        onSplit: (self) => {
+          // Preserve progress if autoSplit re-runs on resize
+          roleTweens[i]?.kill();
+
+          roleTweens[i] = gsap.from(self.lines, {
+            yPercent: 100,
+            autoAlpha: 0,
+            stagger: 0.1,
+            duration: 1.5,
+            ease: "expo.out",
+            paused: true,
+          });
+
+          return roleTweens[i];
+        },
+      });
+    });
+
+    let currentIndex = -1;
+
+    function setActiveItem(index) {
+      teamItems.forEach((item, i) => {
+        item.classList.toggle("is-active", i === index);
+      });
+    }
+
+    function showPanel(index) {
+      if (index === currentIndex) return;
+      currentIndex = index;
+
+      gsap.set(teamPanels, { autoAlpha: 0 });
+      gsap.set(teamPanels[index], { autoAlpha: 1 });
+      setActiveItem(index);
+
+      // Replay only the active panel's text animation
+      roleTweens.forEach((tween, i) => {
+        if (i !== index) tween?.pause(0);
+      });
+      roleTweens[index]?.restart();
+    }
+
+    showPanel(0);
+
+    teamItems.forEach((teamItem, index) => {
+      teamItem.addEventListener("mouseenter", () => showPanel(index));
     });
   }
   teamAnimation();
