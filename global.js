@@ -450,6 +450,26 @@ function pageInit() {
   }
   heroAnim();
 
+  function lazyImageH() {
+    const lazy = document.querySelector("[data-lazy-image]");
+    if (!lazy) return;
+
+    gsap.set(lazy, { y: 200 });
+
+    let tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: lazy,
+        start: "top bottom",
+        end: "bottom top",
+        ease: "expo.inOut",
+        scrub: 1,
+      }
+    });
+
+    tl.to(lazy, { y: -200 });
+  }
+  lazyImageH();
+
   function projectAnim() {
     let total = 0,
       xTo,
@@ -655,7 +675,7 @@ function pageInit() {
   bgColourChange();
 
   /*Studio page*/
-  function lazyImage() {
+  function lazyImageS() {
     const lazy = document.querySelector("[data-lazy-image]");
     if (!lazy) return;
 
@@ -673,7 +693,7 @@ function pageInit() {
 
     tl.to(lazy, { y: -200 });
   }
-  lazyImage();
+  lazyImageS();
 
   function teamAnimation() {
     const teamWrapper = document.querySelector("[data-team-wrapper]");
