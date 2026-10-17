@@ -485,45 +485,36 @@ function pageInit() {
     const wrap = gsap.utils.wrap(-half, 0);
 
     xTo = gsap.quickTo(content, "x", {
-      duration: 0.5, // Will transition over 0.5s
-      ease: 'power3', // Non-linear
+      duration: 0.5,
+      ease: 'power3',
       modifiers: {
         x: gsap.utils.unitize(wrap),
       },
     });
 
-    // Generate an array of random values between -10 and 10
     for (let i = 0; i < cardsLength; i++) {
       itemValues.push((Math.random() - 0.5) * 20);
     }
 
-    // Create a GSAP timeline and keep it paused initially
     const tl = gsap.timeline({ paused: true });
     tl.to(cards, {
-      // Rotate each card using a precomputed random value
-      rotate: (index) => (itemValues[index % cardsLength]),
-      // Move each card horizontally based on the same random value
-      xPercent: (index) => (itemValues[index % cardsLength]),
-      // Move each card vertically based on the same random value
-      yPercent: (index) => (itemValues[index % cardsLength]),
-      // Slightly scale down the cards
       scale: 0.95,
       duration: 0.5,
-      ease: 'back.inOut(3)', // Non-linear
+      ease: 'back.inOut(3)',
     })
 
     Observer.create({
       target: content,
-      type: "pointer,touch", // Detect both pointer and touch events
-      onPress: () => tl.play(), // Play the timeline when pressing down
-      onDrag: (self) => { // Update the horizontal position while dragging
+      type: "pointer,touch",
+      onPress: () => tl.play(),
+      onDrag: (self) => {
         total += self.deltaX
         xTo(total)
       },
-      onRelease: () => { // Reverse the timeline when releasing the pointer
+      onRelease: () => {
         tl.reverse()
       },
-      onStop: () => { // Reverse the timeline when the interaction stops
+      onStop: () => {
         tl.reverse()
       },
     })
@@ -531,7 +522,7 @@ function pageInit() {
     gsap.ticker.add(tick);
 
     function tick(time, deltaTime) {
-      total -= deltaTime / 10  // Adjust the speed of automatic scrolling    
+      total -= deltaTime / 7.5  // Adjust the speed of automatic scrolling    
       xTo(total)
     }
 
