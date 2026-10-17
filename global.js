@@ -538,6 +538,33 @@ function pageInit() {
   }
   projectAnim();
 
+  function marqueeAnimation() {
+    const marquee = document.querySelector(".h-clients-track");
+    const marqueeContent = document.querySelector(".h-clients-inner");
+    if (!marquee || !marqueeContent) {
+      return;
+    }
+
+    const marqueeContentClone = marqueeContent.cloneNode(true);
+    marquee.append(marqueeContentClone);
+
+    const width = marqueeContent.offsetWidth;
+    const gap = 16; // Match the px gap from CSS
+
+    gsap.set(marquee.children, { x: 0 });
+
+    gsap.to(marquee.children, {
+      x: -(width + gap),
+      duration: 20,
+      ease: "none",
+      repeat: -1,
+      modifiers: {
+        x: gsap.utils.unitize((x) => parseFloat(x) % (width + gap)),
+      },
+    });
+  }
+  marqueeAnimation();
+
   /*Work page*/
   function filterReveal() {
     const filterButton = document.querySelector(".filter-button");
