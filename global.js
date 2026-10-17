@@ -450,26 +450,6 @@ function pageInit() {
   }
   heroAnim();
 
-  function lazyImageH() {
-    const lazy = document.querySelector("[data-lazy-image]");
-    if (!lazy) return;
-
-    gsap.set(lazy, { y: 200 });
-
-    let tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: lazy,
-        start: "top bottom",
-        end: "bottom top",
-        ease: "expo.inOut",
-        scrub: 1,
-      }
-    });
-
-    tl.to(lazy, { y: -200 });
-  }
-  lazyImageH();
-
   function projectAnim() {
     let total = 0,
       xTo,
@@ -477,6 +457,7 @@ function pageInit() {
 
     const content = document.querySelector('.f-work-list')
     const cards = document.querySelectorAll('.f-work-item')
+    if (!content || !cards.length) return;
     const cardsLength = cards.length / 2
     const half = content.clientWidth / 2
 
