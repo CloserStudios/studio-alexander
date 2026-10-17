@@ -689,6 +689,7 @@ function pageInit() {
   teamAnimation();
   */
 
+  /*
   function teamAnimation() {
     const teamWrapper = document.querySelector("[data-team-wrapper]");
     const teamItems = document.querySelectorAll("[data-team-item]");
@@ -725,6 +726,59 @@ function pageInit() {
       teamItem.addEventListener("mouseenter", () => {
         showPanel(index);
       });
+    });
+  }
+  teamAnimation();
+  */
+
+  function teamAnimation() {
+    const teamWrapper = document.querySelector("[data-team-wrapper]");
+    const teamItems = document.querySelectorAll("[data-team-item]");
+
+    if (!teamWrapper || !teamItems.length) return;
+
+    const teamPanels = teamWrapper.querySelectorAll("[data-team-panel]");
+    if (!teamPanels.length) return;
+
+    // Scope each query to its own panel
+    const roles = Array.from(teamPanels, (panel) => panel.querySelector("[data-team-role]"));
+    const bios = Array.from(teamPanels, (panel) => panel.querySelector("[data-team-bio]"));
+    const allText = [...roles, ...bios].filter(Boolean);
+
+    let currentIndex = -1;
+
+    function setActiveItem(index) {
+      teamItems.forEach((item, i) => {
+        item.classList.toggle("is-active", i === index);
+      });
+    }
+
+    function showPanel(index) {
+      if (index === currentIndex) return;
+      currentIndex = index;
+
+      gsap.set(teamPanels, { autoAlpha: 0 });
+      gsap.set(teamPanels[index], { autoAlpha: 1 });
+
+      // Stop any in-flight text tweens, then reset
+      gsap.killTweensOf(allText);
+      gsap.set(bios.filter(Boolean), { autoAlpha: 0 });
+      gsap.set(roles.filter(Boolean), { autoAlpha: 0, y: -12 });
+
+      if (roles[index]) {
+        gsap.to(roles[index], { autoAlpha: 1, y: 0, duration: 0.5, ease: "power2.out" });
+      }
+      if (bios[index]) {
+        gsap.to(bios[index], { autoAlpha: 1, duration: 0.5, ease: "power2.out", delay: 0.25 });
+      }
+
+      setActiveItem(index);
+    }
+
+    showPanel(0);
+
+    teamItems.forEach((teamItem, index) => {
+      teamItem.addEventListener("mouseenter", () => showPanel(index));
     });
   }
   teamAnimation();
