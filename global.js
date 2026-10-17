@@ -669,11 +669,17 @@ function pageInit() {
   function teamAnimation() {
     const teamWrapper = document.querySelector("[data-team-wrapper]");
     const teamItems = document.querySelectorAll("[data-team-item]");
+    const teamImageArray = [];
 
     if (!teamWrapper || !teamItems.length) return;
 
     const teamPanels = teamWrapper.querySelectorAll("[data-team-panel]");
     if (!teamPanels.length) return;
+
+    teamPanels.forEach((panel, i) => {
+      const teamImage = panel.querySelector("[data-team-image]");
+      teamImage && (teamImageArray[i] = teamImage);
+    });
 
     function setActiveItem(index) {
       teamItems.forEach((item, i) => {
@@ -684,6 +690,7 @@ function pageInit() {
     function showPanel(index) {
       gsap.set(teamPanels, { autoAlpha: 0 });
       gsap.set(teamPanels[index], { autoAlpha: 1 });
+      gsap.from(teamImageArray[index], { scale: 1.1, duration: 0.6, ease: "expo.inOut" });
       setActiveItem(index);
     }
     showPanel(0);
@@ -797,8 +804,7 @@ function pageInit() {
       );
     });
   }
-    /*
-  
+  /*
   
   /*Global*/
   function paraEffect() {
