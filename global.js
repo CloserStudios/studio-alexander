@@ -830,26 +830,29 @@ function pageInit() {
   
   /*Global*/
   function splitA() {
-    const elements = document.querySelectorAll("[data-split-a]");
+    const elements = gsap.utils.toArray("[data-split-a]");
     if (!elements.length) return;
 
-    const split = SplitText.create(elements, {
-      type: "lines",
-      mask: "lines",
-      autoSplit: true,
-    });
-
-    gsap.from(split.lines, {
-      duration: 1.5,
-      y: 50,
-      autoAlpha: 0,
-      stagger: 0.05,
-      ease: "expo.out",
-      scrollTrigger: {
-        trigger: elements[0], // ScrollTrigger needs one element, not NodeList
-        start: "top 80%",
-        toggleActions: "play none none none",
-      },
+    elements.forEach((el) => {
+      SplitText.create(el, {
+        type: "lines",
+        mask: "lines",
+        autoSplit: true,
+        onSplit(self) {
+          return gsap.from(self.lines, {
+            duration: 1.5,
+            y: 50,
+            autoAlpha: 0,
+            stagger: 0.05,
+            ease: "expo.out",
+            scrollTrigger: {
+              trigger: el,
+              start: "top 80%",
+              toggleActions: "play none none none",
+            },
+          });
+        },
+      });
     });
   }
   splitA();
