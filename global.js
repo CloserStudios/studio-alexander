@@ -689,7 +689,6 @@ function pageInit() {
   teamAnimation();
   */
 
-  /*
   function teamAnimation() {
     const teamWrapper = document.querySelector("[data-team-wrapper]");
     const teamItems = document.querySelectorAll("[data-team-item]");
@@ -702,14 +701,22 @@ function pageInit() {
     function setActiveItem(index) {
       teamItems.forEach((item, i) => {
         item.classList.toggle("is-active", i === index);
-        const teamRole = gsap.utils.toArray("[data-team-role]", i === index);
       });
     }
+
+    teamPanels.forEach((panel, index) => {
+      const bio = document.querySelectorAll("[data-team-bio]");
+      const role = document.querySelectorAll("[data-team-role]");
+      if (!bio.length || !role.length) return;
+    });
 
     function showPanel(index) {
       gsap.set(teamPanels, { autoAlpha: 0 });
       gsap.set(teamPanels[index], { autoAlpha: 1 });
-      gsap.add(teamRole, { splitA });
+      gsap.set(bio, { autoAlpha: 0, });
+      gsap.to(bio[index], { autoAlpha: 1, duration: 0.5, ease: "power2.out", delay: 0.25 });
+      gsap.set(role, { autoAlpha: 0, y: -12 });
+      gsap.to(role[index], { autoAlpha: 1, y: 0, duration: 0.5, ease: "power2.out" });
       setActiveItem(index);
     }
     showPanel(0);
@@ -721,80 +728,7 @@ function pageInit() {
     });
   }
   teamAnimation();
-  */
 
-  function teamAnimation() {
-    const teamWrapper = document.querySelector("[data-team-wrapper]");
-    const teamItems = document.querySelectorAll("[data-team-item]");
-
-    if (!teamWrapper || !teamItems.length) return;
-
-    const teamPanels = teamWrapper.querySelectorAll("[data-team-panel]");
-    if (!teamPanels.length) return;
-
-    let currentIndex = -1;
-    const roleTweens = [];
-
-    teamPanels.forEach((panel, i) => {
-      const targets = [
-        panel.querySelector("[data-team-role]"),
-        panel.querySelector("[data-team-bio]"),
-      ].filter(Boolean);
-
-      if (!targets.length) return;
-
-      SplitText.create(targets, {
-        type: "lines",
-        mask: "lines",
-        autoSplit: true,
-        onSplit: (self) => {
-          roleTweens[i]?.kill();
-
-          roleTweens[i] = gsap.from(self.lines, {
-            yPercent: 100,
-            //autoAlpha: 0,
-            stagger: 0.1,
-            duration: 1.5,
-            ease: "expo.out",
-            paused: true,
-          });
-
-          // If a re-split happens while this panel is showing, replay it
-          if (i === currentIndex) roleTweens[i].restart();
-
-          return roleTweens[i];
-        },
-      });
-    });
-
-    function setActiveItem(index) {
-      teamItems.forEach((item, i) => {
-        item.classList.toggle("is-active", i === index);
-      });
-    }
-
-    function showPanel(index) {
-      if (index === currentIndex) return;
-      currentIndex = index;
-
-      gsap.set(teamPanels, { autoAlpha: 0 });
-      gsap.set(teamPanels[index], { autoAlpha: 1 });
-      setActiveItem(index);
-
-      // Replay only the active panel's text animation
-      roleTweens.forEach((tween, i) => {
-        if (i !== index) tween?.pause(0);
-      });
-      roleTweens[index]?.restart();
-    }
-
-    showPanel(0);
-
-    teamItems.forEach((teamItem, index) => {
-      teamItem.addEventListener("mouseenter", () => showPanel(index));
-    });
-  }
-  teamAnimation();
 
   /*
   function heroSwiper() {
