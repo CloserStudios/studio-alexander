@@ -671,6 +671,7 @@ function pageInit() {
     const teamItems = document.querySelectorAll("[data-team-item]");
     const teamImageArray = [];
     const teamRoleArray = [];
+    const teamBioArray = [];
 
     if (!teamWrapper || !teamItems.length) return;
 
@@ -684,6 +685,9 @@ function pageInit() {
       const teamRole = panel.querySelectorAll("[data-team-role]");
       teamRole && (teamRoleArray[index] = teamRole);
 
+      const teamBio = panel.querySelectorAll("[data-team-bio]");
+      teamBio && (teamBioArray[index] = teamBio);
+
 
     });
 
@@ -696,7 +700,9 @@ function pageInit() {
     function showPanel(index) {
       gsap.set(teamPanels, { autoAlpha: 0 });
       gsap.set(teamPanels[index], { autoAlpha: 1 });
-      gsap.from(teamRoleArray[index], { y: 12, duration: 0.1, ease: "expo.inOut" });
+      gsap.to(teamImageArray[index], { autoAlpha: 1, ease: "expo.inOut" }, 0);
+      gsap.from(teamRoleArray[index], { y: 12, duration: 0.2, ease: "expo.inOut" }, 0);
+      gsap.from(teamBioArray[index], { y: 12, duration: 0.2, ease: "expo.inOut" }, ">");
       setActiveItem(index);
     }
     showPanel(0);
