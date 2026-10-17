@@ -839,10 +839,10 @@ function pageInit() {
       });
 
       tl
-        .to(buttonText, { y: -12, duration: 0.5 })
-        .to(buttonArrow, { duration: 0.25, xPercent: 101 })
-        .set(buttonArrow, { xPercent: -101 })
-        .to(buttonArrow, { duration: 0.5, xPercent: 0 });
+        .to(buttonText, { y: -12, duration: 0.5 }, 0)
+        .to(buttonArrow, { xPercent: 101, duration: 0.25 }, 0)
+        .set(buttonArrow, { xPercent: -101 }, 0.25)
+        .to(buttonArrow, { xPercent: 0, duration: 0.25 }, 0.25);
 
       button.addEventListener("mouseenter", () => tl.play(0));
 
