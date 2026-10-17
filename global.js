@@ -833,15 +833,20 @@ function pageInit() {
       let buttonText = button.querySelectorAll("[data-button-text]");
       let tl = gsap.timeline({
         paused: true,
+        defaults: {
+          ease: "expo.inOut"
+        }
       });
 
       tl
-        .to(buttonArrow, { duration: 0.3, xPercent: 101, ease: "expo.inOut" })
+        .to(buttonText, { y: -12, duration: 0.5 })
+        .to(buttonArrow, { duration: 0.25, xPercent: 101 })
         .set(buttonArrow, { xPercent: -101 })
-        .to(buttonArrow, { duration: 0.5, xPercent: 0 })
-        .to(buttonText, { y: -12, duration: 0.5 });
+        .to(buttonArrow, { duration: 0.5, xPercent: 0 });
 
       button.addEventListener("mouseenter", () => tl.play(0));
+
+      button.addEventListener("mouseleave", () => tl.reverse());
     });
   }
   buttonAnimation();
