@@ -732,36 +732,40 @@ function pageInit() {
     const teamPanels = teamWrapper.querySelectorAll("[data-team-panel]");
     if (!teamPanels.length) return;
 
-    // One paused tween per panel, built from that panel's role text
+    let currentIndex = -1;
     const roleTweens = [];
 
     teamPanels.forEach((panel, i) => {
-      const role = panel.querySelector("[data-team-role]");
-      if (!role) return;
+      const targets = [
+        panel.querySelector("[data-team-role]"),
+        panel.querySelector("[data-team-bio]"),
+      ].filter(Boolean);
 
-      SplitText.create(role, {
+      if (!targets.length) return;
+
+      SplitText.create(targets, {
         type: "lines",
         mask: "lines",
         autoSplit: true,
         onSplit: (self) => {
-          // Preserve progress if autoSplit re-runs on resize
           roleTweens[i]?.kill();
 
           roleTweens[i] = gsap.from(self.lines, {
             yPercent: 100,
-            autoAlpha: 0,
+            //autoAlpha: 0,
             stagger: 0.1,
             duration: 1.5,
             ease: "expo.out",
             paused: true,
           });
 
+          // If a re-split happens while this panel is showing, replay it
+          if (i === currentIndex) roleTweens[i].restart();
+
           return roleTweens[i];
         },
       });
     });
-
-    let currentIndex = -1;
 
     function setActiveItem(index) {
       teamItems.forEach((item, i) => {
