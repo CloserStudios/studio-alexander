@@ -830,22 +830,23 @@ function pageInit() {
   
   /*Global*/
   function splitA() {
-    const splitA = document.querySelectorAll("[data-split-a]");
-    if (!splitA.length) return;
+    const elements = document.querySelectorAll("[data-split-a]");
+    if (!elements.length) return;
 
-    SplitText.create(splitA, {
+    const split = SplitText.create(elements, {
       type: "lines",
       mask: "lines",
       autoSplit: true,
     });
 
-    gsap.from(SplitText.get(splitA).lines, {
+    gsap.from(split.lines, {
       duration: 1.5,
       y: 50,
+      autoAlpha: 0,
       stagger: 0.05,
       ease: "expo.out",
       scrollTrigger: {
-        trigger: splitA,
+        trigger: elements[0], // ScrollTrigger needs one element, not NodeList
         start: "top 80%",
         toggleActions: "play none none none",
       },
