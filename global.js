@@ -690,7 +690,7 @@ function pageInit() {
     function showPanel(index) {
       gsap.set(teamPanels, { autoAlpha: 0 });
       gsap.set(teamPanels[index], { autoAlpha: 1 });
-      gsap.from(teamImageArray[index], { opacity: 0, duration: 0.05, ease: "expo.inOut" });
+      gsap.to(teamImageArray[index], { scale: 1.1, duration: 0.1, ease: "expo.inOut" });
       setActiveItem(index);
     }
     showPanel(0);
