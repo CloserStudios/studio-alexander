@@ -836,10 +836,12 @@ function pageInit() {
       gsap.timeline({
         scrollTrigger: {
           trigger: wrapper,
-          scrub: 1,
+          scrub: true,
+          invalidateOnRefresh: true,
         },
         defaults: {
-          ease: "none"
+          ease: "none",
+          force3D: true,
         }
       })
         .fromTo(image, { backgroundPosition: "50% 100%" }, { backgroundPosition: "50% 0%", duration: 1 });
