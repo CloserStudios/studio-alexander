@@ -825,6 +825,27 @@ function pageInit() {
   /*
   
   /*Global*/
+  function buttonAnimation() {
+    const buttons = gsap.utils.toArray("[data-button-hover]");
+
+    buttons.forEach((button) => {
+      let buttonArrow = button.querySelector("[data-button-arrow]");
+      let buttonText = button.querySelectorAll("[data-button-text]");
+      let tl = gsap.timeline({
+        paused: true,
+      });
+
+      tl
+        .to(buttonArrow, { duration: 0.3, xPercent: 101, ease: "expo.inOut" })
+        .set(buttonArrow, { xPercent: -101 })
+        .to(buttonArrow, { duration: 0.5, xPercent: 0 })
+        .to(buttonText, { y: -12, duration: 0.5 });
+
+      button.addEventListener("mouseenter", () => tl.play(0));
+    });
+  }
+  buttonAnimation();
+
   function paraEffect() {
     const paraWrappers = document.querySelectorAll("[data-para-wrap]");
     if (!paraWrappers.length) return;
