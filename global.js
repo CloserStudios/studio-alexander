@@ -1,4 +1,4 @@
-gsap.registerPlugin(ScrollTrigger, SplitText);
+gsap.registerPlugin(ScrollTrigger, SplitText, Observer);
 let mm = gsap.matchMedia();
 let lenis;
 let resizeObserver = null;
@@ -6,6 +6,9 @@ const getNav = () => document.querySelector('nav');
 const getPreview = () => document.querySelector('[data-work-preview]');
 const CLIP_HIDDEN = 'polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)';
 const CLIP_SHOWN = 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)';
+let total = 0,
+  xTo,
+  itemValues = []
 
 /*Grid to list*/
 function setView(view) {
@@ -473,6 +476,68 @@ function pageInit() {
   }
   heroAnim();
 
+  function projectAnim() {
+    const content = document.querySelector('.h-featured-bottom')
+    const cards = document.querySelectorAll('.f-work-item')
+    const cardsLength = cards.length / 2
+    const half = content.clientWidth / 2
+
+    const wrap = gsap.utils.wrap(-half, 0);
+
+    xTo = gsap.quickTo(content, "x", {
+      duration: 0.5, // Will transition over 0.5s
+      ease: 'power3', // Non-linear
+      modifiers: {
+        x: gsap.utils.unitize(wrap),
+      },
+    });
+
+    // Generate an array of random values between -10 and 10
+    for (let i = 0; i < cardsLength; i++) {
+      itemValues.push((Math.random() - 0.5) * 20);
+    }
+
+    // Create a GSAP timeline and keep it paused initially
+    const tl = gsap.timeline({ paused: true });
+    tl.to(cards, {
+      // Rotate each card using a precomputed random value
+      rotate: (index) => (itemValues[index % cardsLength]),
+      // Move each card horizontally based on the same random value
+      xPercent: (index) => (itemValues[index % cardsLength]),
+      // Move each card vertically based on the same random value
+      yPercent: (index) => (itemValues[index % cardsLength]),
+      // Slightly scale down the cards
+      scale: 0.95,
+      duration: 0.5,
+      ease: 'back.inOut(3)', // Non-linear
+    })
+
+    Observer.create({
+      target: content,
+      type: "pointer,touch", // Detect both pointer and touch events
+      onPress: () => tl.play(), // Play the timeline when pressing down
+      onDrag: (self) => { // Update the horizontal position while dragging
+        total += self.deltaX
+        xTo(total)
+      },
+      onRelease: () => { // Reverse the timeline when releasing the pointer
+        tl.reverse()
+      },
+      onStop: () => { // Reverse the timeline when the interaction stops
+        tl.reverse()
+      },
+    })
+
+    gsap.ticker.add(tick);
+
+    function tick(time, deltaTime) {
+      total -= deltaTime / 10  // Adjust the speed of automatic scrolling    
+      xTo(total)
+    }
+
+  }
+  projectAnim();
+
   /*Work page*/
   function filterReveal() {
     const filterButton = document.querySelector(".filter-button");
@@ -606,90 +671,6 @@ function pageInit() {
   }
   lazyImage();
 
-  /*
-  function teamAnimation() {
-    const teamItems = document.querySelectorAll("[data-team-item]");
-    const teamPanels = document.querySelectorAll("[data-team-panel]");
-
-    if (!teamItems.length || !teamPanels.length) return;
-
-    const getParts = (panel) => ({
-      image: panel.querySelector("[data-team-image]"),
-      texts: panel.querySelectorAll("[data-team-role], [data-team-bio]"),
-    });
-
-    function setActiveIndex(index) {
-      teamItems.forEach((item, i) => {
-        item.classList.toggle("is-active", i === index);
-      });
-    }
-
-    let currentIndex = 0;
-    let zCounter = 1;
-    let activeTl = null;
-
-    teamPanels.forEach((panel, i) => {
-      const { image, texts } = getParts(panel);
-      const isFirst = i === 0;
-
-      gsap.set(panel, { zIndex: isFirst ? zCounter : 0 });
-      gsap.set(image, { clipPath: isFirst ? CLIP_SHOWN : CLIP_HIDDEN });
-      gsap.set(texts, { autoAlpha: isFirst ? 1 : 0 });
-    });
-
-    setActiveIndex(0);
-
-    function showPanel(index) {
-      if (index === currentIndex) return;
-
-      const prevPanel = teamPanels[currentIndex];
-      const nextPanel = teamPanels[index];
-      const { image, texts } = getParts(nextPanel);
-      const { texts: prevTexts } = getParts(prevPanel);
-      currentIndex = index;
-
-      setActiveIndex(index);
-
-      //if (activeTl) activeTl.kill();
-
-      gsap.set(nextPanel, { zIndex: ++zCounter });
-      gsap.set(image, { clipPath: CLIP_HIDDEN });
-      gsap.set(texts, { autoAlpha: 0 });
-
-      teamPanels.forEach((panel, i) => {
-        if (i !== index && i !== currentIndex) {
-          gsap.set(getParts(panel).texts, { autoAlpha: 0 });
-        }
-      });
-
-      activeTl = gsap.timeline({
-        onComplete: () => {
-          teamPanels.forEach((panel, i) => {
-            if (i !== currentIndex) {
-              gsap.set(getParts(panel).texts, { autoAlpha: 0 });
-            }
-          });
-        },
-      });
-
-      activeTl
-        .to(prevTexts, { autoAlpha: 0, duration: 0.3, ease: "power2.out" }, 0)
-        .to(image, { clipPath: CLIP_SHOWN, duration: 0.6, ease: "expo.inOut" }, 0)
-        .to(
-          texts,
-          { autoAlpha: 1, duration: 0.5, ease: "expo.out", stagger: 0.2 },
-          0.3
-        );
-    }
-
-    teamItems.forEach((teamItem, index) => {
-      teamItem.addEventListener("mouseenter", () => showPanel(index));
-    });
-  }
-  teamAnimation();
-  */
-
-  /*
   function teamAnimation() {
     const teamWrapper = document.querySelector("[data-team-wrapper]");
     const teamItems = document.querySelectorAll("[data-team-item]");
@@ -699,48 +680,6 @@ function pageInit() {
     const teamPanels = teamWrapper.querySelectorAll("[data-team-panel]");
     if (!teamPanels.length) return;
 
-    function setActiveItem(index) {
-      teamItems.forEach((item, i) => {
-        item.classList.toggle("is-active", i === index);
-      });
-    }
-
-    teamPanels.forEach((panel, index) => {
-      const bio = document.querySelectorAll("[data-team-bio]");
-      const role = document.querySelectorAll("[data-team-role]");
-      if (!bio.length || !role.length) return;
-    });
-
-    function showPanel(index) {
-      gsap.set(teamPanels, { autoAlpha: 0 });
-      gsap.set(teamPanels[index], { autoAlpha: 1 });
-      gsap.set(bio, { autoAlpha: 0, });
-      gsap.to(bio[index], { autoAlpha: 1, duration: 0.5, ease: "power2.out", delay: 0.25 });
-      gsap.set(role, { autoAlpha: 0, y: -12 });
-      gsap.to(role[index], { autoAlpha: 1, y: 0, duration: 0.5, ease: "power2.out" });
-      setActiveItem(index);
-    }
-    showPanel(0);
-
-    teamItems.forEach((teamItem, index) => {
-      teamItem.addEventListener("mouseenter", () => {
-        showPanel(index);
-      });
-    });
-  }
-  teamAnimation();
-  */
-
-  function teamAnimation() {
-    const teamWrapper = document.querySelector("[data-team-wrapper]");
-    const teamItems = document.querySelectorAll("[data-team-item]");
-
-    if (!teamWrapper || !teamItems.length) return;
-
-    const teamPanels = teamWrapper.querySelectorAll("[data-team-panel]");
-    if (!teamPanels.length) return;
-
-    // Scope each query to its own panel
     const roles = Array.from(teamPanels, (panel) => panel.querySelector("[data-team-role]"));
     const bios = Array.from(teamPanels, (panel) => panel.querySelector("[data-team-bio]"));
     const allText = [...roles, ...bios].filter(Boolean);
@@ -759,8 +698,6 @@ function pageInit() {
 
       gsap.set(teamPanels, { autoAlpha: 0 });
       gsap.set(teamPanels[index], { autoAlpha: 1 });
-
-      // Stop any in-flight text tweens, then reset
       gsap.killTweensOf(allText);
       gsap.set(bios.filter(Boolean), { autoAlpha: 0 });
       gsap.set(roles.filter(Boolean), { autoAlpha: 0, y: -12 });
