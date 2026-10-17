@@ -478,7 +478,7 @@ function pageInit() {
       xTo,
       itemValues = []
 
-    const content = document.querySelector('.h-featured-bottom')
+    const content = document.querySelector('.f-work-list')
     const cards = document.querySelectorAll('.f-work-item')
     const cardsLength = cards.length / 2
     const half = content.clientWidth / 2
