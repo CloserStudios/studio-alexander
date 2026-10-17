@@ -479,7 +479,7 @@ function pageInit() {
     tl.to(cards, {
       scale: 0.95,
       duration: 0.5,
-      ease: 'back.inOut(3)',
+      ease: 'expo.inOut',
     })
 
     Observer.create({
