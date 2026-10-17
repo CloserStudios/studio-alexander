@@ -254,29 +254,6 @@ function pageInit() {
   ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
   mm.revert();
 
-  function splitA() {
-    const texts = gsap.utils.toArray("[data-split-a]");
-
-    if (texts.length) {
-      SplitText.create(texts, {
-        type: "lines",
-        mask: "lines",
-        autoSplit: true,
-        onSplit: (self) => {
-          texts = gsap.from(self.lines, {
-            y: 30,
-            autoAlpha: 0,
-            stagger: 0.1,
-            duration: 1.5,
-            clearProps: "transform",
-          });
-        },
-      });
-    }
-
-
-  }
-
   function preLoader() {
     const loader = document.querySelector('.preload-wrapper');
     const target = document.querySelector(".h-hero-mask");
@@ -852,6 +829,27 @@ function pageInit() {
   /*
   
   /*Global*/
+  function splitA() {
+    let split = SplitText.create("[data-split-a]", {
+      type: "lines",
+      mask: "lines",
+    });
+
+    gsap.from(split.lines, {
+      duration: 1.5,
+      y: 50,
+      autoAlpha: 0,
+      stagger: 0.05,
+      ease: "power2.out",
+      scrollTrigger: {
+        trigger: "[data-split-a]",
+        start: "top 80%",
+        toggleActions: "play none none none",
+      },
+    });
+  }
+  splitA();
+
   function buttonAnimation() {
     const buttons = gsap.utils.toArray("[data-button-hover]");
 
