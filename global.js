@@ -6,9 +6,6 @@ const getNav = () => document.querySelector('nav');
 const getPreview = () => document.querySelector('[data-work-preview]');
 const CLIP_HIDDEN = 'polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)';
 const CLIP_SHOWN = 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)';
-let total = 0,
-  xTo,
-  itemValues = []
 
 /*Grid to list*/
 function setView(view) {
@@ -477,6 +474,10 @@ function pageInit() {
   heroAnim();
 
   function projectAnim() {
+    let total = 0,
+      xTo,
+      itemValues = []
+
     const content = document.querySelector('.h-featured-bottom')
     const cards = document.querySelectorAll('.f-work-item')
     const cardsLength = cards.length / 2
@@ -506,18 +507,26 @@ function pageInit() {
     Observer.create({
       target: content,
       type: "pointer,touch",
-      onPress: () => tl.play(),
+      dragMinimum: 10,
+      onPress: () => {
+        tl.play();
+      },
+      onDragStart: () => {
+        content.classList.add('is-dragging');
+      },
       onDrag: (self) => {
-        total += self.deltaX
-        xTo(total)
+        total += self.deltaX;
+        xTo(total);
       },
       onRelease: () => {
-        tl.reverse()
+        content.classList.remove('is-dragging');
+        tl.reverse();
       },
       onStop: () => {
-        tl.reverse()
-      },
-    })
+        content.classList.remove('is-dragging');
+        tl.reverse();
+      }
+    });
 
     gsap.ticker.add(tick);
 
