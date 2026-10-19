@@ -3,9 +3,9 @@ let mm = gsap.matchMedia();
 let lenis;
 let resizeObserver = null;
 const getNav = () => document.querySelector('nav');
-const getPreview = () => document.querySelector('[data-work-preview]');
 const CLIP_HIDDEN = 'polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)';
 const CLIP_SHOWN = 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)';
+const getPreview = () => document.querySelector('[data-work-preview]');
 const container = document.querySelector('[data-barba="container"]');
 
 /*Nav*/
@@ -281,12 +281,9 @@ function menuAnimation() {
   });
 }
 
-function pageInit(container) {
+function pageInit() {
   ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
   mm.revert();
-
-  navInit(container);
-  navScroll(container);
 
   function preLoader() {
     const loader = document.querySelector('.preload-wrapper');
