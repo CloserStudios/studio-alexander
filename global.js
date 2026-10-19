@@ -460,6 +460,7 @@ function pageInit() {
     const mask = document.querySelector('.h-hero-mask');
     const heroImage = document.querySelector('.h-hero-image');
 
+    const nav = getNav();
     const navToggle = 0.8;
     const baseDark = barba?.dataset.navTheme === 'dark';
 
