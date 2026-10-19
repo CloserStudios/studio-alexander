@@ -845,7 +845,6 @@ function destroyResizeObserver() {
 function init() {
   globalInit();
   pageInit(document.querySelector('[data-barba="container"]'));
-  navInit();
   initResizeObserver();
   menuButtonHover();
   menuAnimation();
