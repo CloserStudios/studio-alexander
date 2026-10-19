@@ -455,6 +455,7 @@ function pageInit() {
   function heroAnim() {
     const hero = document.querySelector('.h-hero');
     if (!hero) return;
+    const barba = document.querySelector('[data-barba="container"]');
     const pinHeight = document.querySelector('[data-pin-height="hero"]');
     const container = document.querySelector('.h-hero-container');
     const mask = document.querySelector('.h-hero-mask');
@@ -487,7 +488,7 @@ function pageInit() {
       },
     });
 
-    tl.to(mask, { scale: 2.1 }, 0) // 50% -> 110% (110 / 50 = 2.2)
+    tl.to(mask, { scale: 2.1 }, 0)
       .fromTo(heroImage, { scale: 1.1, yPercent: 6 }, { scale: 1, yPercent: 0 }, 0);
 
     ScrollTrigger.create({
