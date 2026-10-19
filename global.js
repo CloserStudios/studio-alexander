@@ -3,6 +3,7 @@ let mm = gsap.matchMedia();
 let lenis;
 let resizeObserver = null;
 const getNav = () => document.querySelector('nav');
+const container = document.querySelector('[data-barba="container"]');
 
 function globalInit() {
   lenis = new Lenis();
@@ -181,7 +182,6 @@ function pageInit(container) {
   function navColourChange() {
     const nav = getNav();
     const navTrigger = document.querySelector("[data-nav-trigger]");
-    const container = document.querySelector('[data-barba="container"]');
     if (!nav || !navTrigger || !container) return;
 
     const baseDark = container.dataset.navTheme === "dark";
@@ -824,7 +824,6 @@ function pageInit(container) {
   paraEffect();
 
   function currentPage() {
-    const container = document.querySelector('[data-barba="container"]');
     const pageTitle = container?.getAttribute("page-name");
     const pageBreadcrumb = document.querySelector("[current-page]");
 
