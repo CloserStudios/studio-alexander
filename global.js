@@ -203,7 +203,7 @@ function pageInit(container) {
     });
 
     tl.to(
-      loaderInnerBg,
+      loaderInnerImg,
       {
         scale: 1,
       },
