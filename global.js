@@ -124,6 +124,7 @@ function pageInit(container) {
 
   function homePreLoader() {
     const loader = document.querySelector(".preload-wrapper");
+    const loaderLogoWrap = document.querySelector(".preloader-logo-svg");
     const loaderLogo = document.querySelectorAll(".preloader-logo-svg path");
     const loaderInnerBg = document.querySelector(".preload-inner-bg");
     const loaderInnerImg = document.querySelector(".preload-inner-img");
@@ -144,6 +145,9 @@ function pageInit(container) {
         document.documentElement.classList.remove("show-preloader");
       },
     });
+
+    gsap.set(loaderLogo, { autoAlpha: 0, scale: 0.5 });
+    gsap.set(loaderLogoWrap, { autoAlpha: 1 });
 
     // Counter: part of the timeline, starts at 0
     tl.to(
@@ -168,9 +172,8 @@ function pageInit(container) {
       0.5
     );
 
-    tl.fromTo(
+    tl.to(
       loaderLogo,
-      { autoAlpha: 0, scale: 0.5 },
       { autoAlpha: 1, scale: 1, transformOrigin: "center center", stagger: 0.05, duration: 2, },
       1
     );
