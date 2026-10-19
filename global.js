@@ -394,7 +394,7 @@ function pageInit(container) {
   filterReveal();
 
   function setGrid(container) {
-    if (!container.querySelector('[data-list]')) return;
+    if (!container.querySelector('.work-list, .ap-list')) return;
 
     const getPreview = () => container.querySelector('[data-work-preview]');
     let previewVisible = false;
