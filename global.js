@@ -151,6 +151,7 @@ function pageInit(container) {
       {
         value: 100,
         ease: "none",
+        duration: 4,
         onUpdate: () => {
           counterEl.textContent = Math.round(counter.value);
         },
@@ -171,7 +172,7 @@ function pageInit(container) {
       loaderLogo,
       { opacity: 0, x: -10 },
       { opacity: 1, x: 0, stagger: 0.05, duration: 2.5 },
-      1.5
+      1
     );
 
 
