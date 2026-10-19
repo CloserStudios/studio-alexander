@@ -3,7 +3,6 @@ let mm = gsap.matchMedia();
 let lenis;
 let resizeObserver = null;
 const getNav = () => document.querySelector('nav');
-const container = document.querySelector('[data-barba="container"]');
 
 function globalInit() {
   lenis = new Lenis();
@@ -867,7 +866,7 @@ function destroyResizeObserver() {
 
 function init() {
   globalInit();
-  pageInit(container);
+  pageInit(document.querySelector('[data-barba="container"]'));
   initResizeObserver();
   menuButtonHover();
   menuAnimation();
@@ -893,7 +892,7 @@ barba.hooks.afterEnter((data) => {
 
 barba.hooks.after((data) => {
   window.scrollTo(0, 0);
-  pageInit(container);
+  pageInit(data.next.container);
   lenis.start();
   initResizeObserver();
 });
