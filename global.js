@@ -169,6 +169,8 @@ function pageInit(container) {
       },
     });
 
+    tl.from(".preloader-logo-svg path", { x: -10, opacity: 0, stagger: 0.05, duration: 2 });
+
     tl.add(startCounter(), 0);
 
     tl.fromTo(loaderLogo, { opacity: 0 }, { delay: 0.5, opacity: 1 });
