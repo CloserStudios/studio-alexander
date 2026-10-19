@@ -7,6 +7,34 @@ const getPreview = () => document.querySelector('[data-work-preview]');
 const CLIP_HIDDEN = 'polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)';
 const CLIP_SHOWN = 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)';
 
+/*Nav*/
+// The ONE place the nav class changes
+function setNavDark(isDark) {
+  getNav()?.classList.toggle('dark', isDark);
+}
+
+// 1. Starting state (your function, simplified)
+function navInit(container) {
+  if (!container) return;
+  setNavDark(container.dataset.navTheme === 'dark');
+}
+
+// 2. Scroll flips. Call once per page, after navInit.
+function navScroll(container) {
+  if (!container) return;
+
+  const baseDark = container.dataset.navTheme === 'dark';
+
+  container.querySelectorAll('[data-nav-flip]').forEach((section) => {
+    ScrollTrigger.create({
+      trigger: section,
+      start: 'top top',     // nav sits at the top of the viewport
+      end: 'bottom top',
+      onToggle: (self) => setNavDark(self.isActive ? !baseDark : baseDark),
+    });
+  });
+}
+
 /*Grid to list*/
 function setView(view) {
   const isList = view === 'list';
@@ -131,6 +159,7 @@ function initListListeners() {
 }
 /*List hover end*/
 
+/*
 function navTheme(container) {
   const nav = getNav();
   if (!nav || !container) return;
@@ -144,6 +173,7 @@ function navTheme(container) {
 
   nav.classList.toggle("dark", container.dataset.navTheme === "dark");
 }
+  */
 
 function globalInit() {
   lenis = new Lenis();
@@ -254,6 +284,9 @@ function pageInit() {
   ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
   mm.revert();
 
+  navInit(container);
+  navScroll(container);
+
   function preLoader() {
     const loader = document.querySelector('.preload-wrapper');
     const target = document.querySelector(".h-hero-mask");
@@ -337,120 +370,6 @@ function pageInit() {
     });
   }
   navColourChange();
-
-  /*
-  function heroAnim() {
-    const root = document.querySelector('.h-hero');
-    if (!root) return;
-
-    const pinHeight = root.querySelector('[data-pin-height]');
-    const container = root.querySelector('.h-hero-wrapper');
-    const mask = root.querySelector('.h-hero-mask');
-    const heroImage = root.querySelector('.h-hero-image');
-
-    const ratio = 16 / 9;
-    const startH = () => container.clientHeight * 0.4;
-    const endH = () => container.clientHeight;
-
-    const tl = gsap.timeline({
-      defaults: { ease: 'none' },
-      scrollTrigger: {
-        trigger: pinHeight,
-        start: 'top top',
-        end: 'bottom bottom',
-        pin: container,
-        scrub: 1,
-        invalidateOnRefresh: true,
-      },
-    });
-
-    tl.fromTo(mask,
-      {
-        height: () => startH(),
-        width: () => startH() * ratio,
-      },
-      {
-        height: () => endH(),
-        width: () => endH() * ratio,
-      }, 0)
-      .fromTo(heroImage,
-        { scale: 1.3, yPercent: 6 },
-        { scale: 1, yPercent: 0 }, 0);
-  }
-  heroAnim();
-  */
-
-  /*Home page*/
-  /*
-  function heroAnim() {
-    const root = document.querySelector('.h-hero');
-    if (!root) return;
-
-    const nav = getNav();
-    const barba = document.querySelector('[data-barba="container"]');
-    const baseDark = barba?.dataset.navTheme === 'dark';
-
-    const pinHeight = root.querySelector('[data-pin-height="hero"]');
-    const container = root.querySelector('.h-hero-wrapper');
-    const mask = root.querySelector('.h-hero-mask');
-    const heroImage = root.querySelector('.h-hero-image');
-    const heroText = root.querySelector('.h-hero-text');
-
-    const ratio = 16 / 9;
-    const startH = () => container.clientHeight * 0.4;
-    const endH = () => container.clientHeight;
-
-    const navToggle = 0.8;
-
-    const tl = gsap.timeline({
-      defaults: { ease: 'none' },
-      scrollTrigger: {
-        trigger: pinHeight,
-        start: 'top top',
-        end: 'bottom bottom',
-        pin: container,
-        scrub: 1,
-        invalidateOnRefresh: true,
-      },
-    });
-
-    tl.fromTo(mask,
-      {
-        height: () => startH(),
-        width: () => startH() * ratio,
-      },
-      {
-        height: () => endH(),
-        width: () => endH() * ratio,
-      }, 0)
-      .fromTo(heroImage,
-        { scale: 1.3, yPercent: 6 },
-        { scale: 1, yPercent: 0 }, 0);
-
-    ScrollTrigger.create({
-      trigger: pinHeight,
-      start: 'top top',
-      end: 'bottom bottom',
-      onUpdate: (self) => {
-        if (!nav) return;
-        const past = self.progress >= navToggle;
-        nav.classList.toggle('dark', past ? !baseDark : baseDark);
-      },
-    });
-
-    ScrollTrigger.create({
-      trigger: pinHeight,
-      start: 'top top',
-      end: 'bottom bottom',
-      onUpdate: (self) => {
-        if (!nav) return;
-        const past = self.progress >= navToggle;
-        heroText.classList.toggle('dark', past ? !baseDark : baseDark);
-      },
-    });
-  }
-  heroAnim();
-  */
 
   function heroAnim() {
     const hero = document.querySelector('.h-hero');
