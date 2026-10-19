@@ -24,10 +24,24 @@ function globalInit() {
   });
 }
 
+/*
 function navColour(container) {
   const isDark = container?.dataset.navTheme === "dark";
   const nav = getNav();
   if (nav) nav.classList.toggle("dark", isDark);
+}
+*/
+
+function navColour(container) {
+  const isLight = container?.dataset.navTheme === "light";
+  const nav = getNav();
+  if (!nav) return;
+
+  if (isLight) {
+    nav.setAttribute("data-wf--nav--variant", "light");
+  } else {
+    nav.removeAttribute("data-wf--nav--variant"); // falls back to base (dark)
+  }
 }
 
 function menuAnimation() {
