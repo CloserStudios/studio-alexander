@@ -460,7 +460,7 @@ function pageInit() {
     const container = document.querySelector('.h-hero-container');
     const mask = document.querySelector('.h-hero-mask');
     const heroImage = document.querySelector('.h-hero-image');
-    const heroText = root.querySelector('.h-hero-text');
+    const heroText = document.querySelector('.h-hero-text');
 
     const nav = getNav();
     const navToggle = 0.8;
