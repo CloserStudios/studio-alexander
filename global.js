@@ -122,6 +122,7 @@ function pageInit(container) {
   const clipHidden = 'polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)';
   const clipShown = 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)';
 
+  /*
   function preLoader() {
     const loader = document.querySelector('.preload-wrapper');
     const target = document.querySelector(".h-hero-mask");
@@ -173,6 +174,43 @@ function pageInit(container) {
     );
 
     preloaderTl.to(loader, { opacity: 0 }, ">");
+  }
+    */
+  function preLoader() {
+    const loader = document.querySelector('.preload-wrapper');
+    const loaderLogo = document.querySelector('.preloader-logo-svg');
+    const loaderInnerBg = document.querySelector('.preload-inner-wrapper');
+    const loaderInnerImg = document.querySelector('.preload-inner-img');
+    let loaderDuration = 1.5;
+
+    let tl = gsap.timeline({
+      defaults: { duration: loaderDuration, ease: "expo.inOut" },
+      onStart: () => {
+        lenis.stop();
+        loader.style.visibility = "visible";
+      },
+      onComplete: () => {
+        lenis.start();
+        sessionStorage.setItem("visited", "true");
+        document.documentElement.classList.remove("show-preloader");
+      },
+    });
+
+    tl.fromTo(loaderLogo, { opacity: 0 }, { delay: 0.5, opacity: 1 });
+
+    tl.to(loaderInnerBg, {
+      clipPath: "inset(0% 0% 0% 0%)",
+    });
+
+    tl.to(
+      loaderInnerBg,
+      {
+        scale: 1,
+      },
+      ">"
+    );
+
+    tl.to(loader, { opacity: 0 }, ">");
   }
 
   function checkPreloader() {
