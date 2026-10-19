@@ -3,178 +3,8 @@ let mm = gsap.matchMedia();
 let lenis;
 let resizeObserver = null;
 const getNav = () => document.querySelector('nav');
-const CLIP_HIDDEN = 'polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)';
-const CLIP_SHOWN = 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)';
-const getPreview = () => document.querySelector('[data-work-preview]');
+
 const container = document.querySelector('[data-barba="container"]');
-
-/*Nav*/
-// The ONE place the nav class changes
-function setNavDark(isDark) {
-  getNav()?.classList.toggle('dark', isDark);
-}
-
-// 1. Starting state (your function, simplified)
-function navInit(container) {
-  if (!container) return;
-  setNavDark(container.dataset.navTheme === 'dark');
-}
-
-// 2. Scroll flips. Call once per page, after navInit.
-function navScroll(container) {
-  if (!container) return;
-
-  const baseDark = container.dataset.navTheme === 'dark';
-
-  container.querySelectorAll('[data-nav-flip]').forEach((section) => {
-    ScrollTrigger.create({
-      trigger: section,
-      start: 'top top',     // nav sits at the top of the viewport
-      end: 'bottom top',
-      onToggle: (self) => setNavDark(self.isActive ? !baseDark : baseDark),
-    });
-  });
-}
-
-/*Grid to list*/
-function setView(view) {
-  const isList = view === 'list';
-
-  document.querySelectorAll('.work-list, .work-list-header').forEach(el => {
-    el.classList.toggle('is-list', isList);
-  });
-
-  document.querySelectorAll('[data-view]').forEach(b => {
-    b.classList.toggle('is-active', b.dataset.view === view);
-  });
-
-  if (!isList) clearPreview();
-}
-
-function clearPreview() {
-  const preview = getPreview();
-  previewVisible = false;
-  if (preview) {
-    gsap.killTweensOf(preview);
-    preview.classList.remove('on');
-    preview.replaceChildren();
-  }
-}
-
-function getItemSrc(item) {
-  return item.dataset.image || item.querySelector('.work-image')?.getAttribute('src');
-}
-
-let previewVisible = false;
-
-function showPreview(preview) {
-  if (previewVisible) return;
-  previewVisible = true;
-
-  preview.classList.add('on');
-  gsap.killTweensOf(preview);
-  gsap.fromTo(
-    preview,
-    { clipPath: CLIP_HIDDEN },
-    { clipPath: CLIP_SHOWN, duration: 0.6, ease: 'expo.inOut' }
-  );
-}
-
-function hidePreview() {
-  const preview = getPreview();
-  if (!preview || !previewVisible) return;
-  previewVisible = false;
-
-  gsap.killTweensOf(preview);
-  gsap.to(preview, {
-    clipPath: CLIP_HIDDEN,
-    duration: 0.4,
-    ease: 'expo.inOut',
-    onComplete: () => {
-      // Only clear if the user hasn't re-entered in the meantime
-      if (previewVisible) return;
-      preview.classList.remove('on');
-      preview.replaceChildren();
-    },
-  });
-}
-
-function createMedia(preview, src) {
-  // Same image as the current top one: nothing to do
-  const top = preview.lastElementChild;
-  if (top?.dataset.src === src) return;
-
-  const div = document.createElement('div');
-  div.dataset.src = src;
-  const img = document.createElement('img');
-  img.src = src;
-  div.appendChild(img);
-  preview.appendChild(div);
-
-  // Newest layer sits on top, instantly visible, no clip-path
-  gsap.set(div, { autoAlpha: 1, zIndex: ++mediaZ });
-
-  // Keep the DOM small: remove layers hidden underneath
-  while (preview.children.length > 2) preview.children[0].remove();
-}
-
-let mediaZ = 1;
-
-function arrowHover(item) {
-  const arrow = item.querySelector('.arrow-svg');
-  if (!arrow) return;
-
-  gsap.killTweensOf(arrow);
-
-  gsap.timeline()
-    .to(arrow, { duration: 0.3, xPercent: 101, ease: 'power2.inOut' })
-    .set(arrow, { xPercent: -101 })
-    .to(arrow, { duration: 0.5, xPercent: 0, ease: 'power2.inOut' });
-}
-
-function initListListeners() {
-  document.addEventListener('click', e => {
-    const btn = e.target.closest('[data-view]');
-    if (btn) setView(btn.dataset.view);
-  });
-
-  document.addEventListener('mouseover', e => {
-    const item = e.target.closest('.work-list.is-list .work-item, .ap-item');
-    if (!item || item.contains(e.relatedTarget)) return;
-
-    arrowHover(item);
-
-    const preview = getPreview();
-    const src = getItemSrc(item);
-    if (!preview || !src) return;
-
-    createMedia(preview, src);
-    showPreview(preview); // only animates the first time
-  });
-
-  document.addEventListener('mouseout', e => {
-    const list = e.target.closest('.work-list.is-list, .ap-list');
-    if (!list || list.contains(e.relatedTarget)) return;
-    hidePreview();
-  });
-}
-/*List hover end*/
-
-/*
-function navTheme(container) {
-  const nav = getNav();
-  if (!nav || !container) return;
-
-  const title = container.getAttribute("page-name");
-
-  if (title) {
-    const navTitle = nav.querySelector(".nav__title");
-    if (navTitle) navTitle.textContent = title;
-  }
-
-  nav.classList.toggle("dark", container.dataset.navTheme === "dark");
-}
-  */
 
 function globalInit() {
   lenis = new Lenis();
@@ -285,6 +115,11 @@ function pageInit() {
   ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
   mm.revert();
 
+  const work = document.querySelector('.work');
+  const getPreview = work.querySelector('[data-work-preview]');
+  const CLIP_HIDDEN = 'polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)';
+  const CLIP_SHOWN = 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)';
+
   function preLoader() {
     const loader = document.querySelector('.preload-wrapper');
     const target = document.querySelector(".h-hero-mask");
@@ -346,11 +181,6 @@ function pageInit() {
     }
   }
   checkPreloader();
-
-  let pageLoadTl;
-
-  function pageLoad() { }
-  pageLoad();
 
   function navColourChange() {
     const nav = getNav();
@@ -526,7 +356,6 @@ function pageInit() {
   }
   marqueeAnimation();
 
-  /*Work page*/
   function filterReveal() {
     const filterButton = document.querySelector(".filter-button");
     const filterOptions = document.querySelector(".filter-options");
@@ -578,8 +407,131 @@ function pageInit() {
   }
   filterReveal();
 
-  /*View toggle start*/
-  setView('grid');
+  function setGrid() {
+    function setView(view) {
+      const isList = view === 'list';
+
+      work.querySelectorAll('.work-list, .work-list-header').forEach(el => {
+        el.classList.toggle('is-list', isList);
+      });
+
+      work.querySelectorAll('[data-view]').forEach(b => {
+        b.classList.toggle('is-active', b.dataset.view === view);
+      });
+
+      if (!isList) clearPreview();
+    }
+
+    function clearPreview() {
+      const preview = getPreview();
+      previewVisible = false;
+      if (preview) {
+        gsap.killTweensOf(preview);
+        preview.classList.remove('on');
+        preview.replaceChildren();
+      }
+    }
+
+    function getItemSrc(item) {
+      return item.dataset.image || item.querySelector('.work-image')?.getAttribute('src');
+    }
+
+    let previewVisible = false;
+
+    function showPreview(preview) {
+      if (previewVisible) return;
+      previewVisible = true;
+
+      preview.classList.add('on');
+      gsap.killTweensOf(preview);
+      gsap.fromTo(
+        preview,
+        { clipPath: CLIP_HIDDEN },
+        { clipPath: CLIP_SHOWN, duration: 0.6, ease: 'expo.inOut' }
+      );
+    }
+
+    function hidePreview() {
+      const preview = getPreview();
+      if (!preview || !previewVisible) return;
+      previewVisible = false;
+
+      gsap.killTweensOf(preview);
+      gsap.to(preview, {
+        clipPath: CLIP_HIDDEN,
+        duration: 0.4,
+        ease: 'expo.inOut',
+        onComplete: () => {
+          // Only clear if the user hasn't re-entered in the meantime
+          if (previewVisible) return;
+          preview.classList.remove('on');
+          preview.replaceChildren();
+        },
+      });
+    }
+
+    function createMedia(preview, src) {
+      const top = preview.lastElementChild;
+      if (top?.dataset.src === src) return;
+
+      const div = work.createElement('div');
+      div.dataset.src = src;
+      const img = work.createElement('img');
+      img.src = src;
+      div.appendChild(img);
+      preview.appendChild(div);
+
+      gsap.set(div, { autoAlpha: 1, zIndex: ++mediaZ });
+
+      while (preview.children.length > 2) preview.children[0].remove();
+    }
+
+    let mediaZ = 1;
+
+    function arrowHover() {
+      const arrow = document.querySelector('.arrow-svg');
+      if (!arrow) return;
+
+      gsap.killTweensOf(arrow);
+
+      gsap.timeline()
+        .to(arrow, { duration: 0.3, xPercent: 101, ease: 'power2.inOut' })
+        .set(arrow, { xPercent: -101 })
+        .to(arrow, { duration: 0.5, xPercent: 0, ease: 'power2.inOut' });
+    }
+
+    function initListListeners() {
+      work.addEventListener('click', e => {
+        const btn = e.target.closest('[data-view]');
+        if (btn) setView(btn.dataset.view);
+      });
+
+      work.addEventListener('mouseover', e => {
+        const item = e.target.closest('.work-list.is-list .work-item, .ap-item');
+        if (!item || item.contains(e.relatedTarget)) return;
+
+        arrowHover();
+
+        const preview = getPreview();
+        const src = getItemSrc(item);
+        if (!preview || !src) return;
+
+        createMedia(preview, src);
+        showPreview(preview); // only animates the first time
+      });
+
+      work.addEventListener('mouseout', e => {
+        const list = e.target.closest('.work-list.is-list, .ap-list');
+        if (!list || list.contains(e.relatedTarget)) return;
+        hidePreview();
+      });
+    }
+    initListListeners();
+
+    setView('grid');
+  }
+  setGrid();
+
 
   /*Project page*/
   function currentProject() {
@@ -936,7 +888,7 @@ function destroyResizeObserver() {
 function init() {
   globalInit();
   pageInit();
-  initListListeners();
+  //initListListeners();
   initResizeObserver();
   menuButtonHover();
   menuAnimation();
