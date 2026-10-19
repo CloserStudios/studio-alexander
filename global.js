@@ -158,7 +158,12 @@ function pageInit(container) {
       0
     );
 
-    tl.from(loaderLogo, { x: -10, opacity: 0, stagger: 0.05 }, 0);
+    tl.fromTo(
+      loaderLogo,
+      { opacity: 0, x: -10 },
+      { opacity: 1, x: 0, stagger: 0.05, duration: 0.8 },
+      0
+    );
 
     tl.fromTo(
       loaderInnerBg,
