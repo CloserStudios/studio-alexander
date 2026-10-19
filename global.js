@@ -463,9 +463,9 @@ function pageInit(container) {
       const top = preview.lastElementChild;
       if (top?.dataset.src === src) return;
 
-      const div = container.createElement('div');
+      const div = document.createElement('div');
       div.dataset.src = src;
-      const img = container.createElement('img');
+      const img = document.createElement('img');
       img.src = src;
       div.appendChild(img);
       preview.appendChild(div);
