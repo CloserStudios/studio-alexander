@@ -502,6 +502,16 @@ function pageInit() {
       },
     });
 
+    ScrollTrigger.create({
+      trigger: pinHeight,
+      start: 'top top',
+      end: 'bottom bottom',
+      onUpdate: (self) => {
+        if (!nav) return;
+        const past = self.progress >= navToggle;
+        heroText.classList.toggle('dark', past ? !baseDark : baseDark);
+      },
+    });
   }
   heroAnim();
 
