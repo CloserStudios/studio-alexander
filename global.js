@@ -477,7 +477,7 @@ function pageInit() {
         width: '110%'
       }, 0)
       .fromTo(heroImage,
-        { scale: 1.3, yPercent: 6 },
+        { scale: 1.1, yPercent: 6 },
         { scale: 1, yPercent: 0 }, 0);
 
   }
