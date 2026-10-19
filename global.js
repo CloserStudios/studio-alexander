@@ -6,6 +6,7 @@ const getNav = () => document.querySelector('nav');
 const getPreview = () => document.querySelector('[data-work-preview]');
 const CLIP_HIDDEN = 'polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)';
 const CLIP_SHOWN = 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)';
+const container = document.querySelector('[data-barba="container"]');
 
 /*Nav*/
 // The ONE place the nav class changes
@@ -280,7 +281,7 @@ function menuAnimation() {
   });
 }
 
-function pageInit(container) {
+function pageInit() {
   ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
   mm.revert();
 
