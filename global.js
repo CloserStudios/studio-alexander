@@ -456,7 +456,7 @@ function pageInit() {
     const hero = document.querySelector('.h-hero');
     if (!hero) return;
     const pinHeight = document.querySelector('[data-pin-height="hero"]');
-    const container = document.querySelector('.h-hero-wrapper');
+    const container = document.querySelector('.h-hero-container');
 
     const tl = gsap.timeline({
       defaults: { ease: 'none' },
