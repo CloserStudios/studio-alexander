@@ -127,7 +127,34 @@ function pageInit(container) {
     const loaderLogo = document.querySelector('.preloader-logo-svg');
     const loaderInnerBg = document.querySelector('.preload-inner-bg');
     const loaderInnerImg = document.querySelector('.preload-inner-img');
+    const counterEl = document.querySelector("[data-counter]");
     let loaderDuration = 1.5;
+
+
+    const durationMs = loaderDuration * 1000;
+    const startTime = performance.now();
+
+    function startCounter() {
+      const durationMs = loaderDuration * 1000;
+      const startTime = performance.now();
+
+      function updateCounter(now) {
+        const elapsed = now - startTime;
+        const progress = Math.min(elapsed / durationMs, 1);
+        const count = Math.floor(progress * 100);
+
+        counterEl.textContent = count;
+
+        if (count < 100) {
+          requestAnimationFrame(updateCounter);
+        } else {
+          counterEl.textContent = "100";
+        }
+      }
+
+      requestAnimationFrame(updateCounter);
+    }
+    startCounter();
 
     let tl = gsap.timeline({
       defaults: { duration: loaderDuration, ease: "expo.inOut" },
@@ -141,6 +168,8 @@ function pageInit(container) {
         document.documentElement.classList.remove("show-preloader");
       },
     });
+
+    tl.add(startCounter(), 0);
 
     tl.fromTo(loaderLogo, { opacity: 0 }, { delay: 0.5, opacity: 1 });
 
