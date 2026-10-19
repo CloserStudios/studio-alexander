@@ -472,13 +472,10 @@ function pageInit() {
       },
     });
 
-    tl.to(mask,
-      {
-        width: '110vw'
-      }, 0)
-      .fromTo(heroImage,
-        { scale: 1.1, yPercent: 6 },
-        { scale: 1, yPercent: 0 }, 0);
+    gsap.set(mask, { transformOrigin: '50% 50%' });
+
+    tl.to(mask, { scaleX: 2.2 }, 0) // 50% -> 110% (110 / 50 = 2.2)
+      .fromTo(heroImage, { scale: 1.1, yPercent: 6 }, { scale: 1, yPercent: 0 }, 0);
 
   }
   heroAnim();
