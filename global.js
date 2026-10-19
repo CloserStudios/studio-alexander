@@ -230,29 +230,31 @@ function pageInit(container) {
       trigger: pinHeight,
       start: 'top top',
       end: 'bottom bottom',
+      /*
       onUpdate: (self) => {
         if (!nav) return;
         const past = self.progress >= navToggle;
         nav.classList.toggle('dark', past ? !baseDark : baseDark);
       },
+      */
     });
 
     tl.to(mask, { scale: 2.1 }, 0)
       .fromTo(heroImage, { scale: 1.1, yPercent: 6 }, { scale: 1, yPercent: 0 }, 0);
 
-    ScrollTrigger.create({
-      trigger: pinHeight,
-      start: 'top top',
-      end: 'bottom bottom',
-      onUpdate: (self) => {
-        if (!nav) return;
-        const past = self.progress >= navToggle;
-        nav.classList.toggle('dark', past ? !baseDark : baseDark);
-        heroText?.classList.toggle('dark', past ? !baseDark : baseDark);
-      },
-    });
-
-    ScrollTrigger.refresh();
+    /*
+  ScrollTrigger.create({
+    trigger: pinHeight,
+    start: 'top top',
+    end: 'bottom bottom',
+    onUpdate: (self) => {
+      if (!nav) return;
+      const past = self.progress >= navToggle;
+      nav.classList.toggle('dark', past ? !baseDark : baseDark);
+      heroText?.classList.toggle('dark', past ? !baseDark : baseDark);
+    },
+  });
+  */
   }
   heroAnim();
 
