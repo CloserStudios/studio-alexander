@@ -1,12 +1,42 @@
 gsap.registerPlugin(ScrollTrigger, SplitText, Observer);
+const clipHidden = 'polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)';
+const clipShown = 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)';
 let mm = gsap.matchMedia();
 let lenis;
 let resizeObserver = null;
 const getNav = () => document.querySelector('nav');
-const CLIP_HIDDEN = 'polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)';
-const CLIP_SHOWN = 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)';
 const getPreview = () => document.querySelector('[data-work-preview]');
-const container = document.querySelector('[data-barba="container"]');
+const isBaseDark = (container) => container?.dataset.navTheme === "dark";
+
+function setNavDark(isDark) {
+    getNav()?.classList.toggle("dark", isDark);
+}
+
+function navTheme(container) {
+    const nav = getNav();
+    if (!nav || !container) return;
+
+    const title = container.getAttribute("page-name");
+    const navTitle = nav.querySelector(".nav__title");
+    if (title && navTitle) navTitle.textContent = title;
+
+    setNavDark(isBaseDark(container));
+}
+
+// Generic: flip nav while a trigger zone is active
+function navFlip({ trigger, start = "top top", end = "bottom top", container }) {
+    if (!trigger) return;
+    const baseDark = isBaseDark(container);
+
+    ScrollTrigger.create({
+        trigger,
+        start,
+        end,
+        onToggle: (self) => setNavDark(self.isActive ? !baseDark : baseDark),
+        // make sure the state is right after refresh / load mid-scroll
+        onRefresh: (self) => setNavDark(self.isActive ? !baseDark : baseDark),
+    });
+}
 
 /*Nav*/
 // The ONE place the nav class changes
@@ -75,8 +105,8 @@ function showPreview(preview) {
     gsap.killTweensOf(preview);
     gsap.fromTo(
         preview,
-        { clipPath: CLIP_HIDDEN },
-        { clipPath: CLIP_SHOWN, duration: 0.6, ease: 'expo.inOut' }
+        { clipPath: clipHidden },
+        { clipPath: clipShown, duration: 0.6, ease: 'expo.inOut' }
     );
 }
 
@@ -87,7 +117,7 @@ function hidePreview() {
 
     gsap.killTweensOf(preview);
     gsap.to(preview, {
-        clipPath: CLIP_HIDDEN,
+        clipPath: clipHidden,
         duration: 0.4,
         ease: 'expo.inOut',
         onComplete: () => {

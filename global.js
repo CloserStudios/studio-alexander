@@ -24,6 +24,10 @@ function globalInit() {
   });
 }
 
+function navInit() {
+
+}
+
 function menuButtonHover() {
   const menuButton = document.querySelector(".menu-button");
   const menuLineTop = document.querySelector(".menu-line__top");
@@ -113,8 +117,8 @@ function pageInit(container) {
   ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
   mm.revert();
 
-  const CLIP_HIDDEN = 'polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)';
-  const CLIP_SHOWN = 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)';
+  const clipHidden = 'polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)';
+  const clipShown = 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)';
 
   function preLoader() {
     const loader = document.querySelector('.preload-wrapper');
@@ -138,7 +142,7 @@ function pageInit(container) {
     };
 
     let preloaderTl = gsap.timeline({
-      defaults: { duration: loaderDuration, ease: "power2.inOut" },
+      defaults: { duration: loaderDuration, ease: "expo.inOut" },
       onStart: () => {
         lenis.stop();
         loader.style.visibility = "visible";
@@ -435,8 +439,8 @@ function pageInit(container) {
       gsap.killTweensOf(preview);
       gsap.fromTo(
         preview,
-        { clipPath: CLIP_HIDDEN },
-        { clipPath: CLIP_SHOWN, duration: 0.6, ease: 'expo.inOut' }
+        { clipPath: clipHidden },
+        { clipPath: clipShown, duration: 0.6, ease: 'expo.inOut' }
       );
     }
 
@@ -447,7 +451,7 @@ function pageInit(container) {
 
       gsap.killTweensOf(preview);
       gsap.to(preview, {
-        clipPath: CLIP_HIDDEN,
+        clipPath: clipHidden,
         duration: 0.4,
         ease: 'expo.inOut',
         onComplete: () => {
@@ -867,6 +871,7 @@ function destroyResizeObserver() {
 function init() {
   globalInit();
   pageInit(document.querySelector('[data-barba="container"]'));
+  navInit();
   initResizeObserver();
   menuButtonHover();
   menuAnimation();
