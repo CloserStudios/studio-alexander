@@ -162,7 +162,7 @@ function pageInit(container) {
       {
         y: 0,
       },
-      0
+      0.25
     );
 
     tl.to(
@@ -170,7 +170,7 @@ function pageInit(container) {
       {
         xPercent: 0,
       },
-      0.25
+      0.45
     );
 
     tl.to(
@@ -178,7 +178,7 @@ function pageInit(container) {
       {
         y: 0,
       },
-      0.5
+      0.65
     );
 
     tl.to(
@@ -191,7 +191,7 @@ function pageInit(container) {
           counterEl.textContent = Math.round(counter.value);
         },
       },
-      0.5
+      1
     );
 
     tl.to(
