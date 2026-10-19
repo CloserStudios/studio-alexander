@@ -124,12 +124,16 @@ function pageInit(container) {
 
   function homePreLoader() {
     const loader = document.querySelector(".preload-wrapper");
+    if (!loader) return;
     const loaderLogoWrap = document.querySelector(".preloader-logo-svg");
     const loaderLogo = document.querySelectorAll(".preloader-logo-svg path");
     const loaderInnerBg = document.querySelector(".preload-inner-bg");
     const loaderInnerImg = document.querySelector(".preload-inner-img");
     const counterEl = document.querySelector("[data-counter]");
-    const loaderDuration = 3;
+    const loading = document.querySelector("[data-loading]");
+    const connectingLine = document.querySelector("[data-connecting-line]");
+    const number = document.querySelectorAll("[data-number]");
+
 
     const counter = { value: 0 };
 
@@ -148,14 +152,41 @@ function pageInit(container) {
 
     gsap.set(loaderLogo, { autoAlpha: 0, scale: 0.5 });
     gsap.set(loaderLogoWrap, { autoAlpha: 1 });
+    gsap.set(loading, { y: 12 });
+    gsap.set(connectingLine, { xPercent: -150 });
+    gsap.set(number, { y: 12 });
 
     // Counter: part of the timeline, starts at 0
+    tl.to(
+      loading,
+      {
+        y: 0,
+      },
+      0
+    );
+
+    tl.to(
+      connectingLine,
+      {
+        xPercent: 0,
+      },
+      0.25
+    );
+
+    tl.to(
+      number,
+      {
+        y: 0,
+      },
+      0.5
+    );
+
     tl.to(
       counter,
       {
         value: 100,
         ease: "none",
-        duration: 4,
+        duration: 3.5,
         onUpdate: () => {
           counterEl.textContent = Math.round(counter.value);
         },
@@ -167,7 +198,7 @@ function pageInit(container) {
       loaderInnerImg,
       {
         clipPath: clipShown,
-        duration: 1,
+        duration: 1.5,
       },
       0.5
     );
@@ -175,7 +206,7 @@ function pageInit(container) {
     tl.to(
       loaderLogo,
       { autoAlpha: 1, scale: 1, transformOrigin: "center center", stagger: 0.05, duration: 2, },
-      1
+      0.5
     );
 
     tl.to(loaderLogo, { autoAlpha: 0, duration: 1 }, 3);
