@@ -87,6 +87,34 @@ function menuAnimation() {
   });
 }
 
+function menuButtonHover() {
+  const menuButton = document.querySelector(".menu-button");
+  const menuLineTop = document.querySelector(".menu-line__top");
+  const menuLineTopHover = document.querySelector(".menu-line__top.hover");
+  const menuLineBottom = document.querySelector(".menu-line__bottom");
+  const menuLineBottomHover = document.querySelector(".menu-line__bottom.hover");
+
+  if (!menuButton || !menuLineTop || !menuLineTopHover || !menuLineBottom || !menuLineBottomHover) return;
+
+  gsap.set([menuLineTopHover, menuLineBottomHover], { xPercent: -150 });
+
+  const tl = gsap.timeline({
+    paused: true,
+    defaults: {
+      ease: "power2.inOut",
+    },
+  });
+
+  tl
+    .to(menuLineTop, { duration: 0.2, xPercent: 150 }, 0)
+    .to(menuLineTopHover, { duration: 0.3, xPercent: 0 }, 0.1)
+    .to(menuLineBottom, { duration: 0.2, xPercent: 150 }, 0.15)
+    .to(menuLineBottomHover, { duration: 0.3, xPercent: 0 }, 0.2);
+
+  menuButton.addEventListener("mouseenter", () => tl.play());
+  menuButton.addEventListener("mouseleave", () => tl.reverse());
+}
+
 function pageInit(container) {
   ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
   mm.revert();
