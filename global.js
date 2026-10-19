@@ -115,8 +115,6 @@ function pageInit() {
   ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
   mm.revert();
 
-  const work = document.querySelector('.work');
-  const getPreview = work.querySelector('[data-work-preview]');
   const CLIP_HIDDEN = 'polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)';
   const CLIP_SHOWN = 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)';
 
@@ -247,16 +245,6 @@ function pageInit() {
         if (!nav) return;
         const past = self.progress >= navToggle;
         nav.classList.toggle('dark', past ? !baseDark : baseDark);
-      },
-    });
-
-    ScrollTrigger.create({
-      trigger: pinHeight,
-      start: 'top top',
-      end: 'bottom bottom',
-      onUpdate: (self) => {
-        if (!nav) return;
-        const past = self.progress >= navToggle;
         heroText.classList.toggle('dark', past ? !baseDark : baseDark);
       },
     });
@@ -408,6 +396,11 @@ function pageInit() {
   filterReveal();
 
   function setGrid() {
+    const work = document.querySelector('.work');
+    const getPreview = () => work.querySelector('[data-work-preview]');
+
+    if (!work) return;
+
     function setView(view) {
       const isList = view === 'list';
 
@@ -488,52 +481,50 @@ function pageInit() {
 
     let mediaZ = 1;
 
-    function arrowHover() {
-      const arrow = document.querySelector('.arrow-svg');
-      if (!arrow) return;
-
-      gsap.killTweensOf(arrow);
-
-      gsap.timeline()
-        .to(arrow, { duration: 0.3, xPercent: 101, ease: 'power2.inOut' })
-        .set(arrow, { xPercent: -101 })
-        .to(arrow, { duration: 0.5, xPercent: 0, ease: 'power2.inOut' });
-    }
-
-    function initListListeners() {
-      work.addEventListener('click', e => {
-        const btn = e.target.closest('[data-view]');
-        if (btn) setView(btn.dataset.view);
-      });
-
-      work.addEventListener('mouseover', e => {
-        const item = e.target.closest('.work-list.is-list .work-item, .ap-item');
-        if (!item || item.contains(e.relatedTarget)) return;
-
-        arrowHover();
-
-        const preview = getPreview();
-        const src = getItemSrc(item);
-        if (!preview || !src) return;
-
-        createMedia(preview, src);
-        showPreview(preview); // only animates the first time
-      });
-
-      work.addEventListener('mouseout', e => {
-        const list = e.target.closest('.work-list.is-list, .ap-list');
-        if (!list || list.contains(e.relatedTarget)) return;
-        hidePreview();
-      });
-    }
-    initListListeners();
-
     setView('grid');
   }
   setGrid();
 
+  function arrowHover() {
+    const arrow = document.querySelector('.arrow-svg');
+    if (!arrow) return;
 
-  /*Project page*/
+    gsap.killTweensOf(arrow);
+
+    gsap.timeline()
+      .to(arrow, { duration: 0.3, xPercent: 101, ease: 'power2.inOut' })
+      .set(arrow, { xPercent: -101 })
+      .to(arrow, { duration: 0.5, xPercent: 0, ease: 'power2.inOut' });
+  }
+
+  function initListListeners() {
+    document.addEventListener('click', e => {
+      const btn = e.target.closest('[data-view]');
+      if (btn) setView(btn.dataset.view);
+    });
+
+    document.addEventListener('mouseover', e => {
+      const item = e.target.closest('.work-list.is-list .work-item, .ap-item');
+      if (!item || item.contains(e.relatedTarget)) return;
+
+      arrowHover();
+
+      const preview = getPreview();
+      const src = getItemSrc(item);
+      if (!preview || !src) return;
+
+      createMedia(preview, src);
+      showPreview(preview); // only animates the first time
+    });
+
+    document.addEventListener('mouseout', e => {
+      const list = e.target.closest('.work-list.is-list, .ap-list');
+      if (!list || list.contains(e.relatedTarget)) return;
+      hidePreview();
+    });
+  }
+  initListListeners();
+
   function currentProject() {
     const projectName = document.querySelector("[data-project-name]");
     const connectingLine = document.querySelector("[data-connecting-line]");
@@ -590,8 +581,7 @@ function pageInit() {
   }
   bgColourChange();
 
-  /*Studio page*/
-  function lazyImageS() {
+  function lazyImage() {
     const lazy = document.querySelector("[data-lazy-image]");
     if (!lazy) return;
 
@@ -609,7 +599,7 @@ function pageInit() {
 
     tl.to(lazy, { y: -200 });
   }
-  lazyImageS();
+  lazyImage();
 
   function teamAnimation() {
     const teamWrapper = document.querySelector("[data-team-wrapper]");
