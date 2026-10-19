@@ -187,7 +187,7 @@ function pageInit(container) {
   }
 
   function preLoader() {
-    const isHome = document.body.classList.contains("home");
+    const isHome = document.querySelector('[data-page="home"]') !== null;
 
     if (isHome) {
       // home-page preloader
