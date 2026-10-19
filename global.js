@@ -474,7 +474,7 @@ function pageInit() {
 
     tl.to(mask,
       {
-        width: '110%'
+        width: '110vw'
       }, 0)
       .fromTo(heroImage,
         { scale: 1.1, yPercent: 6 },
