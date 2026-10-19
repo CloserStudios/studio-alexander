@@ -280,7 +280,7 @@ function menuAnimation() {
   });
 }
 
-function pageInit() {
+function pageInit(container) {
   ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
   mm.revert();
 
