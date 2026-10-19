@@ -155,14 +155,7 @@ function pageInit(container) {
           counterEl.textContent = Math.round(counter.value);
         },
       },
-      0
-    );
-
-    tl.fromTo(
-      loaderLogo,
-      { opacity: 0, x: -10 },
-      { opacity: 1, x: 0, stagger: 0.05, duration: 2.5 },
-      0
+      0.5
     );
 
     tl.to(
@@ -171,17 +164,26 @@ function pageInit(container) {
         clipPath: clipShown,
         duration: 1,
       },
-      2
+      0.5
     );
+
+    tl.fromTo(
+      loaderLogo,
+      { opacity: 0, x: -10 },
+      { opacity: 1, x: 0, stagger: 0.05, duration: 2.5 },
+      1.5
+    );
+
+
 
     tl.fromTo(
       loaderInnerBg,
       { clipPath: "inset(30% 30% 30% 30%)" },
-      { clipPath: "inset(0% 0% 0% 0%)" },
-      3
+      { clipPath: "inset(0% 0% 0% 0%)", duration: 1 },
+      4
     );
 
-    tl.to(loaderInnerImg, { scale: 1 }, 3);
+    tl.to(loaderInnerImg, { scale: 1, duration: 1 }, 4);
 
     tl.to(loader, { opacity: 0 }, ">");
   }
