@@ -281,7 +281,7 @@ function menuAnimation() {
   });
 }
 
-function pageInit() {
+function pageInit(container) {
   ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
   mm.revert();
 
@@ -711,7 +711,6 @@ function pageInit() {
   }
   teamAnimation();
 
-
   /*
   function heroSwiper() {
     const heroTrigger = document.querySelector("[hero-trigger]");
@@ -953,7 +952,7 @@ if (document.readyState === "loading") {
 }
 
 barba.hooks.beforeEnter((data) => {
-  navTheme(data.next.container);
+  //navTheme(data.next.container);
 });
 
 barba.hooks.beforeLeave(() => {
@@ -985,7 +984,7 @@ barba.init({
 
       beforeEnter(data) {
         gsap.set(data.next.container, { visibility: "hidden" });
-        navTheme(data.next.container);
+        //navTheme(data.next.container);
       },
 
       enter(data) {
