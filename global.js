@@ -171,7 +171,7 @@ function pageInit(container) {
     tl.fromTo(
       loaderLogo,
       { opacity: 0, scale: 0.5 },
-      { opacity: 1, scale: 1, stagger: 0.05, duration: 2, },
+      { opacity: 1, scale: 1, transformOrigin: "center center", stagger: 0.05, duration: 2, },
       1
     );
 
