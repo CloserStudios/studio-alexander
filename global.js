@@ -389,7 +389,7 @@ function pageInit() {
     const barba = document.querySelector('[data-barba="container"]');
     const baseDark = barba?.dataset.navTheme === 'dark';
 
-    const pinHeight = root.querySelector('[data-pin-height]');
+    const pinHeight = root.querySelector('[data-pin-height="hero"]');
     const container = root.querySelector('.h-hero-wrapper');
     const mask = root.querySelector('.h-hero-mask');
     const heroImage = root.querySelector('.h-hero-image');
