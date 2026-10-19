@@ -243,7 +243,7 @@ function pageInit(container) {
         if (!nav) return;
         const past = self.progress >= navToggle;
         nav.classList.toggle('dark', past ? !baseDark : baseDark);
-        heroText.classList.toggle('dark', past ? !baseDark : baseDark);
+        heroText?.classList.toggle('dark', past ? !baseDark : baseDark);
       },
     });
   }
@@ -463,9 +463,9 @@ function pageInit(container) {
       const top = preview.lastElementChild;
       if (top?.dataset.src === src) return;
 
-      const div = work.createElement('div');
+      const div = container.createElement('div');
       div.dataset.src = src;
-      const img = work.createElement('img');
+      const img = container.createElement('img');
       img.src = src;
       div.appendChild(img);
       preview.appendChild(div);
@@ -477,8 +477,8 @@ function pageInit(container) {
 
     setView('grid');
 
-    function arrowHover() {
-      const arrow = document.querySelector('.arrow-svg');
+    function arrowHover(item) {
+      const arrow = item.querySelector('.arrow-svg');
       if (!arrow) return;
 
       gsap.killTweensOf(arrow);
@@ -514,7 +514,7 @@ function pageInit(container) {
       hidePreview();
     });
   }
-  setGrid();
+  setGrid(container);
 
   function currentProject() {
     const projectName = document.querySelector("[data-project-name]");
