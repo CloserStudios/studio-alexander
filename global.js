@@ -868,7 +868,7 @@ function destroyResizeObserver() {
 
 function init() {
   globalInit();
-  pageInit();
+  pageInit(container);
   initResizeObserver();
   menuButtonHover();
   menuAnimation();
@@ -894,7 +894,7 @@ barba.hooks.afterEnter((data) => {
 
 barba.hooks.after((data) => {
   window.scrollTo(0, 0);
-  pageInit();
+  pageInit(container);
   lenis.start();
   initResizeObserver();
 });
