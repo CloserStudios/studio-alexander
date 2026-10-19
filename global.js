@@ -474,7 +474,7 @@ function pageInit() {
 
     gsap.set(mask, { transformOrigin: '50% 50%' });
 
-    tl.to(mask, { scale: 2.2 }, 0) // 50% -> 110% (110 / 50 = 2.2)
+    tl.to(mask, { scale: 2.1 }, 0) // 50% -> 110% (110 / 50 = 2.2)
       .fromTo(heroImage, { scale: 1.1, yPercent: 6 }, { scale: 1, yPercent: 0 }, 0);
 
   }
