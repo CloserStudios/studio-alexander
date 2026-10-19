@@ -130,7 +130,6 @@ function hidePreview() {
 }
 
 function createMedia(preview, src) {
-    // Same image as the current top one: nothing to do
     const top = preview.lastElementChild;
     if (top?.dataset.src === src) return;
 
