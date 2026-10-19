@@ -457,6 +457,8 @@ function pageInit() {
     if (!hero) return;
     const pinHeight = document.querySelector('[data-pin-height="hero"]');
     const container = document.querySelector('.h-hero-container');
+    const mask = document.querySelector('.h-hero-mask');
+    const heroImage = document.querySelector('.h-hero-image');
 
     const tl = gsap.timeline({
       defaults: { ease: 'none' },
@@ -469,6 +471,14 @@ function pageInit() {
         invalidateOnRefresh: true,
       },
     });
+
+    tl.to(mask,
+      {
+        width: '110%'
+      }, 0)
+      .fromTo(heroImage,
+        { scale: 1.3, yPercent: 6 },
+        { scale: 1, yPercent: 0 }, 0);
 
   }
   heroAnim();
