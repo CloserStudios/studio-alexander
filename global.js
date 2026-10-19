@@ -123,40 +123,16 @@ function pageInit(container) {
   const clipShown = 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)';
 
   function homePreLoader() {
-    const loader = document.querySelector('.preload-wrapper');
-    const loaderLogo = document.querySelector('.preloader-logo-svg');
-    const loaderInnerBg = document.querySelector('.preload-inner-bg');
-    const loaderInnerImg = document.querySelector('.preload-inner-img');
+    const loader = document.querySelector(".preload-wrapper");
+    const loaderLogo = document.querySelectorAll(".preloader-logo-svg path");
+    const loaderInnerBg = document.querySelector(".preload-inner-bg");
+    const loaderInnerImg = document.querySelector(".preload-inner-img");
     const counterEl = document.querySelector("[data-counter]");
-    let loaderDuration = 1.5;
+    const loaderDuration = 1.5;
 
+    const counter = { value: 0 };
 
-    const durationMs = loaderDuration * 1000;
-    const startTime = performance.now();
-
-    function startCounter() {
-      const durationMs = loaderDuration * 1000;
-      const startTime = performance.now();
-
-      function updateCounter(now) {
-        const elapsed = now - startTime;
-        const progress = Math.min(elapsed / durationMs, 1);
-        const count = Math.floor(progress * 100);
-
-        counterEl.textContent = count;
-
-        if (count < 100) {
-          requestAnimationFrame(updateCounter);
-        } else {
-          counterEl.textContent = "100";
-        }
-      }
-
-      requestAnimationFrame(updateCounter);
-    }
-    startCounter();
-
-    let tl = gsap.timeline({
+    const tl = gsap.timeline({
       defaults: { duration: loaderDuration, ease: "expo.inOut" },
       onStart: () => {
         lenis.stop();
@@ -169,25 +145,29 @@ function pageInit(container) {
       },
     });
 
-    tl.from(".preloader-logo-svg path", { x: -10, opacity: 0, stagger: 0.05, duration: 2 });
+    // Counter: part of the timeline, starts at 0
+    tl.to(
+      counter,
+      {
+        value: 100,
+        ease: "none", // linear count. Use the default ease if you want it to match the others
+        onUpdate: () => {
+          counterEl.textContent = Math.round(counter.value);
+        },
+      },
+      0
+    );
 
-    tl.add(startCounter(), 0);
-
-    tl.fromTo(loaderLogo, { opacity: 0 }, { delay: 0.5, opacity: 1 });
+    tl.from(loaderLogo, { x: -10, opacity: 0, stagger: 0.05 }, 0);
 
     tl.fromTo(
       loaderInnerBg,
       { clipPath: "inset(30% 30% 30% 30%)" },
-      { clipPath: "inset(0% 0% 0% 0%)" }
+      { clipPath: "inset(0% 0% 0% 0%)" },
+      0 // run alongside the counter. Remove this to run it after the logo
     );
 
-    tl.to(
-      loaderInnerImg,
-      {
-        scale: 1,
-      },
-      ">"
-    );
+    tl.to(loaderInnerImg, { scale: 1 }, "<");
 
     tl.to(loader, { opacity: 0 }, ">");
   }
