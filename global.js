@@ -251,6 +251,8 @@ function pageInit(container) {
         heroText?.classList.toggle('dark', past ? !baseDark : baseDark);
       },
     });
+
+    ScrollTrigger.refresh();
   }
   heroAnim();
 
