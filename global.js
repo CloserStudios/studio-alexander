@@ -854,7 +854,7 @@ function pageInit(container) {
   paraEffect();
 
   function currentPage() {
-    const pageTitle = container?.getAttribute("page-name");
+    const pageTitle = container?.getAttribute("data-page");
     const pageBreadcrumb = document.querySelector("[current-page]");
 
     if (!pageBreadcrumb || !pageTitle) return;
