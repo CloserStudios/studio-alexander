@@ -128,7 +128,7 @@ function pageInit(container) {
     const loaderInnerBg = document.querySelector(".preload-inner-bg");
     const loaderInnerImg = document.querySelector(".preload-inner-img");
     const counterEl = document.querySelector("[data-counter]");
-    const loaderDuration = 1.5;
+    const loaderDuration = 3;
 
     const counter = { value: 0 };
 
@@ -150,7 +150,7 @@ function pageInit(container) {
       counter,
       {
         value: 100,
-        ease: "none", // linear count. Use the default ease if you want it to match the others
+        ease: "none",
         onUpdate: () => {
           counterEl.textContent = Math.round(counter.value);
         },
