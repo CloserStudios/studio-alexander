@@ -460,6 +460,9 @@ function pageInit() {
     const mask = document.querySelector('.h-hero-mask');
     const heroImage = document.querySelector('.h-hero-image');
 
+    const navToggle = 0.8;
+    const baseDark = barba?.dataset.navTheme === 'dark';
+
     const tl = gsap.timeline({
       defaults: { ease: 'none' },
       scrollTrigger: {
