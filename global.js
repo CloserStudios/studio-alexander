@@ -161,7 +161,7 @@ function pageInit(container) {
     tl.fromTo(
       loaderLogo,
       { opacity: 0, x: -10 },
-      { opacity: 1, x: 0, stagger: 0.05, duration: 1.5 },
+      { opacity: 1, x: 0, stagger: 0.05, duration: 2.5 },
       0
     );
 
@@ -171,17 +171,17 @@ function pageInit(container) {
         clipPath: clipShown,
         duration: 1,
       },
-      1
+      2
     );
 
     tl.fromTo(
       loaderInnerBg,
       { clipPath: "inset(30% 30% 30% 30%)" },
       { clipPath: "inset(0% 0% 0% 0%)" },
-      2
+      3
     );
 
-    tl.to(loaderInnerImg, { scale: 1 }, 2);
+    tl.to(loaderInnerImg, { scale: 1 }, 3);
 
     tl.to(loader, { opacity: 0 }, ">");
   }
