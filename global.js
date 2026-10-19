@@ -381,6 +381,7 @@ function pageInit() {
   */
 
   /*Home page*/
+  /*
   function heroAnim() {
     const root = document.querySelector('.h-hero');
     if (!root) return;
@@ -447,6 +448,28 @@ function pageInit() {
         heroText.classList.toggle('dark', past ? !baseDark : baseDark);
       },
     });
+  }
+  heroAnim();
+  */
+
+  function heroAnim() {
+    const hero = document.querySelector('.h-hero');
+    if (!hero) return;
+    const pinHeight = document.querySelector('[data-pin-height="hero"]');
+    const container = document.querySelector('.h-hero-wrapper');
+
+    const tl = gsap.timeline({
+      defaults: { ease: 'none' },
+      scrollTrigger: {
+        trigger: pinHeight,
+        start: 'top top',
+        end: 'bottom bottom',
+        pin: container,
+        scrub: 1,
+        invalidateOnRefresh: true,
+      },
+    });
+
   }
   heroAnim();
 
