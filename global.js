@@ -4,8 +4,6 @@ let lenis;
 let resizeObserver = null;
 const getNav = () => document.querySelector('nav');
 
-const container = document.querySelector('[data-barba="container"]');
-
 function globalInit() {
   lenis = new Lenis();
 
@@ -111,7 +109,7 @@ function menuAnimation() {
   });
 }
 
-function pageInit() {
+function pageInit(container) {
   ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
   mm.revert();
 
@@ -395,20 +393,21 @@ function pageInit() {
   }
   filterReveal();
 
-  function setGrid() {
-    const work = document.querySelector('.work');
-    const getPreview = () => work.querySelector('[data-work-preview]');
+  function setGrid(container) {
+    if (!container.querySelector('[data-list]')) return;
 
-    if (!work) return;
+    const getPreview = () => container.querySelector('[data-work-preview]');
+    let previewVisible = false;
+    let mediaZ = 1;
 
     function setView(view) {
       const isList = view === 'list';
 
-      work.querySelectorAll('.work-list, .work-list-header').forEach(el => {
+      container.querySelectorAll('.work-list, .work-list-header').forEach(el => {
         el.classList.toggle('is-list', isList);
       });
 
-      work.querySelectorAll('[data-view]').forEach(b => {
+      container.querySelectorAll('[data-view]').forEach(b => {
         b.classList.toggle('is-active', b.dataset.view === view);
       });
 
@@ -428,8 +427,6 @@ function pageInit() {
     function getItemSrc(item) {
       return item.dataset.image || item.querySelector('.work-image')?.getAttribute('src');
     }
-
-    let previewVisible = false;
 
     function showPreview(preview) {
       if (previewVisible) return;
@@ -455,7 +452,6 @@ function pageInit() {
         duration: 0.4,
         ease: 'expo.inOut',
         onComplete: () => {
-          // Only clear if the user hasn't re-entered in the meantime
           if (previewVisible) return;
           preview.classList.remove('on');
           preview.replaceChildren();
@@ -479,51 +475,46 @@ function pageInit() {
       while (preview.children.length > 2) preview.children[0].remove();
     }
 
-    let mediaZ = 1;
-
     setView('grid');
-  }
-  setGrid();
 
-  function arrowHover() {
-    const arrow = document.querySelector('.arrow-svg');
-    if (!arrow) return;
+    function arrowHover() {
+      const arrow = document.querySelector('.arrow-svg');
+      if (!arrow) return;
 
-    gsap.killTweensOf(arrow);
+      gsap.killTweensOf(arrow);
 
-    gsap.timeline()
-      .to(arrow, { duration: 0.3, xPercent: 101, ease: 'power2.inOut' })
-      .set(arrow, { xPercent: -101 })
-      .to(arrow, { duration: 0.5, xPercent: 0, ease: 'power2.inOut' });
-  }
+      gsap.timeline()
+        .to(arrow, { duration: 0.3, xPercent: 101, ease: 'power2.inOut' })
+        .set(arrow, { xPercent: -101 })
+        .to(arrow, { duration: 0.5, xPercent: 0, ease: 'power2.inOut' });
+    }
 
-  function initListListeners() {
-    document.addEventListener('click', e => {
+    container.addEventListener('click', e => {
       const btn = e.target.closest('[data-view]');
       if (btn) setView(btn.dataset.view);
     });
 
-    document.addEventListener('mouseover', e => {
+    container.addEventListener('mouseover', e => {
       const item = e.target.closest('.work-list.is-list .work-item, .ap-item');
       if (!item || item.contains(e.relatedTarget)) return;
 
-      arrowHover();
+      arrowHover(item);
 
       const preview = getPreview();
       const src = getItemSrc(item);
       if (!preview || !src) return;
 
       createMedia(preview, src);
-      showPreview(preview); // only animates the first time
+      showPreview(preview);
     });
 
-    document.addEventListener('mouseout', e => {
+    container.addEventListener('mouseout', e => {
       const list = e.target.closest('.work-list.is-list, .ap-list');
       if (!list || list.contains(e.relatedTarget)) return;
       hidePreview();
     });
   }
-  initListListeners();
+  setGrid();
 
   function currentProject() {
     const projectName = document.querySelector("[data-project-name]");
@@ -878,7 +869,6 @@ function destroyResizeObserver() {
 function init() {
   globalInit();
   pageInit();
-  //initListListeners();
   initResizeObserver();
   menuButtonHover();
   menuAnimation();
