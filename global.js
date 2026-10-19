@@ -170,8 +170,15 @@ function pageInit(container) {
 
     tl.fromTo(
       loaderLogo,
-      { opacity: 0, x: -10 },
-      { opacity: 1, x: 0, stagger: 0.05, duration: 2.5 },
+      { opacity: 0, },
+      {
+        opacity: 1,
+        stagger: 0.05,
+        duration: 2,
+        onComplete: () => {
+          loaderLogo.style.opacity = 0;
+        },
+      },
       1
     );
 
