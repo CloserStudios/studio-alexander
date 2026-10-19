@@ -179,7 +179,7 @@ function pageInit(container) {
   function preLoader() {
     const loader = document.querySelector('.preload-wrapper');
     const loaderLogo = document.querySelector('.preloader-logo-svg');
-    const loaderInnerBg = document.querySelector('.preload-inner-wrapper');
+    const loaderInnerBg = document.querySelector('.preload-inner-bg');
     const loaderInnerImg = document.querySelector('.preload-inner-img');
     let loaderDuration = 1.5;
 
@@ -198,9 +198,11 @@ function pageInit(container) {
 
     tl.fromTo(loaderLogo, { opacity: 0 }, { delay: 0.5, opacity: 1 });
 
-    tl.to(loaderInnerBg, {
-      clipPath: "inset(0% 0% 0% 0%)",
-    });
+    tl.fromTo(
+      loaderInnerBg,
+      { clipPath: "inset(30% 30% 30% 30%)" },
+      { clipPath: "inset(0% 0% 0% 0%)" }
+    );
 
     tl.to(
       loaderInnerImg,
