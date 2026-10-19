@@ -133,7 +133,7 @@ function pageInit(container) {
     const counter = { value: 0 };
 
     const tl = gsap.timeline({
-      defaults: { duration: loaderDuration, ease: "expo.inOut" },
+      defaults: { ease: "expo.inOut" },
       onStart: () => {
         lenis.stop();
         loader.style.visibility = "visible";
@@ -165,14 +165,23 @@ function pageInit(container) {
       0
     );
 
+    tl.to(
+      loaderInnerImg,
+      {
+        clipPath: clipShown,
+        duration: 1,
+      },
+      1
+    );
+
     tl.fromTo(
       loaderInnerBg,
       { clipPath: "inset(30% 30% 30% 30%)" },
       { clipPath: "inset(0% 0% 0% 0%)" },
-      0 // run alongside the counter. Remove this to run it after the logo
+      2
     );
 
-    tl.to(loaderInnerImg, { scale: 1 }, "<");
+    tl.to(loaderInnerImg, { scale: 1 }, 2);
 
     tl.to(loader, { opacity: 0 }, ">");
   }
