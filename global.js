@@ -1025,7 +1025,7 @@ barba.init({
       leave(data) { },
 
       afterLeave(data) {
-        gsap.set(data.current.container, { visibility: "hidden" });
+        gsap.set(data.current.container, { opacity: 0, duration: 1, ease: "expo.out" });
       },
 
       beforeEnter(data) {
@@ -1035,6 +1035,7 @@ barba.init({
 
       enter(data) {
         gsap.set(data.next.container, { visibility: "visible" });
+        pageLoad(data.next.container);
       },
     },
   ],
