@@ -677,32 +677,31 @@ function pageInit(container) {
   }
   teamAnimation();
 
-  /*
-  function heroSwiper() {
-    const heroTrigger = document.querySelector("[hero-trigger]");
-    const heroPanels = gsap.utils.toArray("[hero-panels]");
-    const heroSegments = heroPanels.length - 1;
-    const heroText = gsap.utils.toArray("[hero-text]");
-    const subText = gsap.utils.toArray("[sub-text]");
-  
+  function reasonSwiper() {
+    const reasonTrigger = document.querySelector("[data-reason-trigger]");
+    const reasonPanels = gsap.utils.toArray("[data-reason-panels]");
+    const reasonSegments = reasonPanels.length - 1;
+    const reasonHead = gsap.utils.toArray("[data-reason-head]");
+    const reasonSub = gsap.utils.toArray("[data-reason-sub]");
+
     const heroTL = gsap.timeline({
       scrollTrigger: {
-        trigger: heroTrigger,
+        trigger: reasonTrigger,
         start: "top top",
-        end: "+=" + heroSegments * 100 + "%",
+        end: "+=" + reasonSegments * 100 + "%",
         scrub: 1,
         pin: true,
         anticipatePin: 1,
       },
     });
-  
-    heroPanels.forEach((heroPanel, i) => {
-      gsap.set(heroPanel, { zIndex: heroPanels.length - i });
+
+    reasonPanels.forEach((reasonPanel, i) => {
+      gsap.set(reasonPanel, { zIndex: reasonPanels.length - i });
     });
-  
-    heroPanels.slice(0, -1).forEach((heroPanel, i) => {
+
+    reasonPanels.slice(0, -1).forEach((reasonPanel, i) => {
       heroTL.to(
-        heroPanel,
+        reasonPanel,
         {
           clipPath: "inset(0% 0% 100% 0%)",
           ease: "none",
@@ -711,29 +710,29 @@ function pageInit(container) {
         i
       );
     });
-  
-    gsap.set(heroText, { autoAlpha: 0, y: 30 });
-    gsap.set(subText, { autoAlpha: 0, y: 30 });
-  
-    gsap.set(heroText[0], { autoAlpha: 1, y: 0 });
-    gsap.set(subText[0], { autoAlpha: 1, y: 0 });
-  
+
+    gsap.set(reasonHead, { autoAlpha: 0, y: 30 });
+    gsap.set(reasonSub, { autoAlpha: 0, y: 30 });
+
+    gsap.set(reasonHead[0], { autoAlpha: 1, y: 0 });
+    gsap.set(reasonSub[0], { autoAlpha: 1, y: 0 });
+
     let activeIndex = 0;
-  
+
     function showText(nextIndex, direction) {
       if (nextIndex === activeIndex) return;
-  
+
       const prevIndex = activeIndex;
       activeIndex = nextIndex;
-  
-      gsap.killTweensOf(heroText);
-      gsap.killTweensOf(subText);
-  
+
+      gsap.killTweensOf(reasonHead);
+      gsap.killTweensOf(reasonSub);
+
       const outY = direction > 0 ? -30 : 30;
       const inY = direction > 0 ? 30 : -30;
-  
+
       // Out
-      gsap.to([heroText[prevIndex], subText[prevIndex]], {
+      gsap.to([reasonHead[prevIndex], reasonSub[prevIndex]], {
         autoAlpha: 0,
         y: outY,
         duration: 0.75,
@@ -741,10 +740,10 @@ function pageInit(container) {
         stagger: 0.05,
         overwrite: true,
       });
-  
+
       // In
       gsap.fromTo(
-        [heroText[nextIndex], subText[nextIndex]],
+        [reasonHead[nextIndex], reasonSub[nextIndex]],
         { autoAlpha: 0, y: inY },
         {
           autoAlpha: 1,
@@ -756,30 +755,29 @@ function pageInit(container) {
         }
       );
     }
-  
+
     // Callbacks
-    for (let i = 0; i < heroText.length - 1; i++) {
+    for (let i = 0; i < reasonHead.length - 1; i++) {
       const t = i + 0.85;
-  
+
       heroTL.add(() => showText(i + 1, 1), t);
       heroTL.add(() => showText(i, -1), t - 0.001);
     }
     //Parallax
     const Parallax = -5; // tweak amount of parallax
-    heroPanels.forEach((heroPanel) => {
-      const inner = heroPanel.querySelector(".hero__image");
+    reasonPanels.forEach((reasonPanel) => {
+      const inner = reasonPanel.querySelector(".h-reasons-image");
       if (!inner) return;
-  
+
       heroTL.fromTo(
         inner,
         { yPercent: 0 },
-        { yPercent: Parallax, ease: "none", duration: heroSegments },
+        { yPercent: Parallax, ease: "none", duration: reasonSegments },
         0
       );
     });
   }
-  /*
-  
+
   /*Global*/
   function splitA() {
     const elements = gsap.utils.toArray("[data-split-a]");
