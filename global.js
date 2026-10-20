@@ -237,43 +237,6 @@ function pageInit(container) {
   }
   copyright();
 
-  function pageLoad() {
-    //const featuredImage = document.querySelectorAll('[featured-image]');
-    const elements = document.querySelectorAll('[data-split-b]');
-    //const elementLoad = document.querySelectorAll('[element-load]');
-
-    const allWords = [];
-    const pageLoadTl = gsap.timeline();
-
-    if (elements.length) {
-      elements.forEach((element) => {
-        const split = SplitText.create(element, {
-          type: 'words',
-          wordsClass: 'word'
-        });
-
-        split.words.forEach((word) => {
-          const wrapper = document.createElement('span');
-          wrapper.className = 'word-clip';
-          word.parentNode.insertBefore(wrapper, word);
-          wrapper.appendChild(word);
-          allWords.push(word);
-        });
-
-        element.style.visibility = 'visible';
-      });
-
-      gsap.set(allWords, { yPercent: 180 });
-
-      pageLoadTl.to(allWords, {
-        yPercent: 0,
-        stagger: 0.03,
-        duration: 0.8,
-        ease: 'back.out(1.3)'
-      }, 0.75);
-    }
-  }
-
   function homePreLoader() {
     const loader = document.querySelector(".preload-wrapper");
     if (!loader) return;
@@ -285,7 +248,6 @@ function pageInit(container) {
     const loading = document.querySelector("[data-loading]");
     const connectingLine = document.querySelector("[data-connecting-line]");
     const number = document.querySelectorAll("[data-number]");
-
 
     const counter = { value: 0 };
 
@@ -406,11 +368,44 @@ function pageInit(container) {
     const isHome = document.querySelector('[data-page="home"]') !== null;
 
     if (isHome) {
-      // home-page preloader
       homePreLoader();
     } else {
-      // all other pages
       defaultPreLoader();
+    }
+  }
+
+  function pageLoad() {
+    const elements = document.querySelectorAll('[data-split-b]');
+    const allWords = [];
+
+    pageLoadTl = gsap.timeline({ paused: true }); // no const/let
+
+    if (elements.length) {
+      elements.forEach((element) => {
+        const split = SplitText.create(element, {
+          type: 'words',
+          wordsClass: 'word'
+        });
+
+        split.words.forEach((word) => {
+          const wrapper = document.createElement('span');
+          wrapper.className = 'word-clip';
+          word.parentNode.insertBefore(wrapper, word);
+          wrapper.appendChild(word);
+          allWords.push(word);
+        });
+
+        element.style.visibility = 'visible';
+      });
+
+      gsap.set(allWords, { yPercent: 180 });
+
+      pageLoadTl.to(allWords, {
+        yPercent: 0,
+        stagger: 0.03,
+        duration: 0.8,
+        ease: 'back.out(1.3)'
+      }, 0.75);
     }
   }
   pageLoad();
