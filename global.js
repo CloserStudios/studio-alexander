@@ -683,8 +683,35 @@ function pageInit(container) {
     const reasonSegments = reasonPanels.length - 1;
     const reasonHead = gsap.utils.toArray("[data-reason-head]");
     const reasonSub = gsap.utils.toArray("[data-reason-sub]");
+    const reasonCount = document.querySelector("[data-reason-count]");
 
-    const heroTL = gsap.timeline({
+    let countIndex = 0;
+
+    function updateCount(nextIndex, direction) {
+      if (!reasonCount || nextIndex === countIndex) return;
+      countIndex = nextIndex;
+
+      const outY = direction > 0 ? "-100%" : "100%";
+      const inY = direction > 0 ? "100%" : "-100%";
+
+      gsap.killTweensOf(reasonCount);
+      gsap.to(reasonCount, {
+        yPercent: parseFloat(outY),
+        autoAlpha: 0,
+        duration: 0.25,
+        ease: "power2.in",
+        onComplete: () => {
+          reasonCount.textContent = nextIndex + 1; // 1-based
+          gsap.fromTo(
+            reasonCount,
+            { yPercent: parseFloat(inY), autoAlpha: 0 },
+            { yPercent: 0, autoAlpha: 1, duration: 0.35, ease: "power2.out" }
+          );
+        },
+      });
+    }
+
+    const tl = gsap.timeline({
       scrollTrigger: {
         trigger: reasonTrigger,
         start: "top top",
@@ -700,7 +727,7 @@ function pageInit(container) {
     });
 
     reasonPanels.slice(0, -1).forEach((reasonPanel, i) => {
-      heroTL.to(
+      tl.to(
         reasonPanel,
         {
           clipPath: "inset(0% 0% 100% 0%)",
@@ -760,8 +787,8 @@ function pageInit(container) {
     for (let i = 0; i < reasonHead.length - 1; i++) {
       const t = i + 0.85;
 
-      heroTL.add(() => showText(i + 1, 1), t);
-      heroTL.add(() => showText(i, -1), t - 0.001);
+      tl.add(() => { showText(i + 1, 1); updateCount(i + 1, 1); }, t);
+      tl.add(() => { showText(i, -1); updateCount(i, -1); }, t - 0.001);
     }
     //Parallax
     const Parallax = -5; // tweak amount of parallax
@@ -769,7 +796,7 @@ function pageInit(container) {
       const inner = reasonPanel.querySelector(".h-reasons-image");
       if (!inner) return;
 
-      heroTL.fromTo(
+      tl.fromTo(
         inner,
         { yPercent: 0 },
         { yPercent: Parallax, ease: "none", duration: reasonSegments },
