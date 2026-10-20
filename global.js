@@ -394,7 +394,6 @@ function pageInit(container) {
             autoAlpha: 0,
             stagger: 0.05,
             ease: "expo.out",
-            paused: true, // important
           });
 
           splitTweens.push(tween);
