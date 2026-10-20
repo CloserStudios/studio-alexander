@@ -3,6 +3,7 @@ let mm = gsap.matchMedia();
 let lenis;
 let resizeObserver = null;
 const getNav = () => document.querySelector('nav');
+const initialised = new WeakSet();
 
 function globalInit() {
   lenis = new Lenis();
@@ -116,6 +117,9 @@ function menuButtonHover() {
 }
 
 function pageInit(container) {
+  if (!container || initialised.has(container)) return;
+  initialised.add(container);
+
   ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
   mm.revert();
 
@@ -981,7 +985,7 @@ function destroyResizeObserver() {
 
 function init() {
   globalInit();
-  //pageInit(document.querySelector('[data-barba="container"]'));
+  pageInit(document.querySelector('[data-barba="container"]'));
   navColour(document.querySelector('[data-barba="container"]'));
   initResizeObserver();
   menuButtonHover();
