@@ -161,7 +161,6 @@ function pageInit(container) {
       scrollTrigger: {
         trigger: partner,
         start: "top 95%",
-        markers: true,
         toggleActions: "play none none reverse",
       },
     });
@@ -1009,7 +1008,7 @@ barba.hooks.afterEnter((data) => {
 
 barba.hooks.after((data) => {
   window.scrollTo(0, 0);
-  pageInit(data.next.container);
+  //pageInit(data.next.container);
   lenis.start();
   initResizeObserver();
 });
