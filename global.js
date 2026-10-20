@@ -272,7 +272,6 @@ function pageInit(container) {
       .add(splitB, 0)
 
   }
-  pageLoad();
 
   function homePreLoader() {
     const loader = document.querySelector(".preload-wrapper");
@@ -413,6 +412,7 @@ function pageInit(container) {
       defaultPreLoader();
     }
   }
+  pageLoad();
 
   function checkPreloader() {
     if (!sessionStorage.getItem("visited")) {
