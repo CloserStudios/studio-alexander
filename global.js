@@ -499,6 +499,135 @@ function pageInit(container) {
   }
   projectAnim();
 
+  function reasonSwiper() {
+    const reasonTrigger = document.querySelector("[data-reason-trigger]");
+    const reasonPanels = gsap.utils.toArray("[data-reason-panels]");
+    const reasonSegments = reasonPanels.length - 1;
+    const reasonHead = gsap.utils.toArray("[data-reason-head]");
+    const reasonSub = gsap.utils.toArray("[data-reason-sub]");
+    const reasonCount = document.querySelector("[data-reason-count]");
+
+    let countIndex = 0;
+
+    function updateCount(nextIndex, direction) {
+      if (!reasonCount || nextIndex === countIndex) return;
+      countIndex = nextIndex;
+
+      const outY = direction > 0 ? "-100%" : "100%";
+      const inY = direction > 0 ? "100%" : "-100%";
+
+      gsap.killTweensOf(reasonCount);
+      gsap.to(reasonCount, {
+        yPercent: parseFloat(outY),
+        autoAlpha: 0,
+        duration: 0.25,
+        ease: "power2.in",
+        onComplete: () => {
+          reasonCount.textContent = String(nextIndex + 1).padStart(2, "0");
+          gsap.fromTo(
+            reasonCount,
+            { yPercent: parseFloat(inY), autoAlpha: 0 },
+            { yPercent: 0, autoAlpha: 1, duration: 0.35, ease: "power2.out" }
+          );
+        },
+      });
+    }
+
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: reasonTrigger,
+        start: "top top",
+        end: "+=" + reasonSegments * 100 + "%",
+        scrub: 1,
+        pin: true,
+        anticipatePin: 1,
+      },
+    });
+
+    reasonPanels.forEach((reasonPanel, i) => {
+      gsap.set(reasonPanel, { zIndex: reasonPanels.length - i });
+    });
+
+    reasonPanels.slice(0, -1).forEach((reasonPanel, i) => {
+      tl.to(
+        reasonPanel,
+        {
+          clipPath: "inset(0% 0% 100% 0%)",
+          ease: "none",
+          duration: 1,
+        },
+        i
+      );
+    });
+
+    gsap.set(reasonHead, { autoAlpha: 0, y: 30 });
+    gsap.set(reasonSub, { autoAlpha: 0, y: 30 });
+
+    gsap.set(reasonHead[0], { autoAlpha: 1, y: 0 });
+    gsap.set(reasonSub[0], { autoAlpha: 1, y: 0 });
+
+    let activeIndex = 0;
+
+    function showText(nextIndex, direction) {
+      if (nextIndex === activeIndex) return;
+
+      const prevIndex = activeIndex;
+      activeIndex = nextIndex;
+
+      gsap.killTweensOf(reasonHead);
+      gsap.killTweensOf(reasonSub);
+
+      const outY = direction > 0 ? -30 : 30;
+      const inY = direction > 0 ? 30 : -30;
+
+      // Out
+      gsap.to([reasonHead[prevIndex], reasonSub[prevIndex]], {
+        autoAlpha: 0,
+        y: outY,
+        duration: 0.75,
+        ease: "power2.out",
+        stagger: 0.05,
+        overwrite: true,
+      });
+
+      // In
+      gsap.fromTo(
+        [reasonHead[nextIndex], reasonSub[nextIndex]],
+        { autoAlpha: 0, y: inY },
+        {
+          autoAlpha: 1,
+          y: 0,
+          duration: 0.75,
+          stagger: 0.05,
+          ease: "power2.out",
+          overwrite: true,
+        }
+      );
+    }
+
+    // Callbacks
+    for (let i = 0; i < reasonHead.length - 1; i++) {
+      const t = i + 0.85;
+
+      tl.add(() => { showText(i + 1, 1); updateCount(i + 1, 1); }, t);
+      tl.add(() => { showText(i, -1); updateCount(i, -1); }, t - 0.001);
+    }
+    //Parallax
+    const Parallax = -5; // tweak amount of parallax
+    reasonPanels.forEach((reasonPanel) => {
+      const inner = reasonPanel.querySelector(".h-reasons-image");
+      if (!inner) return;
+
+      tl.fromTo(
+        inner,
+        { yPercent: 0 },
+        { yPercent: Parallax, ease: "none", duration: reasonSegments },
+        0
+      );
+    });
+  }
+  reasonSwiper();
+
   function marqueeAnimation() {
     const marquee = document.querySelector(".h-clients-track");
     const marqueeContent = document.querySelector(".h-clients-inner");
@@ -825,135 +954,6 @@ function pageInit(container) {
   }
   teamAnimation();
 
-  function reasonSwiper() {
-    const reasonTrigger = document.querySelector("[data-reason-trigger]");
-    const reasonPanels = gsap.utils.toArray("[data-reason-panels]");
-    const reasonSegments = reasonPanels.length - 1;
-    const reasonHead = gsap.utils.toArray("[data-reason-head]");
-    const reasonSub = gsap.utils.toArray("[data-reason-sub]");
-    const reasonCount = document.querySelector("[data-reason-count]");
-
-    let countIndex = 0;
-
-    function updateCount(nextIndex, direction) {
-      if (!reasonCount || nextIndex === countIndex) return;
-      countIndex = nextIndex;
-
-      const outY = direction > 0 ? "-100%" : "100%";
-      const inY = direction > 0 ? "100%" : "-100%";
-
-      gsap.killTweensOf(reasonCount);
-      gsap.to(reasonCount, {
-        yPercent: parseFloat(outY),
-        autoAlpha: 0,
-        duration: 0.25,
-        ease: "power2.in",
-        onComplete: () => {
-          reasonCount.textContent = String(nextIndex + 1).padStart(2, "0");
-          gsap.fromTo(
-            reasonCount,
-            { yPercent: parseFloat(inY), autoAlpha: 0 },
-            { yPercent: 0, autoAlpha: 1, duration: 0.35, ease: "power2.out" }
-          );
-        },
-      });
-    }
-
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: reasonTrigger,
-        start: "top top",
-        end: "+=" + reasonSegments * 100 + "%",
-        scrub: 1,
-        pin: true,
-        anticipatePin: 1,
-      },
-    });
-
-    reasonPanels.forEach((reasonPanel, i) => {
-      gsap.set(reasonPanel, { zIndex: reasonPanels.length - i });
-    });
-
-    reasonPanels.slice(0, -1).forEach((reasonPanel, i) => {
-      tl.to(
-        reasonPanel,
-        {
-          clipPath: "inset(0% 0% 100% 0%)",
-          ease: "none",
-          duration: 1,
-        },
-        i
-      );
-    });
-
-    gsap.set(reasonHead, { autoAlpha: 0, y: 30 });
-    gsap.set(reasonSub, { autoAlpha: 0, y: 30 });
-
-    gsap.set(reasonHead[0], { autoAlpha: 1, y: 0 });
-    gsap.set(reasonSub[0], { autoAlpha: 1, y: 0 });
-
-    let activeIndex = 0;
-
-    function showText(nextIndex, direction) {
-      if (nextIndex === activeIndex) return;
-
-      const prevIndex = activeIndex;
-      activeIndex = nextIndex;
-
-      gsap.killTweensOf(reasonHead);
-      gsap.killTweensOf(reasonSub);
-
-      const outY = direction > 0 ? -30 : 30;
-      const inY = direction > 0 ? 30 : -30;
-
-      // Out
-      gsap.to([reasonHead[prevIndex], reasonSub[prevIndex]], {
-        autoAlpha: 0,
-        y: outY,
-        duration: 0.75,
-        ease: "power2.out",
-        stagger: 0.05,
-        overwrite: true,
-      });
-
-      // In
-      gsap.fromTo(
-        [reasonHead[nextIndex], reasonSub[nextIndex]],
-        { autoAlpha: 0, y: inY },
-        {
-          autoAlpha: 1,
-          y: 0,
-          duration: 0.75,
-          stagger: 0.05,
-          ease: "power2.out",
-          overwrite: true,
-        }
-      );
-    }
-
-    // Callbacks
-    for (let i = 0; i < reasonHead.length - 1; i++) {
-      const t = i + 0.85;
-
-      tl.add(() => { showText(i + 1, 1); updateCount(i + 1, 1); }, t);
-      tl.add(() => { showText(i, -1); updateCount(i, -1); }, t - 0.001);
-    }
-    //Parallax
-    const Parallax = -5; // tweak amount of parallax
-    reasonPanels.forEach((reasonPanel) => {
-      const inner = reasonPanel.querySelector(".h-reasons-image");
-      if (!inner) return;
-
-      tl.fromTo(
-        inner,
-        { yPercent: 0 },
-        { yPercent: Parallax, ease: "none", duration: reasonSegments },
-        0
-      );
-    });
-  }
-  reasonSwiper();
-
   function desktopAnimations() {
     mm.add("(min-width: 992px)", () => {
     });
@@ -965,11 +965,8 @@ function initResizeObserver() {
   if (resizeObserver) return;
 
   resizeObserver = new ResizeObserver(() => {
-    clearTimeout(resizeObserver._t);
-    resizeObserver._t = setTimeout(() => {
-      ScrollTrigger.refresh();
-      lenis?.resize?.();
-    }, 200);
+    ScrollTrigger.refresh();
+    lenis?.resize?.();
   });
 
   resizeObserver.observe(document.body);
