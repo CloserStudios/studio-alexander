@@ -379,7 +379,7 @@ function pageInit(container) {
   }
 
   function pageLoad() {
-    const elements = document.querySelectorAll("[data-split-b]");
+    const elements = document.querySelectorAll("[data-split-p1]");
     const splitTweens = [];
 
     pageLoadTl = gsap.timeline({ paused: true });
