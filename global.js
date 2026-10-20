@@ -174,6 +174,7 @@ function pageInit(container) {
       });
     });
   }
+  splitAnimB();
 
   function partnerAnim() {
     const partner = document.querySelector("[data-partner]");
@@ -271,6 +272,7 @@ function pageInit(container) {
       .add(splitB, 0)
 
   }
+  pageLoad();
 
   function homePreLoader() {
     const loader = document.querySelector(".preload-wrapper");
