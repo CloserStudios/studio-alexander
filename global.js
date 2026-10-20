@@ -272,28 +272,6 @@ function pageInit(container) {
         ease: 'back.out(1.3)'
       }, 0.75);
     }
-
-    if (featuredImage) {
-      tl.fromTo(featuredImage, {
-        clipPath: 'inset(100% 0 0 0)'
-      }, {
-        clipPath: 'inset(0% 0 0 0)',
-        duration: 1,
-        ease: 'power3.inOut'
-      }, 0);
-    }
-
-    if (elementLoad.length) {
-      gsap.set(elementLoad, { autoAlpha: 0 });
-
-      tl.to(elementLoad, {
-        autoAlpha: 1,
-        stagger: 0.1,
-        duration: 0.5,
-        ease: 'power2.out'
-      }, 1);
-    }
-
   }
 
   function homePreLoader() {
