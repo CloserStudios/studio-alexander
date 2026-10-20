@@ -701,7 +701,7 @@ function pageInit(container) {
         duration: 0.25,
         ease: "power2.in",
         onComplete: () => {
-          reasonCount.textContent = nextIndex + 1; // 1-based
+          reasonCount.textContent = String(nextIndex + 1).padStart(2, "0");
           gsap.fromTo(
             reasonCount,
             { yPercent: parseFloat(inY), autoAlpha: 0 },
