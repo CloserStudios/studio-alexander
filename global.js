@@ -845,12 +845,11 @@ function pageInit(container) {
       scrollTrigger: {
         trigger: partner,
         start: "top 90%",
-        toggleActions: "play none none none",
-        markers: true,
+        toggleActions: "play none none reset",
       },
     });
 
-    tl.to(partner, { yPercent: 0, duration: 1, ease: "power2.out" });
+    tl.to(partner, { yPercent: 0, duration: 1, ease: "expo.out" });
   }
   partnerAnim();
 
