@@ -501,6 +501,7 @@ function pageInit(container) {
 
   function reasonSwiper() {
     const reasonTrigger = document.querySelector("[data-reason-trigger]");
+    if (!reasonTrigger) return;
     const reasonPanels = gsap.utils.toArray("[data-reason-panels]");
     const reasonSegments = reasonPanels.length - 1;
     const reasonHead = gsap.utils.toArray("[data-reason-head]");
@@ -521,7 +522,7 @@ function pageInit(container) {
         yPercent: parseFloat(outY),
         autoAlpha: 0,
         duration: 0.25,
-        ease: "power2.in",
+        ease: "expo.in",
         onComplete: () => {
           reasonCount.textContent = String(nextIndex + 1).padStart(2, "0");
           gsap.fromTo(
@@ -541,6 +542,7 @@ function pageInit(container) {
         scrub: 1,
         pin: true,
         anticipatePin: 1,
+        refreshPriority: 1,
       },
     });
 
