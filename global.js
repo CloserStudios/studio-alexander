@@ -125,7 +125,7 @@ function pageInit(container) {
   let splitB;
 
   /*Global*/
-  function splitA() {
+  function splitAnimA() {
     const elements = gsap.utils.toArray("[data-split-a]");
     if (!elements.length) return;
 
@@ -151,9 +151,9 @@ function pageInit(container) {
       });
     });
   }
-  splitA();
+  splitAnimA();
 
-  function splitB() {
+  function splitAnimB() {
     const elements = gsap.utils.toArray("[data-split-b]");
     if (!elements.length) return;
 
