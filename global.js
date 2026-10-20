@@ -146,7 +146,7 @@ function pageInit(container) {
             scrollTrigger: {
               trigger: el,
               start: "top 80%",
-              toggleActions: "play none none none",
+              toggleActions: "play none none reverse",
             },
           });
         },
@@ -164,7 +164,7 @@ function pageInit(container) {
     let tl = gsap.timeline({
       scrollTrigger: {
         trigger: partner,
-        start: "top 95%",
+        start: "top bottom",
         toggleActions: "play none none reverse",
       },
     });
@@ -390,8 +390,8 @@ function pageInit(container) {
       SplitText.create(el, {
         type: "lines",
         mask: "lines",
+        linesClass: "split-line",
         autoSplit: true,
-        deepSplice: true,
         onSplit(self) {
           const tween = gsap.from(self.lines, {
             duration: 1.5,
