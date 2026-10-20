@@ -121,6 +121,156 @@ function pageInit(container) {
 
   const clipHidden = 'polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)';
   const clipShown = 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)';
+  let pageLoadTl;
+  let splitB;
+
+  /*Global*/
+  function splitA() {
+    const elements = gsap.utils.toArray("[data-split-a]");
+    if (!elements.length) return;
+
+    elements.forEach((el) => {
+      SplitText.create(el, {
+        type: "lines",
+        mask: "lines",
+        autoSplit: true,
+        onSplit(self) {
+          return gsap.from(self.lines, {
+            duration: 1.5,
+            y: 50,
+            autoAlpha: 0,
+            stagger: 0.05,
+            ease: "expo.out",
+            scrollTrigger: {
+              trigger: el,
+              start: "top 80%",
+              toggleActions: "play none none none",
+            },
+          });
+        },
+      });
+    });
+  }
+  splitA();
+
+  function splitB() {
+    const elements = gsap.utils.toArray("[data-split-b]");
+    if (!elements.length) return;
+
+    elements.forEach((el) => {
+      SplitText.create(el, {
+        type: "lines",
+        mask: "lines",
+        autoSplit: true,
+        onSplit(self) {
+          splitB = gsap.from(self.lines, {
+            duration: 1.5,
+            y: 50,
+            autoAlpha: 0,
+            stagger: 0.05,
+            ease: "expo.out",
+          });
+        },
+      });
+    });
+  }
+
+  function partnerAnim() {
+    const partner = document.querySelector("[data-partner]");
+    if (!partner) return;
+
+    gsap.set(partner, { yPercent: 100 });
+
+    let tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: partner,
+        start: "top 90%",
+        toggleActions: "play none none reverse",
+      },
+    });
+
+    tl.to(partner, { yPercent: 0, duration: 1, ease: "expo.out" });
+  }
+  partnerAnim();
+
+  function buttonAnim() {
+    const buttons = gsap.utils.toArray("[data-button-hover]");
+
+    buttons.forEach((button) => {
+      let buttonArrow = button.querySelector("[data-button-arrow]");
+      let buttonText = button.querySelectorAll("[data-button-text]");
+      let tl = gsap.timeline({
+        paused: true,
+        defaults: {
+          ease: "expo.inOut"
+        }
+      });
+
+      tl
+        .to(buttonText, { y: -12, duration: 0.5 }, 0)
+        .to(buttonArrow, { xPercent: 101, duration: 0.25 }, 0)
+        .set(buttonArrow, { xPercent: -101 }, 0.25)
+        .to(buttonArrow, { xPercent: 0, duration: 0.25 }, 0.25);
+
+      button.addEventListener("mouseenter", () => tl.play(0));
+
+      button.addEventListener("mouseleave", () => tl.reverse());
+    });
+  }
+  buttonAnim();
+
+  function paraEffect() {
+    const paraWrappers = document.querySelectorAll("[data-para-wrap]");
+    if (!paraWrappers.length) return;
+
+    paraWrappers.forEach((wrapper) => {
+      const image = wrapper.querySelector("[data-para-image]");
+      if (!image) return;
+
+      gsap.timeline({
+        scrollTrigger: {
+          trigger: wrapper,
+          scrub: true,
+          invalidateOnRefresh: true,
+        },
+        defaults: {
+          ease: "none",
+          force3D: true,
+        }
+      })
+        .fromTo(image, { backgroundPosition: "50% 100%" }, { backgroundPosition: "50% 0%", duration: 1 });
+    });
+  }
+  paraEffect();
+
+  function currentPage() {
+    const pageTitle = container?.getAttribute("data-page");
+    const pageBreadcrumb = document.querySelector("[current-page]");
+
+    if (!pageBreadcrumb || !pageTitle) return;
+
+    pageBreadcrumb.textContent = pageTitle;
+  }
+  currentPage();
+
+  function copyright() {
+    const currentYear = new Date().getFullYear();
+    document.querySelectorAll('[data="year"]').forEach((el) => {
+      el.textContent = currentYear;
+    });
+  }
+  copyright();
+
+  function pageLoad() {
+    let pageLoadTl = gsap.timeline({
+      defaults: { ease: "expo.inOut" },
+      paused: true,
+    });
+
+    pageLoadTl
+      .add(splitB, 0)
+
+  }
 
   function homePreLoader() {
     const loader = document.querySelector(".preload-wrapper");
@@ -148,6 +298,7 @@ function pageInit(container) {
         sessionStorage.setItem("visited", "true");
         document.documentElement.classList.remove("show-preloader");
         loader.remove();
+        pageLoadTl.play();
       },
     });
 
@@ -806,121 +957,6 @@ function pageInit(container) {
     });
   }
   reasonSwiper();
-
-  /*Global*/
-  function splitA() {
-    const elements = gsap.utils.toArray("[data-split-a]");
-    if (!elements.length) return;
-
-    elements.forEach((el) => {
-      SplitText.create(el, {
-        type: "lines",
-        mask: "lines",
-        autoSplit: true,
-        onSplit(self) {
-          return gsap.from(self.lines, {
-            duration: 1.5,
-            y: 50,
-            autoAlpha: 0,
-            stagger: 0.05,
-            ease: "expo.out",
-            scrollTrigger: {
-              trigger: el,
-              start: "top 80%",
-              toggleActions: "play none none none",
-            },
-          });
-        },
-      });
-    });
-  }
-  splitA();
-
-  function partnerAnim() {
-    const partner = document.querySelector("[data-partner]");
-    if (!partner) return;
-
-    gsap.set(partner, { yPercent: 100 });
-
-    let tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: partner,
-        start: "top 90%",
-        toggleActions: "play none none reverse",
-      },
-    });
-
-    tl.to(partner, { yPercent: 0, duration: 1, ease: "expo.out" });
-  }
-  partnerAnim();
-
-  function buttonAnim() {
-    const buttons = gsap.utils.toArray("[data-button-hover]");
-
-    buttons.forEach((button) => {
-      let buttonArrow = button.querySelector("[data-button-arrow]");
-      let buttonText = button.querySelectorAll("[data-button-text]");
-      let tl = gsap.timeline({
-        paused: true,
-        defaults: {
-          ease: "expo.inOut"
-        }
-      });
-
-      tl
-        .to(buttonText, { y: -12, duration: 0.5 }, 0)
-        .to(buttonArrow, { xPercent: 101, duration: 0.25 }, 0)
-        .set(buttonArrow, { xPercent: -101 }, 0.25)
-        .to(buttonArrow, { xPercent: 0, duration: 0.25 }, 0.25);
-
-      button.addEventListener("mouseenter", () => tl.play(0));
-
-      button.addEventListener("mouseleave", () => tl.reverse());
-    });
-  }
-  buttonAnim();
-
-  function paraEffect() {
-    const paraWrappers = document.querySelectorAll("[data-para-wrap]");
-    if (!paraWrappers.length) return;
-
-    paraWrappers.forEach((wrapper) => {
-      const image = wrapper.querySelector("[data-para-image]");
-      if (!image) return;
-
-      gsap.timeline({
-        scrollTrigger: {
-          trigger: wrapper,
-          scrub: true,
-          invalidateOnRefresh: true,
-        },
-        defaults: {
-          ease: "none",
-          force3D: true,
-        }
-      })
-        .fromTo(image, { backgroundPosition: "50% 100%" }, { backgroundPosition: "50% 0%", duration: 1 });
-    });
-  }
-  paraEffect();
-
-  function currentPage() {
-    const pageTitle = container?.getAttribute("data-page");
-    const pageBreadcrumb = document.querySelector("[current-page]");
-
-    if (!pageBreadcrumb || !pageTitle) return;
-
-    pageBreadcrumb.textContent = pageTitle;
-  }
-  currentPage();
-
-  function copyright() {
-    const currentYear = new Date().getFullYear();
-    document.querySelectorAll('[data="year"]').forEach((el) => {
-      el.textContent = currentYear;
-    });
-  }
-  copyright();
 
   function desktopAnimations() {
     mm.add("(min-width: 992px)", () => {
