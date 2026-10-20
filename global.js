@@ -147,6 +147,7 @@ function pageInit(container) {
         lenis.start();
         sessionStorage.setItem("visited", "true");
         document.documentElement.classList.remove("show-preloader");
+        loader.remove();
       },
     });
 
@@ -845,7 +846,7 @@ function pageInit(container) {
       scrollTrigger: {
         trigger: partner,
         start: "top 90%",
-        toggleActions: "play none none reset",
+        toggleActions: "play none none reverse",
       },
     });
 
