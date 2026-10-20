@@ -965,8 +965,11 @@ function initResizeObserver() {
   if (resizeObserver) return;
 
   resizeObserver = new ResizeObserver(() => {
-    ScrollTrigger.refresh();
-    lenis?.resize?.();
+    clearTimeout(resizeObserver._t);
+    resizeObserver._t = setTimeout(() => {
+      ScrollTrigger.refresh();
+      lenis?.resize?.();
+    }, 200);
   });
 
   resizeObserver.observe(document.body);
@@ -1010,9 +1013,6 @@ barba.hooks.after((data) => {
   pageInit(data.next.container);
   lenis.start();
   initResizeObserver();
-
-  document.fonts.ready.then(() => ScrollTrigger.refresh());
-  window.addEventListener("load", () => ScrollTrigger.refresh(), { once: true });
 });
 
 barba.init({
