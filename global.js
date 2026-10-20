@@ -846,6 +846,7 @@ function pageInit(container) {
         trigger: partner,
         start: "top 80%",
         toggleActions: "play none none none",
+        markers: true,
       },
     });
 
