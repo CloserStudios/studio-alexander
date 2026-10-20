@@ -981,7 +981,7 @@ function destroyResizeObserver() {
 
 function init() {
   globalInit();
-  pageInit(document.querySelector('[data-barba="container"]'));
+  //pageInit(document.querySelector('[data-barba="container"]'));
   navColour(document.querySelector('[data-barba="container"]'));
   initResizeObserver();
   menuButtonHover();
@@ -1008,7 +1008,7 @@ barba.hooks.afterEnter((data) => {
 
 barba.hooks.after((data) => {
   window.scrollTo(0, 0);
-  //pageInit(data.next.container);
+  pageInit(data.next.container);
   lenis.start();
   initResizeObserver();
 });
