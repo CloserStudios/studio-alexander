@@ -835,7 +835,25 @@ function pageInit(container) {
   }
   splitA();
 
-  function buttonAnimation() {
+  function partnerAnim() {
+    const partner = document.querySelector("[data-partner]");
+    if (!partner) return;
+
+    gsap.set(partner, { yPercent: 100 });
+
+    let tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: partner,
+        start: "top 80%",
+        toggleActions: "play none none none",
+      },
+    });
+
+    tl.to(partner, { yPercent: 0, duration: 1, ease: "power2.out" });
+  }
+  partnerAnim();
+
+  function buttonAnim() {
     const buttons = gsap.utils.toArray("[data-button-hover]");
 
     buttons.forEach((button) => {
@@ -859,7 +877,7 @@ function pageInit(container) {
       button.addEventListener("mouseleave", () => tl.reverse());
     });
   }
-  buttonAnimation();
+  buttonAnim();
 
   function paraEffect() {
     const paraWrappers = document.querySelectorAll("[data-para-wrap]");
