@@ -29,7 +29,6 @@ function navColour(container) {
   const nav = getNav();
   if (nav) nav.classList.toggle("dark", isDark);
 }
-navColour(container);
 
 function menuAnimation() {
   const menu = document.querySelector(".menu");
@@ -905,6 +904,7 @@ function destroyResizeObserver() {
 function init() {
   globalInit();
   pageInit(document.querySelector('[data-barba="container"]'));
+  navColour(document.querySelector('[data-barba="container"]'));
   initResizeObserver();
   menuButtonHover();
   menuAnimation();
