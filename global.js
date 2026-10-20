@@ -243,7 +243,7 @@ function pageInit(container) {
     //const elementLoad = document.querySelectorAll('[element-load]');
 
     const allWords = [];
-    const tl = gsap.timeline();
+    const pageLoadTl = gsap.timeline();
 
     if (elements.length) {
       elements.forEach((element) => {
@@ -265,7 +265,7 @@ function pageInit(container) {
 
       gsap.set(allWords, { yPercent: 180 });
 
-      tl.to(allWords, {
+      pageLoadTl.to(allWords, {
         yPercent: 0,
         stagger: 0.03,
         duration: 0.8,
