@@ -122,9 +122,7 @@ function pageInit(container) {
   const clipHidden = 'polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)';
   const clipShown = 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)';
   let pageLoadTl;
-  let splitB;
 
-  /*Global*/
   function splitAnimA() {
     const elements = gsap.utils.toArray("[data-split-a]");
     if (!elements.length) return;
@@ -152,29 +150,6 @@ function pageInit(container) {
     });
   }
   splitAnimA();
-
-  function splitAnimB() {
-    const elements = gsap.utils.toArray("[data-split-b]");
-    if (!elements.length) return;
-
-    elements.forEach((el) => {
-      SplitText.create(el, {
-        type: "lines",
-        mask: "lines",
-        autoSplit: true,
-        onSplit(self) {
-          splitB = gsap.from(self.lines, {
-            duration: 1.5,
-            y: 50,
-            autoAlpha: 0,
-            stagger: 0.05,
-            ease: "expo.out",
-          });
-        },
-      });
-    });
-  }
-  splitAnimB();
 
   function partnerAnim() {
     const partner = document.querySelector("[data-partner]");
@@ -263,13 +238,61 @@ function pageInit(container) {
   copyright();
 
   function pageLoad() {
-    let pageLoadTl = gsap.timeline({
-      defaults: { ease: "expo.inOut" },
-      paused: true,
-    });
+    //const featuredImage = document.querySelectorAll('[featured-image]');
+    const elements = document.querySelectorAll('[data-split-b]');
+    //const elementLoad = document.querySelectorAll('[element-load]');
 
-    pageLoadTl
-      .add(splitB, 0)
+    const allWords = [];
+    const tl = gsap.timeline();
+
+    if (elements.length) {
+      elements.forEach((element) => {
+        const split = SplitText.create(element, {
+          type: 'words',
+          wordsClass: 'word'
+        });
+
+        split.words.forEach((word) => {
+          const wrapper = document.createElement('span');
+          wrapper.className = 'word-clip';
+          word.parentNode.insertBefore(wrapper, word);
+          wrapper.appendChild(word);
+          allWords.push(word);
+        });
+
+        element.style.visibility = 'visible';
+      });
+
+      gsap.set(allWords, { yPercent: 180 });
+
+      tl.to(allWords, {
+        yPercent: 0,
+        stagger: 0.03,
+        duration: 0.8,
+        ease: 'back.out(1.3)'
+      }, 0.75);
+    }
+
+    if (featuredImage) {
+      tl.fromTo(featuredImage, {
+        clipPath: 'inset(100% 0 0 0)'
+      }, {
+        clipPath: 'inset(0% 0 0 0)',
+        duration: 1,
+        ease: 'power3.inOut'
+      }, 0);
+    }
+
+    if (elementLoad.length) {
+      gsap.set(elementLoad, { autoAlpha: 0 });
+
+      tl.to(elementLoad, {
+        autoAlpha: 1,
+        stagger: 0.1,
+        duration: 0.5,
+        ease: 'power2.out'
+      }, 1);
+    }
 
   }
 
