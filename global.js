@@ -777,6 +777,7 @@ function pageInit(container) {
       );
     });
   }
+  reasonSwiper();
 
   /*Global*/
   function splitA() {
