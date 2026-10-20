@@ -844,7 +844,7 @@ function pageInit(container) {
     let tl = gsap.timeline({
       scrollTrigger: {
         trigger: partner,
-        start: "top 80%",
+        start: "top 90%",
         toggleActions: "play none none none",
         markers: true,
       },
