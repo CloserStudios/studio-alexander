@@ -24,25 +24,12 @@ function globalInit() {
   });
 }
 
-/*
 function navColour(container) {
   const isDark = container?.dataset.navTheme === "dark";
   const nav = getNav();
   if (nav) nav.classList.toggle("dark", isDark);
 }
-*/
-
-function navColour(container) {
-  const isLight = container?.dataset.navTheme === "light";
-  const nav = getNav();
-  if (!nav) return;
-
-  if (isLight) {
-    nav.setAttribute("data-wf--nav--variant", "light");
-  } else {
-    nav.removeAttribute("data-wf--nav--variant"); // falls back to base (dark)
-  }
-}
+navColour(container);
 
 function menuAnimation() {
   const menu = document.querySelector(".menu");
@@ -298,62 +285,6 @@ function pageInit(container) {
     });
   }
   navColourChange();
-
-  /*
-  function heroAnim() {
-    const hero = document.querySelector('.h-hero');
-    if (!hero) return;
-    const barba = document.querySelector('[data-barba="container"]');
-    const pinHeight = document.querySelector('[data-pin-height="hero"]');
-    const container = document.querySelector('.h-hero-container');
-    const mask = document.querySelector('.h-hero-mask');
-    const heroImage = document.querySelector('.h-hero-image');
-    const heroText = document.querySelector('.h-hero-text');
-
-    const nav = getNav();
-    const navToggle = 0.8;
-    const baseDark = barba?.dataset.navTheme === 'dark';
-
-    const tl = gsap.timeline({
-      defaults: { ease: 'none' },
-      scrollTrigger: {
-        trigger: pinHeight,
-        start: 'top top',
-        end: 'bottom bottom',
-        pin: container,
-        scrub: 1,
-        invalidateOnRefresh: true,
-      },
-    });
-
-    ScrollTrigger.create({
-      trigger: pinHeight,
-      start: 'top top',
-      end: 'bottom bottom',
-      onUpdate: (self) => {
-        if (!nav) return;
-        const past = self.progress >= navToggle;
-        nav.classList.toggle('dark', past ? !baseDark : baseDark);
-      },
-    });
-
-    tl.to(mask, { scale: 2.1 }, 0)
-      .fromTo(heroImage, { scale: 1.1, yPercent: 6 }, { scale: 1, yPercent: 0 }, 0);
-
-  ScrollTrigger.create({
-    trigger: pinHeight,
-    start: 'top top',
-    end: 'bottom bottom',
-    onUpdate: (self) => {
-      if (!nav) return;
-      const past = self.progress >= navToggle;
-      nav.classList.toggle('dark', past ? !baseDark : baseDark);
-      heroText?.classList.toggle('dark', past ? !baseDark : baseDark);
-    },
-  });
-  }
-  heroAnim();
-  */
 
   function projectAnim() {
     let total = 0,
