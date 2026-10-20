@@ -258,10 +258,10 @@ function pageInit(container) {
         loader.style.visibility = "visible";
       },
       onComplete: () => {
-        lenis.start();
+        loader.remove();
         sessionStorage.setItem("visited", "true");
         document.documentElement.classList.remove("show-preloader");
-        loader.remove();
+        lenis.start();
         pageLoadTl.play();
       },
     });
