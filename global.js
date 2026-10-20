@@ -378,34 +378,25 @@ function pageInit(container) {
     const elements = document.querySelectorAll('[data-split-b]');
     const allWords = [];
 
-    pageLoadTl = gsap.timeline({ paused: true }); // no const/let
+    pageLoadTl = gsap.timeline({ paused: true });
 
     if (elements.length) {
-      elements.forEach((element) => {
-        const split = SplitText.create(element, {
-          type: 'words',
-          wordsClass: 'word'
+      elements.forEach((el) => {
+        SplitText.create(el, {
+          type: "lines",
+          mask: "lines",
+          autoSplit: true,
+          onSplit(self) {
+            return gsap.from(self.lines, {
+              duration: 1.5,
+              y: 50,
+              autoAlpha: 0,
+              stagger: 0.05,
+              ease: "expo.out",
+            });
+          },
         });
-
-        split.words.forEach((word) => {
-          const wrapper = document.createElement('span');
-          wrapper.className = 'word-clip';
-          word.parentNode.insertBefore(wrapper, word);
-          wrapper.appendChild(word);
-          allWords.push(word);
-        });
-
-        element.style.visibility = 'visible';
       });
-
-      gsap.set(allWords, { yPercent: 180 });
-
-      pageLoadTl.to(allWords, {
-        yPercent: 0,
-        stagger: 0.03,
-        duration: 0.8,
-        ease: 'back.out(1.3)'
-      }, 0.75);
     }
   }
   pageLoad();
