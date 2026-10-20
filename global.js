@@ -1010,6 +1010,7 @@ barba.hooks.after((data) => {
   pageInit(data.next.container);
   lenis.start();
   initResizeObserver();
+  ScrollTrigger.refresh();
 });
 
 barba.init({
