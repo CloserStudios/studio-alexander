@@ -387,6 +387,7 @@ function pageInit(container) {
         type: "lines",
         mask: "lines",
         autoSplit: true,
+        deepSplice: true,
         onSplit(self) {
           const tween = gsap.from(self.lines, {
             duration: 1.5,
