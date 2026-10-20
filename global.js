@@ -1035,7 +1035,6 @@ barba.init({
 
       enter(data) {
         gsap.set(data.next.container, { visibility: "visible" });
-        pageLoad(data.next.container);
       },
     },
   ],
