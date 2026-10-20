@@ -375,29 +375,35 @@ function pageInit(container) {
   }
 
   function pageLoad() {
-    const elements = document.querySelectorAll('[data-split-b]');
-    const allWords = [];
+    const elements = document.querySelectorAll("[data-split-b]");
+    const splitTweens = [];
 
     pageLoadTl = gsap.timeline({ paused: true });
 
-    if (elements.length) {
-      elements.forEach((el) => {
-        SplitText.create(el, {
-          type: "lines",
-          mask: "lines",
-          autoSplit: true,
-          onSplit(self) {
-            return gsap.from(self.lines, {
-              duration: 1.5,
-              y: 50,
-              autoAlpha: 0,
-              stagger: 0.05,
-              ease: "expo.out",
-            });
-          },
-        });
+    if (!elements.length) return;
+
+    elements.forEach((el) => {
+      SplitText.create(el, {
+        type: "lines",
+        mask: "lines",
+        autoSplit: true,
+        onSplit(self) {
+          const tween = gsap.from(self.lines, {
+            duration: 1.5,
+            y: 50,
+            autoAlpha: 0,
+            stagger: 0.05,
+            ease: "expo.out",
+            paused: true, // important
+          });
+
+          splitTweens.push(tween);
+          return tween;
+        },
       });
-    }
+    });
+
+    pageLoadTl.add(splitTweens, 0);
   }
   pageLoad();
 
