@@ -942,6 +942,7 @@ function pageInit() {
   }
   filterReveal();
 
+  /*
   function projectHover() {
     const projectCards = document.querySelectorAll("[data-project-card]");
     if (!projectCards.length) return;
@@ -951,7 +952,7 @@ function pageInit() {
       const projectImageOverlay = card.querySelector("[data-image-overlay]");
       if (!projectImage) return;
 
-      gsap.set(projectImage, { scale: 1.05, transformOrigin: "50% 50%" });
+      gsap.set(projectImage, { scale: 1.025, transformOrigin: "50% 50%" });
       gsap.set(projectImageOverlay, { opacity: 0 });
 
       const tl = gsap.timeline({ paused: true });
@@ -974,6 +975,67 @@ function pageInit() {
       });
 
       card.addEventListener("mouseleave", () => {
+        tl.timeScale(1.8).reverse();
+      });
+    });
+  }
+  projectHover();
+  */
+
+  function projectHover() {
+    const projectCards = document.querySelectorAll("[data-project-card]");
+    if (!projectCards.length) return;
+
+    projectCards.forEach((card) => {
+      const projectImage = card.querySelector("[data-project-image]");
+      const projectImageOverlay = card.querySelector("[data-image-overlay]");
+      const cursor = card.querySelector(".cursor"); // cursor inside the card
+      if (!projectImage || !projectImageOverlay || !cursor) return;
+
+      // initial states
+      gsap.set(projectImage, { scale: 1.025, transformOrigin: "50% 50%" });
+      gsap.set(projectImageOverlay, { opacity: 0 });
+      gsap.set(cursor, {
+        opacity: 0,
+        xPercent: -50,
+        yPercent: -50,
+        x: 0,
+        y: 0
+      });
+
+      // smooth cursor movement INSIDE this card
+      const xTo = gsap.quickTo(cursor, "x", { duration: 0.25, ease: "power3.out" });
+      const yTo = gsap.quickTo(cursor, "y", { duration: 0.25, ease: "power3.out" });
+      const opacityTo = gsap.quickTo(cursor, "opacity", { duration: 0.2, ease: "power2.out" });
+
+      // image hover timeline
+      const tl = gsap.timeline({ paused: true });
+      tl.to(projectImage, {
+        scale: 1,
+        duration: 0.5,
+        ease: "power2.out"
+      }, 0).to(projectImageOverlay, {
+        opacity: 0.15,
+        duration: 0.25,
+        ease: "power2.out"
+      }, 0);
+
+      function moveCursor(e) {
+        const rect = card.getBoundingClientRect();
+        xTo(e.clientX - rect.left);
+        yTo(e.clientY - rect.top);
+      }
+
+      card.addEventListener("mouseenter", (e) => {
+        moveCursor(e);
+        opacityTo(1);
+        tl.timeScale(1).play();
+      });
+
+      card.addEventListener("mousemove", moveCursor);
+
+      card.addEventListener("mouseleave", () => {
+        opacityTo(0);
         tl.timeScale(1.8).reverse();
       });
     });
