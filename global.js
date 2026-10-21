@@ -26,8 +26,8 @@ function globalInit() {
   });
 }
 
-function navColour(container) {
-  const isDark = container?.dataset.navTheme === "dark";
+function navColour() {
+  const isDark = document.querySelector('[data-barba="container"]')?.dataset.navTheme === "dark";
   const nav = getNav();
   if (nav) nav.classList.toggle("dark", isDark);
 }
@@ -540,9 +540,9 @@ function pageInit() {
   function navColourChange() {
     const nav = getNav();
     const navTrigger = document.querySelector("[data-nav-trigger]");
-    if (!nav || !navTrigger || !container) return;
+    if (!nav || !navTrigger) return;
 
-    const baseDark = container.dataset.navTheme === "dark";
+    const baseDark = document.querySelector('[data-barba="container"]').dataset.navTheme === "dark";
 
     ScrollTrigger.create({
       trigger: navTrigger,
