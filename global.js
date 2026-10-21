@@ -587,9 +587,9 @@ function pageInit() {
         mask: "lines",
         autoSplit: true,
         onSplit: (self) => {
-          splitHero = gsap.from(self.lines, {
+          splitHero = gsap.to(self.lines, {
             duration: 1.5,
-            yPercent: 100,
+            yPercent: 0,
             //autoAlpha: 0,
             stagger: 0.05,
             ease: "expo.out",
