@@ -984,7 +984,7 @@ function pageInit() {
 
   function projectHover() {
     const projectCards = document.querySelectorAll("[data-project-card]");
-    const cursor = document.querySelector(".cursor"); // single universal cursor
+    const cursor = document.querySelector(".cursor");
     if (!projectCards.length || !cursor) return;
 
     // Cursor setup
