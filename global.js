@@ -581,23 +581,25 @@ function pageInit() {
     const heroText = gsap.utils.toArray("[data-hero-text]");
     if (!heroText.length) return;
 
-    SplitText.create("[data-hero-text]", {
-      type: "lines",
-      mask: "lines",
-      autoSplit: true,
-      onSplit: (self) => {
-        if (splitA) splitA.kill();
+    heroText.forEach((el) => {
+      SplitText.create(el, {
+        type: "lines",
+        mask: "lines",
+        autoSplit: true,
+        onSplit: (self) => {
+          // kill previous animation for this specific element (if re-split happens)
+          const prev = splitAnimations.get(el);
+          if (prev) prev.kill();
 
-        splitA = gsap.from(self.lines, {
-          duration: 1.5,
-          y: 50,
-          autoAlpha: 0,
-          stagger: 0.05,
-          ease: "expo.out",
-        });
-
-        return splitA;
-      },
+          const splitA = gsap.from(self.lines, {
+            duration: 1.5,
+            y: 50,
+            autoAlpha: 0,
+            stagger: 0.05,
+            ease: "expo.out",
+          });
+        },
+      });
     });
 
     pageLoadTl.add(splitA, 0.5);
