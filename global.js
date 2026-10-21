@@ -3,7 +3,8 @@ let mm = gsap.matchMedia();
 let lenis;
 let resizeObserver = null;
 const getNav = () => document.querySelector('nav');
-const initialised = new WeakSet();
+const clipHidden = 'polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)';
+const clipShown = 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)';
 
 function globalInit() {
   lenis = new Lenis();
@@ -116,16 +117,133 @@ function menuButtonHover() {
   menuButton.addEventListener("mouseleave", () => tl.reverse());
 }
 
-function pageInit(container) {
-  if (!container || initialised.has(container)) return;
-  initialised.add(container);
+function setGrid() {
+  if (!document.querySelector('.work-list, .ap-list')) return;
 
+  const getPreview = () => document.querySelector('[data-work-preview]');
+  let previewVisible = false;
+  let mediaZ = 1;
+
+  function setView(view) {
+    const isList = view === 'list';
+
+    document.querySelectorAll('.work-list, .work-list-header').forEach(el => {
+      el.classList.toggle('is-list', isList);
+    });
+
+    document.querySelectorAll('[data-view]').forEach(b => {
+      b.classList.toggle('is-active', b.dataset.view === view);
+    });
+
+    if (!isList) clearPreview();
+  }
+
+  function clearPreview() {
+    const preview = getPreview();
+    previewVisible = false;
+    if (preview) {
+      gsap.killTweensOf(preview);
+      preview.classList.remove('on');
+      preview.replaceChildren();
+    }
+  }
+
+  function getItemSrc(item) {
+    return item.dataset.image || item.querySelector('.work-image')?.getAttribute('src');
+  }
+
+  function showPreview(preview) {
+    if (previewVisible) return;
+    previewVisible = true;
+
+    preview.classList.add('on');
+    gsap.killTweensOf(preview);
+    gsap.fromTo(
+      preview,
+      { clipPath: clipHidden },
+      { clipPath: clipShown, duration: 0.6, ease: 'expo.inOut' }
+    );
+  }
+
+  function hidePreview() {
+    const preview = getPreview();
+    if (!preview || !previewVisible) return;
+    previewVisible = false;
+
+    gsap.killTweensOf(preview);
+    gsap.to(preview, {
+      clipPath: clipHidden,
+      duration: 0.4,
+      ease: 'expo.inOut',
+      onComplete: () => {
+        if (previewVisible) return;
+        preview.classList.remove('on');
+        preview.replaceChildren();
+      },
+    });
+  }
+
+  function createMedia(preview, src) {
+    const top = preview.lastElementChild;
+    if (top?.dataset.src === src) return;
+
+    const div = document.createElement('div');
+    div.dataset.src = src;
+    const img = document.createElement('img');
+    img.src = src;
+    div.appendChild(img);
+    preview.appendChild(div);
+
+    gsap.set(div, { autoAlpha: 1, zIndex: ++mediaZ });
+
+    while (preview.children.length > 2) preview.children[0].remove();
+  }
+
+  setView('grid');
+
+  function arrowHover(item) {
+    const arrow = item.querySelector('.arrow-svg');
+    if (!arrow) return;
+
+    gsap.killTweensOf(arrow);
+
+    gsap.timeline()
+      .to(arrow, { duration: 0.3, xPercent: 101, ease: 'power2.inOut' })
+      .set(arrow, { xPercent: -101 })
+      .to(arrow, { duration: 0.5, xPercent: 0, ease: 'power2.inOut' });
+  }
+
+  container.addEventListener('click', e => {
+    const btn = e.target.closest('[data-view]');
+    if (btn) setView(btn.dataset.view);
+  });
+
+  container.addEventListener('mouseover', e => {
+    const item = e.target.closest('.work-list.is-list .work-item, .ap-item');
+    if (!item || item.contains(e.relatedTarget)) return;
+
+    arrowHover(item);
+
+    const preview = getPreview();
+    const src = getItemSrc(item);
+    if (!preview || !src) return;
+
+    createMedia(preview, src);
+    showPreview(preview);
+  });
+
+  container.addEventListener('mouseout', e => {
+    const list = e.target.closest('.work-list.is-list, .ap-list');
+    if (!list || list.contains(e.relatedTarget)) return;
+    hidePreview();
+  });
+}
+
+function pageInit() {
   ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
   mm.revert();
-
-  const clipHidden = 'polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)';
-  const clipShown = 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)';
   let pageLoadTl;
+  setGrid();
 
   function splitAnimA() {
     const elements = gsap.utils.toArray("[data-split-a]");
@@ -710,129 +828,6 @@ function pageInit(container) {
   }
   filterReveal();
 
-  function setGrid(container) {
-    if (!container.querySelector('.work-list, .ap-list')) return;
-
-    const getPreview = () => container.querySelector('[data-work-preview]');
-    let previewVisible = false;
-    let mediaZ = 1;
-
-    function setView(view) {
-      const isList = view === 'list';
-
-      container.querySelectorAll('.work-list, .work-list-header').forEach(el => {
-        el.classList.toggle('is-list', isList);
-      });
-
-      container.querySelectorAll('[data-view]').forEach(b => {
-        b.classList.toggle('is-active', b.dataset.view === view);
-      });
-
-      if (!isList) clearPreview();
-    }
-
-    function clearPreview() {
-      const preview = getPreview();
-      previewVisible = false;
-      if (preview) {
-        gsap.killTweensOf(preview);
-        preview.classList.remove('on');
-        preview.replaceChildren();
-      }
-    }
-
-    function getItemSrc(item) {
-      return item.dataset.image || item.querySelector('.work-image')?.getAttribute('src');
-    }
-
-    function showPreview(preview) {
-      if (previewVisible) return;
-      previewVisible = true;
-
-      preview.classList.add('on');
-      gsap.killTweensOf(preview);
-      gsap.fromTo(
-        preview,
-        { clipPath: clipHidden },
-        { clipPath: clipShown, duration: 0.6, ease: 'expo.inOut' }
-      );
-    }
-
-    function hidePreview() {
-      const preview = getPreview();
-      if (!preview || !previewVisible) return;
-      previewVisible = false;
-
-      gsap.killTweensOf(preview);
-      gsap.to(preview, {
-        clipPath: clipHidden,
-        duration: 0.4,
-        ease: 'expo.inOut',
-        onComplete: () => {
-          if (previewVisible) return;
-          preview.classList.remove('on');
-          preview.replaceChildren();
-        },
-      });
-    }
-
-    function createMedia(preview, src) {
-      const top = preview.lastElementChild;
-      if (top?.dataset.src === src) return;
-
-      const div = document.createElement('div');
-      div.dataset.src = src;
-      const img = document.createElement('img');
-      img.src = src;
-      div.appendChild(img);
-      preview.appendChild(div);
-
-      gsap.set(div, { autoAlpha: 1, zIndex: ++mediaZ });
-
-      while (preview.children.length > 2) preview.children[0].remove();
-    }
-
-    setView('grid');
-
-    function arrowHover(item) {
-      const arrow = item.querySelector('.arrow-svg');
-      if (!arrow) return;
-
-      gsap.killTweensOf(arrow);
-
-      gsap.timeline()
-        .to(arrow, { duration: 0.3, xPercent: 101, ease: 'power2.inOut' })
-        .set(arrow, { xPercent: -101 })
-        .to(arrow, { duration: 0.5, xPercent: 0, ease: 'power2.inOut' });
-    }
-
-    container.addEventListener('click', e => {
-      const btn = e.target.closest('[data-view]');
-      if (btn) setView(btn.dataset.view);
-    });
-
-    container.addEventListener('mouseover', e => {
-      const item = e.target.closest('.work-list.is-list .work-item, .ap-item');
-      if (!item || item.contains(e.relatedTarget)) return;
-
-      arrowHover(item);
-
-      const preview = getPreview();
-      const src = getItemSrc(item);
-      if (!preview || !src) return;
-
-      createMedia(preview, src);
-      showPreview(preview);
-    });
-
-    container.addEventListener('mouseout', e => {
-      const list = e.target.closest('.work-list.is-list, .ap-list');
-      if (!list || list.contains(e.relatedTarget)) return;
-      hidePreview();
-    });
-  }
-  setGrid(container);
-
   function currentProject() {
     const projectName = document.querySelector("[data-project-name]");
     const connectingLine = document.querySelector("[data-connecting-line]");
@@ -984,7 +979,7 @@ function destroyResizeObserver() {
 
 function init() {
   globalInit();
-  pageInit(document.querySelector('[data-barba="container"]'));
+  //pageInit(document.querySelector('[data-barba="container"]'));
   navColour(document.querySelector('[data-barba="container"]'));
   initResizeObserver();
   menuButtonHover();
@@ -1025,7 +1020,7 @@ barba.init({
       leave(data) { },
 
       afterLeave(data) {
-        gsap.set(data.current.container, { opacity: 0, duration: 1, ease: "expo.out" });
+        gsap.set(data.current.container, { visibility: "hidden" });
       },
 
       beforeEnter(data) {
@@ -1039,3 +1034,18 @@ barba.init({
     },
   ],
 });
+
+/*
+window.addEventListener('load', () => {
+  document.querySelectorAll('.multi-grid .w-dyn-item').forEach((item) => {
+    const img = item.querySelector('img');
+    if (!img) return;
+
+    if (img.naturalWidth > img.naturalHeight) {
+      item.classList.add('landscape');
+    } else {
+      item.classList.add('portrait');
+    }
+  });
+});
+*/
