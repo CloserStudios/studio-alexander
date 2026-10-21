@@ -959,8 +959,16 @@ function pageInit() {
         ease: "expo.out"
       });
 
-      card.addEventListener("mouseenter", () => tl.play());
-      card.addEventListener("mouseleave", () => tl.reverse(1));
+      // make mouseleave feel snappier
+      tl.timeScale(1); // forward speed
+
+      card.addEventListener("mouseenter", () => {
+        tl.timeScale(1).play();
+      });
+
+      card.addEventListener("mouseleave", () => {
+        tl.timeScale(1.6).reverse(); // faster reverse
+      });
     });
   }
   projectHover();
