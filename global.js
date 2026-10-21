@@ -364,8 +364,8 @@ function pageInit() {
   function homePreLoader() {
     const loader = document.querySelector(".preload-wrapper");
     if (!loader) return;
-    const loaderLogoWrap = document.querySelector(".preloader-logo-svg");
-    const loaderLogo = document.querySelectorAll(".preloader-logo-svg path");
+    const loaderLogo = document.querySelector(".preloader-logo-svg");
+    //const loaderLogo = document.querySelectorAll(".preloader-logo-svg path");
     const loaderInnerBg = document.querySelector(".preload-inner-bg");
     const loaderInnerImg = document.querySelector(".preload-inner-img");
     const counterEl = document.querySelector("[data-counter]");
@@ -390,8 +390,8 @@ function pageInit() {
       },
     });
 
-    gsap.set(loaderLogo, { autoAlpha: 0, scale: 0.5 });
-    gsap.set(loaderLogoWrap, { autoAlpha: 1 });
+    //gsap.set(loaderLogo, { autoAlpha: 0, scale: 0.5 });
+    gsap.set(loaderLogo, { autoAlpha: 1 });
     gsap.set(loading, { y: 12 });
     gsap.set(connectingLine, { xPercent: -150 });
     gsap.set(number, { y: 12 });
@@ -443,9 +443,10 @@ function pageInit() {
       0.5
     );
 
-    tl.to(
+    tl.fromTo(
       loaderLogo,
-      { autoAlpha: 1, scale: 1, transformOrigin: "center center", stagger: 0.05, duration: 2, },
+      { filter: "blur(10px)", scale: 0.5, transformOrigin: "center center" },
+      { filter: "blur(0px)", scale: 1, transformOrigin: "center center", duration: 2, },
       0.5
     );
 
