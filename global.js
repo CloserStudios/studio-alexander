@@ -342,7 +342,7 @@ function pageInit() {
   paraEffect();
 
   function currentPage() {
-    const pageTitle = container?.getAttribute("data-page");
+    const pageTitle = document.querySelector('[data-barba="container"]').getAttribute("data-page");
     const pageBreadcrumb = document.querySelector("[current-page]");
 
     if (!pageBreadcrumb || !pageTitle) return;
