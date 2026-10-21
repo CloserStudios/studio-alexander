@@ -395,7 +395,7 @@ function pageInit() {
     gsap.set(connectingLine, { xPercent: -150 });
     gsap.set(number, { y: 12 });
 
-    // Counter: part of the timeline, starts at 0
+
     tl.to(
       loading,
       {
@@ -602,7 +602,7 @@ function pageInit() {
       });
     });
 
-    pageLoadTl.add(splitTweens, 0);
+    pageLoadTl.add(splitTweens, 0.5);
   }
   pageLoad();
 
