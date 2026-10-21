@@ -1104,9 +1104,9 @@ barba.init({
         });
 
         tl.to(
-          ".content-wrapper",
+          ".content-overlay",
           {
-            opacity: 0,
+            opacity: 1,
             duration: 1,
           },
           0
