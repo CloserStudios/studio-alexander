@@ -996,9 +996,9 @@ function pageInit() {
       gsap.set(projectImageOverlay, { opacity: 0 });
       gsap.set(cursor, { opacity: 0, x: 0, y: 0 });
 
-      const xTo = gsap.quickTo(cursor, "x", { duration: 0.25, ease: "power3.out" });
-      const yTo = gsap.quickTo(cursor, "y", { duration: 0.25, ease: "power3.out" });
-      const opacityTo = gsap.quickTo(cursor, "opacity", { duration: 0.2, ease: "power2.out" });
+      const xTo = gsap.quickTo(cursor, "x", { duration: 0.1, ease: "expo.out" });
+      const yTo = gsap.quickTo(cursor, "y", { duration: 0.1, ease: "expo.out" });
+      const opacityTo = gsap.quickTo(cursor, "opacity", { duration: 0.5, ease: "expo.out" });
 
       const tl = gsap.timeline({ paused: true });
       tl.to(projectImage, { scale: 1, duration: 0.5, ease: "power2.out" }, 0)
