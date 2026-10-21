@@ -118,10 +118,9 @@ function menuButtonHover() {
   menuButton.addEventListener("mouseleave", () => tl.reverse());
 }
 
-function setGrid() {
+function setGrid(container = getContainer()) {
   if (!document.querySelector('.work-list, .ap-list')) return;
 
-  const container = document.querySelector('[data-barba="container"]');
   const getPreview = () => document.querySelector('[data-work-preview]');
   let previewVisible = false;
   let mediaZ = 1;
