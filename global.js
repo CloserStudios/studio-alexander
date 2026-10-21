@@ -576,7 +576,7 @@ function pageInit() {
   }
 
   function pageLoad() {
-    pageLoadTl = gsap.timeline({ paused: true });
+    const tl = gsap.timeline();
 
     const heroText = gsap.utils.toArray("[data-hero-text]");
     if (!heroText.length) return;
@@ -587,20 +587,21 @@ function pageInit() {
         mask: "lines",
         autoSplit: true,
         onSplit: (self) => {
-          splitHero = gsap.to(self.lines, {
-            duration: 1.5,
+          gsap.set(el, { visibility: "visible" });
+
+          gsap.set(self.lines, { yPercent: 100, autoAlpha: 0 });
+
+          tl.to(self.lines, {
             yPercent: 0,
-            //autoAlpha: 0,
+            autoAlpha: 1,
+            duration: 1.5,
             stagger: 0.05,
             ease: "expo.out",
-          });
+          }, 0.5);
         },
       });
     });
-
-    pageLoadTl.add(splitHero, 0.5);
   }
-  pageLoad();
 
   pageLoad();
 
