@@ -5,6 +5,7 @@ let resizeObserver = null;
 const getNav = () => document.querySelector('nav');
 const clipHidden = 'polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)';
 const clipShown = 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)';
+const getContainer = () => document.querySelector('[data-barba="container"]');
 
 function globalInit() {
   lenis = new Lenis();
@@ -26,8 +27,8 @@ function globalInit() {
   });
 }
 
-function navColour() {
-  const isDark = document.querySelector('[data-barba="container"]')?.dataset.navTheme === "dark";
+function navColour(container = getContainer()) {
+  const isDark = container?.dataset.navTheme === "dark";
   const nav = getNav();
   if (nav) nav.classList.toggle("dark", isDark);
 }
@@ -120,6 +121,7 @@ function menuButtonHover() {
 function setGrid() {
   if (!document.querySelector('.work-list, .ap-list')) return;
 
+  const container = document.querySelector('[data-barba="container"]');
   const getPreview = () => document.querySelector('[data-work-preview]');
   let previewVisible = false;
   let mediaZ = 1;
@@ -993,7 +995,7 @@ if (document.readyState === "loading") {
 }
 
 barba.hooks.beforeEnter((data) => {
-  navColour();
+  navColour(data.next.container);
 });
 
 barba.hooks.beforeLeave(() => {
