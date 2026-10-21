@@ -989,41 +989,30 @@ function pageInit() {
     projectCards.forEach((card) => {
       const projectImage = card.querySelector("[data-project-image]");
       const projectImageOverlay = card.querySelector("[data-image-overlay]");
-      const cursor = card.querySelector(".cursor"); // cursor inside the card
+      const cursor = card.querySelector(".cursor");
       if (!projectImage || !projectImageOverlay || !cursor) return;
 
-      // initial states
       gsap.set(projectImage, { scale: 1.025, transformOrigin: "50% 50%" });
       gsap.set(projectImageOverlay, { opacity: 0 });
-      gsap.set(cursor, {
-        opacity: 0,
-        xPercent: -50,
-        yPercent: -50,
-        x: 0,
-        y: 0
-      });
+      gsap.set(cursor, { opacity: 0, x: 0, y: 0 });
 
-      // smooth cursor movement INSIDE this card
       const xTo = gsap.quickTo(cursor, "x", { duration: 0.25, ease: "power3.out" });
       const yTo = gsap.quickTo(cursor, "y", { duration: 0.25, ease: "power3.out" });
       const opacityTo = gsap.quickTo(cursor, "opacity", { duration: 0.2, ease: "power2.out" });
 
-      // image hover timeline
       const tl = gsap.timeline({ paused: true });
-      tl.to(projectImage, {
-        scale: 1,
-        duration: 0.5,
-        ease: "power2.out"
-      }, 0).to(projectImageOverlay, {
-        opacity: 0.15,
-        duration: 0.25,
-        ease: "power2.out"
-      }, 0);
+      tl.to(projectImage, { scale: 1, duration: 0.5, ease: "power2.out" }, 0)
+        .to(projectImageOverlay, { opacity: 0.15, duration: 0.25, ease: "power2.out" }, 0);
+
+      const offsetX = 18;
+      const offsetY = 18;
 
       function moveCursor(e) {
         const rect = card.getBoundingClientRect();
-        xTo(e.clientX - rect.left);
-        yTo(e.clientY - rect.top);
+        const localX = e.clientX - rect.left + offsetX;
+        const localY = e.clientY - rect.top + offsetY;
+        xTo(localX);
+        yTo(localY);
       }
 
       card.addEventListener("mouseenter", (e) => {
@@ -1040,6 +1029,7 @@ function pageInit() {
       });
     });
   }
+
   projectHover();
 
   function currentProject() {
