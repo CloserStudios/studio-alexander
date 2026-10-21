@@ -598,7 +598,7 @@ function pageInit() {
       });
     });
 
-    pageLoadTl.add(splitA, 0.5);
+    pageLoadTl.add(splitHero, 0.5);
   }
   pageLoad();
 
