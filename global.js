@@ -955,7 +955,7 @@ function pageInit() {
         defaults: { ease: "expo.in" }
       });
 
-      tl.to(projectImage, { scale: 1, duration: 0.5 }, 0);
+      tl.fromTo(projectImage, { scale: 1.05 }, { scale: 1, duration: 0.5 }, 0);
 
       card.addEventListener("mouseenter", () => tl.play(0));
       card.addEventListener("mouseleave", () => tl.reverse());
