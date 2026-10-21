@@ -980,7 +980,7 @@ function destroyResizeObserver() {
 function init() {
   globalInit();
   pageInit();
-  navColour(document.querySelector('[data-barba="container"]'));
+  navColour();
   initResizeObserver();
   menuButtonHover();
   menuAnimation();
@@ -993,7 +993,7 @@ if (document.readyState === "loading") {
 }
 
 barba.hooks.beforeEnter((data) => {
-  navColour(data.next.container);
+  navColour();
 });
 
 barba.hooks.beforeLeave(() => {
