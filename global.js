@@ -576,7 +576,7 @@ function pageInit() {
   }
 
   function pageLoad() {
-    pageLoadTl = gsap.timeline();
+    pageLoadTl = gsap.timeline({ paused: true }); // important
 
     const heroText = gsap.utils.toArray("[data-hero-text]");
     if (!heroText.length) return;
@@ -588,21 +588,23 @@ function pageInit() {
         autoSplit: true,
         onSplit: (self) => {
           gsap.set(el, { visibility: "visible" });
-
           gsap.set(self.lines, { yPercent: 100, autoAlpha: 0 });
 
-          pageLoadTl.to(self.lines, {
-            yPercent: 0,
-            autoAlpha: 1,
-            duration: 1.5,
-            stagger: 0.05,
-            ease: "expo.out",
-          }, 0.5);
+          pageLoadTl.to(
+            self.lines,
+            {
+              yPercent: 0,
+              autoAlpha: 1,
+              duration: 1.5,
+              stagger: 0.05,
+              ease: "expo.out",
+            },
+            0.5
+          );
         },
       });
     });
   }
-  pageLoad();
 
   function checkPreloader() {
     if (!sessionStorage.getItem("visited")) {
@@ -613,6 +615,7 @@ function pageInit() {
     }
   }
   checkPreloader();
+  pageLoad();
 
   function navColourChange() {
     const nav = getNav();
