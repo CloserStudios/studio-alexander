@@ -985,14 +985,14 @@ function pageInit() {
   function projectHover() {
     const projectCards = document.querySelectorAll("[data-project-card]");
     const cursor = document.querySelector(".cursor");
-    const cursorText = cursor?.querySelector("[data-cursor-text]"); // optional inner text node
+    const cursorText = cursor?.querySelector("[data-cursor-text]");
     if (!projectCards.length || !cursor) return;
 
     gsap.set(cursor, { opacity: 0, x: 0, y: 0 });
 
-    const xTo = gsap.quickTo(cursor, "x", { duration: 0.12, ease: "power3.out" });
-    const yTo = gsap.quickTo(cursor, "y", { duration: 0.12, ease: "power3.out" });
-    const opacityTo = gsap.quickTo(cursor, "opacity", { duration: 0.2, ease: "power2.out" });
+    const xTo = gsap.quickTo(cursor, "x", { duration: 0.05, ease: "expo.out" });
+    const yTo = gsap.quickTo(cursor, "y", { duration: 0.05, ease: "expo.out" });
+    const opacityTo = gsap.quickTo(cursor, "opacity", { duration: 0.75, ease: "expo.out" });
 
     const offsetX = 18;
     const offsetY = 18;
