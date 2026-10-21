@@ -616,7 +616,7 @@ function pageInit() {
         },
         {
           clipPath: "inset(0% 0% 0% 0%)",
-          duration: 0.5,
+          duration: 1,
           ease: "expo.inOut"
         }, 0.5)
     }
@@ -632,9 +632,9 @@ function pageInit() {
     }
 
     if (workOverlay) {
-      pageLoadTl.to(workOverlay, {
-        autoAlpha: 0,
-        duration: 1,
+      pageLoadTl.from(workOverlay, {
+        autoAlpha: 1,
+        duration: 1.5,
         ease: "expo.inOut"
       }, 0.5);
     }
