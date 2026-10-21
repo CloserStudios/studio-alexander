@@ -596,7 +596,7 @@ function pageInit() {
             {
               yPercent: 0,
               autoAlpha: 1,
-              duration: 1.5,
+              duration: 1,
               stagger: 0.05,
             },
             0.5
@@ -611,7 +611,7 @@ function pageInit() {
       },
       {
         clipPath: "inset(0% 0% 0% 0%)",
-        duration: 1,
+        duration: 0.5,
       }, 0.5)
   }
   pageLoad();
