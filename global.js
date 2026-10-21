@@ -576,7 +576,7 @@ function pageInit() {
   }
 
   function pageLoad() {
-    const tl = gsap.timeline();
+    pageLoadTl = gsap.timeline();
 
     const heroText = gsap.utils.toArray("[data-hero-text]");
     if (!heroText.length) return;
@@ -591,7 +591,7 @@ function pageInit() {
 
           gsap.set(self.lines, { yPercent: 100, autoAlpha: 0 });
 
-          tl.to(self.lines, {
+          pageLoadTl.to(self.lines, {
             yPercent: 0,
             autoAlpha: 1,
             duration: 1.5,
@@ -602,7 +602,6 @@ function pageInit() {
       });
     });
   }
-
   pageLoad();
 
   function checkPreloader() {
