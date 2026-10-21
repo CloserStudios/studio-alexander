@@ -979,7 +979,7 @@ function destroyResizeObserver() {
 
 function init() {
   globalInit();
-  //pageInit(document.querySelector('[data-barba="container"]'));
+  pageInit();
   navColour(document.querySelector('[data-barba="container"]'));
   initResizeObserver();
   menuButtonHover();
