@@ -575,7 +575,7 @@ function pageInit() {
   }
 
   function pageLoad() {
-    let pageLoadTl = gsap.timeline({ paused: true });
+    pageLoadTl = gsap.timeline({ paused: true });
 
     const heroText = gsap.utils.toArray("[data-hero-text]");
     if (!heroText.length) return;
