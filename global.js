@@ -956,7 +956,7 @@ function pageInit() {
       tl.to(projectImage, {
         scale: 1,
         duration: 0.75,
-        ease: "expo.out"
+        ease: "power2.out"
       });
 
       // make mouseleave feel snappier
