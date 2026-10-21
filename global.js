@@ -611,6 +611,7 @@ function pageInit() {
       preLoader();
     } else {
       document.documentElement.classList.remove("show-preloader");
+      pageLoadTl.play();
     }
   }
   checkPreloader();
