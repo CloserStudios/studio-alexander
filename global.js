@@ -393,9 +393,9 @@ function pageInit() {
     });
 
     gsap.set(loaderLogo, { autoAlpha: 0 });
-    gsap.set(loading, { y: 12 });
-    gsap.set(connectingLine, { xPercent: -150 });
-    gsap.set(number, { y: 12 });
+    gsap.set(loading, { autoAlpha: 1, y: 12 });
+    gsap.set(connectingLine, { autoAlpha: 1, xPercent: -150 });
+    gsap.set(number, { autoAlpha: 1, y: 12 });
 
 
     tl.to(loading, { y: 0, }, 0.25);
@@ -917,46 +917,6 @@ function pageInit() {
     });
   }
   filterReveal();
-
-  /*
-  function projectHover() {
-    const projectCards = document.querySelectorAll("[data-project-card]");
-    if (!projectCards.length) return;
-
-    projectCards.forEach((card) => {
-      const projectImage = card.querySelector("[data-project-image]");
-      const projectImageOverlay = card.querySelector("[data-image-overlay]");
-      if (!projectImage) return;
-
-      gsap.set(projectImage, { scale: 1.025, transformOrigin: "50% 50%" });
-      gsap.set(projectImageOverlay, { opacity: 0 });
-
-      const tl = gsap.timeline({ paused: true });
-      tl
-        .to(projectImage, {
-          scale: 1,
-          duration: 0.50,
-          ease: "power2.out"
-        }, 0)
-        .to(projectImageOverlay, {
-          opacity: 0.15,
-          duration: 0.25,
-          ease: "power2.out"
-        }, 0);
-
-      tl.timeScale(1);
-
-      card.addEventListener("mouseenter", () => {
-        tl.timeScale(1).play();
-      });
-
-      card.addEventListener("mouseleave", () => {
-        tl.timeScale(1.8).reverse();
-      });
-    });
-  }
-  projectHover();
-  */
 
   function projectHover() {
     const projectCards = document.querySelectorAll("[data-project-card]");
