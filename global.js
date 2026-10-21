@@ -575,34 +575,31 @@ function pageInit() {
   }
 
   function pageLoad() {
-    const elements = document.querySelectorAll("[data-split-p1]");
-    const splitTweens = [];
+    let pageLoadTl = gsap.timeline({ paused: true });
 
-    pageLoadTl = gsap.timeline({ paused: true });
+    const heroText = gsap.utils.toArray("[data-hero-text]");
+    if (!heroText.length) return;
 
-    if (!elements.length) return;
+    SplitText.create("[data-hero-text]", {
+      type: "lines",
+      mask: "lines",
+      autoSplit: true,
+      onSplit: (self) => {
+        if (splitA) splitA.kill();
 
-    elements.forEach((el) => {
-      SplitText.create(el, {
-        type: "lines",
-        mask: "lines",
-        autoSplit: true,
-        onSplit(self) {
-          const tween = gsap.from(self.lines, {
-            duration: 1.5,
-            y: 50,
-            autoAlpha: 0,
-            stagger: 0.05,
-            ease: "expo.out",
-          });
+        splitA = gsap.from(self.lines, {
+          duration: 1.5,
+          y: 50,
+          autoAlpha: 0,
+          stagger: 0.05,
+          ease: "expo.out",
+        });
 
-          splitTweens.push(tween);
-          return tween;
-        },
-      });
+        return splitA;
+      },
     });
 
-    pageLoadTl.add(splitTweens, 0.5);
+    pageLoadTl.add(splitA, 0);
   }
   pageLoad();
 
@@ -1131,17 +1128,4 @@ barba.init({
   ],
 });
 
-/*
-window.addEventListener('load', () => {
-  document.querySelectorAll('.multi-grid .w-dyn-item').forEach((item) => {
-    const img = item.querySelector('img');
-    if (!img) return;
 
-    if (img.naturalWidth > img.naturalHeight) {
-      item.classList.add('landscape');
-    } else {
-      item.classList.add('portrait');
-    }
-  });
-});
-*/
