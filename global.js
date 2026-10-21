@@ -984,38 +984,43 @@ function pageInit() {
 
   function projectHover() {
     const projectCards = document.querySelectorAll("[data-project-card]");
-    if (!projectCards.length) return;
+    const cursor = document.querySelector(".cursor"); // single universal cursor
+    if (!projectCards.length || !cursor) return;
+
+    // Cursor setup
+    gsap.set(cursor, { opacity: 0, x: 0, y: 0 });
+    const xTo = gsap.quickTo(cursor, "x", { duration: 0.12, ease: "power3.out" });
+    const yTo = gsap.quickTo(cursor, "y", { duration: 0.12, ease: "power3.out" });
+    const opacityTo = gsap.quickTo(cursor, "opacity", { duration: 0.2, ease: "power2.out" });
+
+    // bottom-right trail offset
+    const offsetX = 18;
+    const offsetY = 18;
 
     projectCards.forEach((card) => {
       const projectImage = card.querySelector("[data-project-image]");
       const projectImageOverlay = card.querySelector("[data-image-overlay]");
-      const cursor = card.querySelector(".cursor");
-      if (!projectImage || !projectImageOverlay || !cursor) return;
+      if (!projectImage || !projectImageOverlay) return;
+
+      // "coming soon" boolean via data attribute:
+      // data-coming-soon="true" or "false"
+      const isComingSoon = card.dataset.comingSoon === "true";
 
       gsap.set(projectImage, { scale: 1.025, transformOrigin: "50% 50%" });
       gsap.set(projectImageOverlay, { opacity: 0 });
-      gsap.set(cursor, { opacity: 0, x: 0, y: 0 });
-
-      const xTo = gsap.quickTo(cursor, "x", { duration: 0.05, ease: "expo.out" });
-      const yTo = gsap.quickTo(cursor, "y", { duration: 0.05, ease: "expo.out" });
-      const opacityTo = gsap.quickTo(cursor, "opacity", { duration: 0.75, ease: "expo.out" });
 
       const tl = gsap.timeline({ paused: true });
       tl.to(projectImage, { scale: 1, duration: 0.5, ease: "power2.out" }, 0)
         .to(projectImageOverlay, { opacity: 0.15, duration: 0.25, ease: "power2.out" }, 0);
 
-      const offsetX = 18;
-      const offsetY = 18;
-
       function moveCursor(e) {
-        const rect = card.getBoundingClientRect();
-        const localX = e.clientX - rect.left + offsetX;
-        const localY = e.clientY - rect.top + offsetY;
-        xTo(localX);
-        yTo(localY);
+        xTo(e.clientX + offsetX);
+        yTo(e.clientY + offsetY);
       }
 
       card.addEventListener("mouseenter", (e) => {
+        // set label per card
+        cursor.textContent = isComingSoon ? "Coming Soon" : "View Project";
         moveCursor(e);
         opacityTo(1);
         tl.timeScale(1).play();
@@ -1029,7 +1034,6 @@ function pageInit() {
       });
     });
   }
-
   projectHover();
 
   function currentProject() {
