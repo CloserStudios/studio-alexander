@@ -958,13 +958,13 @@ function pageInit() {
       tl
         .to(projectImage, {
           scale: 1,
-          duration: 0.25,
-          ease: "expo.out"
+          duration: 0.50,
+          ease: "power2.out"
         }, 0)
         .to(projectImageOverlay, {
           opacity: 0.15,
           duration: 0.25,
-          ease: "expo.out"
+          ease: "power2.out"
         }, 0);
 
       tl.timeScale(1);
@@ -974,7 +974,7 @@ function pageInit() {
       });
 
       card.addEventListener("mouseleave", () => {
-        tl.timeScale(2).reverse();
+        tl.timeScale(1.8).reverse();
       });
     });
   }
