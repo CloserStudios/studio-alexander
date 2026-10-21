@@ -576,12 +576,13 @@ function pageInit() {
   }
 
   function pageLoad() {
-    pageLoadTl = gsap.timeline({ paused: true }); // important
+    pageLoadTl = gsap.timeline({ paused: true });
 
     const heroText = gsap.utils.toArray("[data-hero-text]");
     if (!heroText.length) return;
     const heroImage = document.querySelector("[data-hero-image]");
     const elementLoad = gsap.utils.toArray("[data-element-load]");
+    const workOverlay = document.querySelector("[data-work-overlay]");
 
 
     heroText.forEach((el) => {
@@ -627,7 +628,15 @@ function pageInit() {
         duration: 1,
         stagger: 0.05,
         ease: "expo.out"
-      });
+      }, 0.5);
+    }
+
+    if (workOverlay) {
+      pageLoadTl.to(workOverlay, {
+        autoAlpha: 0,
+        duration: 1,
+        ease: "expo.inOut"
+      }, 0.5);
     }
   }
   pageLoad();
