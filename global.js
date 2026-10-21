@@ -42,6 +42,7 @@ function menuAnimation() {
   const menuTextClose = document.querySelector("[data-menu-close]");
   const menuTextAnimate = document.querySelectorAll("[data-text-animate]");
   const menuLinks = document.querySelectorAll(".menu-link");
+  const navLogo = document.querySelector(".nav-logo");
 
   if (!menu || !menuWrapper || !menuButton || !menuBackground || !menuTextOpen || !menuTextClose || !menuTextAnimate) return;
   if (menuButton.dataset.bound) return;
@@ -82,11 +83,13 @@ function menuAnimation() {
     const container = document.querySelector('[data-barba="container"]');
     const baseDark = container?.dataset.navTheme === "dark";
     menuButton.classList.toggle("dark", baseDark);
+    if (navLogo) navLogo.style.pointerEvents = "none";
   });
 
   tl.eventCallback("onReverseComplete", () => {
     lenis?.start?.();
     menuButton.classList.remove("dark");
+    if (navLogo) navLogo.style.pointerEvents = "";
   });
 }
 
@@ -557,22 +560,6 @@ function pageInit() {
     const heroImage = document.querySelector("[data-hero-image]");
     const elementLoad = gsap.utils.toArray("[data-element-load]");
     const workOverlay = document.querySelector("[data-work-overlay]");
-    const richHero = gsap.utils.toArray("[data-hero-text]").filter(isRichText);
-
-    richHero.forEach((el) => {
-      const parts = el.querySelectorAll("p, h1, h2, h3, h4, h5, h6, li, blockquote");
-
-      gsap.set(parts, { yPercent: 100, autoAlpha: 0 });
-
-      pageLoadTl.to(parts, {
-        yPercent: 0,
-        autoAlpha: 1,
-        duration: 1,
-        stagger: 0.05,
-        ease: "expo.out",
-      }, 0.5);
-    });
-
 
     heroText.forEach((el) => {
       SplitText.create(el, {
