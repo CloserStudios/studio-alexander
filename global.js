@@ -445,8 +445,8 @@ function pageInit() {
 
     tl.fromTo(
       loaderLogo,
-      { filter: "blur(10px)", scale: 0.5, transformOrigin: "center center" },
-      { filter: "blur(0px)", scale: 1, transformOrigin: "center center", duration: 2, },
+      { filter: "blur(10px)" },
+      { filter: "blur(0px)", duration: 2, },
       0.5
     );
 
