@@ -244,6 +244,7 @@ function pageInit() {
   ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
   mm.revert();
   let pageLoadTl;
+  let splitA;
   setGrid();
 
   function splitAnimA() {
@@ -599,7 +600,7 @@ function pageInit() {
       },
     });
 
-    pageLoadTl.add(splitA, 0);
+    pageLoadTl.add(splitA, 0.5);
   }
   pageLoad();
 
