@@ -955,12 +955,11 @@ function pageInit() {
       const tl = gsap.timeline({ paused: true });
       tl.to(projectImage, {
         scale: 1,
-        duration: 0.5,
-        ease: "expo.out"
+        duration: 1,
+        ease: "expo.inOut"
       });
 
       card.addEventListener("mouseenter", () => tl.play());
-      card.addEventListener("mouseleave", () => tl.reverse());
     });
   }
   projectHover();
