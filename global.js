@@ -244,7 +244,7 @@ function pageInit() {
   ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
   mm.revert();
   let pageLoadTl;
-  let splitA;
+  let splitHero;
   setGrid();
 
   function splitAnimA() {
@@ -587,11 +587,7 @@ function pageInit() {
         mask: "lines",
         autoSplit: true,
         onSplit: (self) => {
-          // kill previous animation for this specific element (if re-split happens)
-          const prev = splitAnimations.get(el);
-          if (prev) prev.kill();
-
-          const splitA = gsap.from(self.lines, {
+          const splitHero = gsap.from(self.lines, {
             duration: 1.5,
             y: 50,
             autoAlpha: 0,
