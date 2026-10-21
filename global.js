@@ -59,7 +59,7 @@ function menuAnimation() {
 
   tl
     .set(menu, { display: "flex" }, 0)
-    .to(menuBackground, { opacity: 0.5, duration: 0.5 }, 0.1)
+    .to(menuBackground, { opacity: 0.5, duration: 0.25 }, 0.1)
     .to(menuWrapper, { scale: 1, duration: 0.5 }, 0.15)
     .to(menuTextOpen, { y: -12, duration: 0.5 }, 0.15)
     .to(menuTextClose, { y: 0, duration: 0.5 }, 0.2)
