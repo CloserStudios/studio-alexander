@@ -948,26 +948,33 @@ function pageInit() {
 
     projectCards.forEach((card) => {
       const projectImage = card.querySelector("[data-project-image]");
+      const projectImageOverlay = card.querySelector("[data-image-overlay]");
       if (!projectImage) return;
 
       gsap.set(projectImage, { scale: 1.05, transformOrigin: "50% 50%" });
+      gsap.set(projectImageOverlay, { opacity: 0 });
 
       const tl = gsap.timeline({ paused: true });
-      tl.to(projectImage, {
-        scale: 1,
-        duration: 0.5,
-        ease: "power2.out"
-      });
+      tl
+        .to(projectImage, {
+          scale: 1,
+          duration: 0.5,
+          ease: "power2.out"
+        })
+        .to(projectImageOverlay, {
+          opacity: 0.15,
+          duration: 0.5,
+          ease: "power2.out"
+        });
 
-      // make mouseleave feel snappier
-      tl.timeScale(1); // forward speed
+      tl.timeScale(1);
 
       card.addEventListener("mouseenter", () => {
         tl.timeScale(1).play();
       });
 
       card.addEventListener("mouseleave", () => {
-        tl.timeScale(1.6).reverse(); // faster reverse
+        tl.timeScale(1.6).reverse();
       });
     });
   }
