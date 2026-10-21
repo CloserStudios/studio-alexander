@@ -985,6 +985,7 @@ function pageInit() {
   function projectHover() {
     const projectCards = document.querySelectorAll("[data-project-card]");
     const cursor = document.querySelector(".cursor");
+    const cursorText = cursor?.querySelector("[data-cursor-text]"); // optional inner text node
     if (!projectCards.length || !cursor) return;
 
     gsap.set(cursor, { opacity: 0, x: 0, y: 0 });
@@ -993,13 +994,15 @@ function pageInit() {
     const yTo = gsap.quickTo(cursor, "y", { duration: 0.12, ease: "power3.out" });
     const opacityTo = gsap.quickTo(cursor, "opacity", { duration: 0.2, ease: "power2.out" });
 
-    const offsetX = 18; // bottom-right trail
+    const offsetX = 18;
     const offsetY = 18;
 
     projectCards.forEach((card) => {
       const projectImage = card.querySelector("[data-project-image]");
       const projectImageOverlay = card.querySelector("[data-image-overlay]");
       if (!projectImage || !projectImageOverlay) return;
+
+      const isComingSoon = (card.getAttribute("data-coming-soon") || "").toLowerCase() === "true";
 
       gsap.set(projectImage, { scale: 1.025, transformOrigin: "50% 50%" });
       gsap.set(projectImageOverlay, { opacity: 0 });
@@ -1008,12 +1011,19 @@ function pageInit() {
       tl.to(projectImage, { scale: 1, duration: 0.5, ease: "power2.out" }, 0)
         .to(projectImageOverlay, { opacity: 0.15, duration: 0.25, ease: "power2.out" }, 0);
 
+      const setCursorLabel = () => {
+        const label = isComingSoon ? "Coming Soon" : "View Project";
+        if (cursorText) cursorText.textContent = label;
+        else cursor.textContent = label;
+      };
+
       const moveCursor = (e) => {
         xTo(e.clientX + offsetX);
         yTo(e.clientY + offsetY);
       };
 
       card.addEventListener("mouseenter", (e) => {
+        setCursorLabel();
         moveCursor(e);
         opacityTo(1);
         tl.timeScale(1).play();
