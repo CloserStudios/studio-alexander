@@ -244,7 +244,6 @@ function pageInit() {
   ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
   mm.revert();
   let pageLoadTl;
-  let splitHero;
   setGrid();
 
   function splitAnimA() {
@@ -295,6 +294,7 @@ function pageInit() {
 
   function buttonAnim() {
     const buttons = gsap.utils.toArray("[data-button-hover]");
+    if (!buttons.length) return;
 
     buttons.forEach((button) => {
       let buttonArrow = button.querySelector("[data-button-arrow]");
@@ -634,8 +634,8 @@ function pageInit() {
     if (workOverlay) {
       pageLoadTl.from(workOverlay, {
         autoAlpha: 1,
-        duration: 1.5,
-        ease: "expo.inOut"
+        duration: 2,
+        ease: "expo.out"
       }, 0.5);
     }
   }
@@ -650,7 +650,6 @@ function pageInit() {
     }
   }
   checkPreloader();
-
 
   function navColourChange() {
     const nav = getNav();
@@ -942,6 +941,27 @@ function pageInit() {
     });
   }
   filterReveal();
+
+  function projectHover() {
+    const projectCards = document.querySelectorAll("[data-project-card]");
+    if (!projectCards.length) return;
+
+    projectCards.forEach((card) => {
+      const projectImage = card.querySelector("[data-project-image]");
+      if (!projectImage) return;
+
+      const tl = gsap.timeline({
+        paused: true,
+        defaults: { ease: "expo.in" }
+      });
+
+      tl.to(projectImage, { scale: 1, duration: 0.5 }, 0);
+
+      card.addEventListener("mouseenter", () => tl.play(0));
+      card.addEventListener("mouseleave", () => tl.reverse());
+    });
+  }
+  projectHover();
 
   function currentProject() {
     const projectName = document.querySelector("[data-project-name]");
