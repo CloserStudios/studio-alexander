@@ -605,6 +605,7 @@ function pageInit() {
       });
     });
   }
+  pageLoad();
 
   function checkPreloader() {
     if (!sessionStorage.getItem("visited")) {
@@ -615,7 +616,7 @@ function pageInit() {
     }
   }
   checkPreloader();
-  pageLoad();
+
 
   function navColourChange() {
     const nav = getNav();
