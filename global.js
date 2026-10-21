@@ -950,14 +950,16 @@ function pageInit() {
       const projectImage = card.querySelector("[data-project-image]");
       if (!projectImage) return;
 
-      const tl = gsap.timeline({
-        paused: true,
-        defaults: { ease: "expo.in" }
+      gsap.set(projectImage, { scale: 1.05, transformOrigin: "50% 50%" });
+
+      const tl = gsap.timeline({ paused: true });
+      tl.to(projectImage, {
+        scale: 1,
+        duration: 0.5,
+        ease: "expo.out"
       });
 
-      tl.fromTo(projectImage, { scale: 1.05 }, { scale: 1, duration: 0.5 }, 0);
-
-      card.addEventListener("mouseenter", () => tl.play(0));
+      card.addEventListener("mouseenter", () => tl.play());
       card.addEventListener("mouseleave", () => tl.reverse());
     });
   }
