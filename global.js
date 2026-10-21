@@ -365,7 +365,6 @@ function pageInit() {
     const loader = document.querySelector(".preload-wrapper");
     if (!loader) return;
     const loaderLogo = document.querySelector(".preloader-logo-svg");
-    //const loaderLogo = document.querySelectorAll(".preloader-logo-svg path");
     const loaderInnerBg = document.querySelector(".preload-inner-bg");
     const loaderInnerImg = document.querySelector(".preload-inner-img");
     const counterEl = document.querySelector("[data-counter]");
@@ -390,36 +389,17 @@ function pageInit() {
       },
     });
 
-    //gsap.set(loaderLogo, { autoAlpha: 0, scale: 0.5 });
-    gsap.set(loaderLogo, { autoAlpha: 1 });
+    gsap.set(loaderLogo, { autoAlpha: 0 });
     gsap.set(loading, { y: 12 });
     gsap.set(connectingLine, { xPercent: -150 });
     gsap.set(number, { y: 12 });
 
 
-    tl.to(
-      loading,
-      {
-        y: 0,
-      },
-      0.25
-    );
+    tl.to(loading, { y: 0, }, 0.25);
 
-    tl.to(
-      connectingLine,
-      {
-        xPercent: 0,
-      },
-      0.45
-    );
+    tl.to(connectingLine, { xPercent: 0, }, 0.45);
 
-    tl.to(
-      number,
-      {
-        y: 0,
-      },
-      0.65
-    );
+    tl.to(number, { y: 0, }, 0.65);
 
     tl.to(
       counter,
@@ -434,20 +414,13 @@ function pageInit() {
       1
     );
 
-    tl.to(
-      loaderInnerImg,
-      {
-        clipPath: clipShown,
-        duration: 1.5,
-      },
-      0.5
-    );
+    tl.to(loaderInnerImg, { clipPath: clipShown, duration: 1.5, }, 0.5);
 
     tl.fromTo(
       loaderLogo,
-      { filter: "blur(10px)" },
-      { filter: "blur(0px)", duration: 2, },
-      0.5
+      { autoAlpha: 0, filter: "blur(10px)" },
+      { autoAlpha: 1, filter: "blur(0px)", duration: 2, },
+      1
     );
 
     tl.to(loaderLogo, { autoAlpha: 0, duration: 1 }, 3);
@@ -456,7 +429,7 @@ function pageInit() {
       loaderInnerBg,
       { clipPath: "inset(30% 30% 30% 30%)" },
       { clipPath: "inset(0% 0% 0% 0%)", duration: 1 },
-      4
+      3
     );
 
     tl.to(loaderInnerImg, { scale: 1, duration: 1 }, 4);
@@ -584,6 +557,21 @@ function pageInit() {
     const heroImage = document.querySelector("[data-hero-image]");
     const elementLoad = gsap.utils.toArray("[data-element-load]");
     const workOverlay = document.querySelector("[data-work-overlay]");
+    const richHero = gsap.utils.toArray("[data-hero-text]").filter(isRichText);
+
+    richHero.forEach((el) => {
+      const parts = el.querySelectorAll("p, h1, h2, h3, h4, h5, h6, li, blockquote");
+
+      gsap.set(parts, { yPercent: 100, autoAlpha: 0 });
+
+      pageLoadTl.to(parts, {
+        yPercent: 0,
+        autoAlpha: 1,
+        duration: 1,
+        stagger: 0.05,
+        ease: "expo.out",
+      }, 0.5);
+    });
 
 
     heroText.forEach((el) => {
