@@ -950,12 +950,12 @@ function pageInit() {
       const projectImage = card.querySelector("[data-project-image]");
       if (!projectImage) return;
 
-      gsap.set(projectImage, { scale: 1.1, transformOrigin: "50% 50%" });
+      gsap.set(projectImage, { scale: 1.05, transformOrigin: "50% 50%" });
 
       const tl = gsap.timeline({ paused: true });
       tl.to(projectImage, {
         scale: 1,
-        duration: 0.75,
+        duration: 0.5,
         ease: "power2.out"
       });
 
