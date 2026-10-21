@@ -576,11 +576,13 @@ function pageInit() {
   }
 
   function pageLoad() {
-    pageLoadTl = gsap.timeline({ paused: true, ease: "expo.out" }); // important
+    pageLoadTl = gsap.timeline({ paused: true }); // important
 
     const heroText = gsap.utils.toArray("[data-hero-text]");
-    const heroImage = document.querySelector("[data-hero-image]");
     if (!heroText.length) return;
+    const heroImage = document.querySelector("[data-hero-image]");
+    const elementLoad = gsap.utils.toArray("[data-element-load]");
+
 
     heroText.forEach((el) => {
       SplitText.create(el, {
@@ -598,6 +600,7 @@ function pageInit() {
               autoAlpha: 1,
               duration: 1,
               stagger: 0.05,
+              ease: "expo.out",
             },
             0.5
           );
@@ -605,14 +608,27 @@ function pageInit() {
       });
     });
 
-    pageLoadTl.fromTo(heroImage,
-      {
-        clipPath: "inset(100% 50% 0% 50%)"
-      },
-      {
-        clipPath: "inset(0% 0% 0% 0%)",
-        duration: 0.5,
-      }, 0.5)
+    if (heroImage) {
+      pageLoadTl.fromTo(heroImage,
+        {
+          clipPath: "inset(100% 50% 0% 50%)"
+        },
+        {
+          clipPath: "inset(0% 0% 0% 0%)",
+          duration: 0.5,
+          ease: "expo.inOut"
+        }, 0.5)
+    }
+
+    if (elementLoad.length) {
+      pageLoadTl.from(elementLoad, {
+        yPercent: 100,
+        autoAlpha: 0,
+        duration: 1,
+        stagger: 0.05,
+        ease: "expo.out"
+      });
+    }
   }
   pageLoad();
 
