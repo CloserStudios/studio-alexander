@@ -590,7 +590,7 @@ function pageInit() {
           splitHero = gsap.from(self.lines, {
             duration: 1.5,
             y: 50,
-            autoAlpha: 0,
+            //autoAlpha: 0,
             stagger: 0.05,
             ease: "expo.out",
           });
@@ -600,6 +600,8 @@ function pageInit() {
 
     pageLoadTl.add(splitHero, 0.5);
   }
+  pageLoad();
+
   pageLoad();
 
   function checkPreloader() {
