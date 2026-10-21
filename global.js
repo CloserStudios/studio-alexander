@@ -738,7 +738,7 @@ function pageInit() {
           gsap.fromTo(
             reasonCount,
             { yPercent: parseFloat(inY), autoAlpha: 0 },
-            { yPercent: 0, autoAlpha: 1, duration: 0.35, ease: "power2.out" }
+            { yPercent: 0, autoAlpha: 1, duration: 0.35, ease: "expo.out" }
           );
         },
       });
@@ -760,6 +760,7 @@ function pageInit() {
       gsap.set(reasonPanel, { zIndex: reasonPanels.length - i });
     });
 
+    /*
     reasonPanels.slice(0, -1).forEach((reasonPanel, i) => {
       tl.to(
         reasonPanel,
@@ -771,6 +772,7 @@ function pageInit() {
         i
       );
     });
+    */
 
     gsap.set(reasonHead, { autoAlpha: 0, y: 30 });
     gsap.set(reasonSub, { autoAlpha: 0, y: 30 });
@@ -797,7 +799,7 @@ function pageInit() {
         autoAlpha: 0,
         y: outY,
         duration: 0.75,
-        ease: "power2.out",
+        ease: "expo.out",
         stagger: 0.05,
         overwrite: true,
       });
@@ -811,7 +813,7 @@ function pageInit() {
           y: 0,
           duration: 0.75,
           stagger: 0.05,
-          ease: "power2.out",
+          ease: "expo.out",
           overwrite: true,
         }
       );
@@ -973,7 +975,6 @@ function pageInit() {
       });
     });
   }
-
   projectHover();
 
   function currentProject() {
@@ -983,7 +984,7 @@ function pageInit() {
     if (!projectName || !connectingLine || !trigger) return;
 
     gsap.set(projectName, { y: 12 });
-    gsap.set(connectingLine, { xPercent: -150 });
+    gsap.set(connectingLine, { autoAlpha: 1, xPercent: -150 });
 
     let tl = gsap.timeline({
       scrollTrigger: {
@@ -1080,14 +1081,14 @@ function pageInit() {
       gsap.set(teamPanels, { autoAlpha: 0 });
       gsap.set(teamPanels[index], { autoAlpha: 1 });
       gsap.killTweensOf(allText);
-      gsap.set(bios.filter(Boolean), { autoAlpha: 0 });
-      gsap.set(roles.filter(Boolean), { autoAlpha: 0, y: -12 });
+      gsap.set(bios.filter(Boolean), { autoAlpha: 0, y: 12 });
+      gsap.set(roles.filter(Boolean), { autoAlpha: 0, y: 12 });
 
       if (roles[index]) {
-        gsap.to(roles[index], { autoAlpha: 1, y: 0, duration: 0.5, ease: "power2.out" });
+        gsap.to(roles[index], { autoAlpha: 1, y: 0, duration: 0.5, ease: "expo.out" });
       }
       if (bios[index]) {
-        gsap.to(bios[index], { autoAlpha: 1, duration: 0.5, ease: "power2.out", delay: 0.25 });
+        gsap.to(bios[index], { autoAlpha: 1, duration: 0.5, ease: "expo.out", delay: 0.25 });
       }
 
       setActiveItem(index);
