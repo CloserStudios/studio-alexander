@@ -589,7 +589,7 @@ function pageInit() {
         onSplit: (self) => {
           splitHero = gsap.from(self.lines, {
             duration: 1.5,
-            y: 50,
+            yPercent: 100,
             //autoAlpha: 0,
             stagger: 0.05,
             ease: "expo.out",
