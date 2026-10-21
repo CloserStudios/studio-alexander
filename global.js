@@ -1096,7 +1096,24 @@ barba.init({
     {
       name: "default-transition",
 
-      leave(data) { },
+      leave(data) {
+        let tl = gsap.timeline({
+          defaults: {
+            ease: "expo.out",
+          },
+        });
+
+        tl.to(
+          ".content-wrapper",
+          {
+            opacity: 0,
+            duration: 1,
+          },
+          0
+        );
+
+        return tl;
+      },
 
       afterLeave(data) {
         gsap.set(data.current.container, { visibility: "hidden" });
