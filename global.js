@@ -617,81 +617,69 @@ function pageInit() {
   navColourChange();
 
   function projectAnim() {
-    let total = 0;
-    let isTicking = false;
-    let isDragging = false;
+    let total = 0,
+      xTo,
+      itemValues = []
 
-    const content = document.querySelector('.f-work-list');
-    const cards = document.querySelectorAll('.f-work-item');
-    if (!content || !cards.length) return;
+    const content = document.querySelector('.f-work-list')
+    const cards = document.querySelectorAll('.f-work-item')
+    const cardsLength = cards.length / 2
+    const half = content.clientWidth / 2
 
-    const half = content.clientWidth / 2;
     const wrap = gsap.utils.wrap(-half, 0);
 
-    const xTo = gsap.quickTo(content, "x", {
-      duration: 0.5,
-      ease: "power3",
-      modifiers: { x: gsap.utils.unitize(wrap) }
+    xTo = gsap.quickTo(content, "x", {
+      duration: 0.5, // Will transition over 0.5s
+      ease: 'power3', // Non-linear
+      modifiers: {
+        x: gsap.utils.unitize(wrap),
+      },
     });
 
-    const tl = gsap.timeline({ paused: true }).to(cards, {
+    // Generate an array of random values between -10 and 10
+    for (let i = 0; i < cardsLength; i++) {
+      itemValues.push((Math.random() - 0.5) * 20);
+    }
+
+    // Create a GSAP timeline and keep it paused initially
+    const tl = gsap.timeline({ paused: true });
+    tl.to(cards, {
+      // Rotate each card using a precomputed random value
+      rotate: (index) => (itemValues[index % cardsLength]),
+      // Move each card horizontally based on the same random value
+      xPercent: (index) => (itemValues[index % cardsLength]),
+      // Move each card vertically based on the same random value
+      yPercent: (index) => (itemValues[index % cardsLength]),
+      // Slightly scale down the cards
       scale: 0.95,
       duration: 0.5,
-      ease: "expo.inOut"
-    });
-
-    function tick(time, deltaTime) {
-      if (isDragging) return; // optional
-      total -= deltaTime / 7.5;
-      xTo(total);
-    }
-
-    function startTicker() {
-      if (isTicking) return;
-      gsap.ticker.add(tick);
-      isTicking = true;
-    }
-
-    function stopTicker() {
-      if (!isTicking) return;
-      gsap.ticker.remove(tick);
-      isTicking = false;
-    }
+      ease: 'back.inOut(3)', // Non-linear
+    })
 
     Observer.create({
       target: content,
-      type: "pointer,touch",
-      dragMinimum: 10,
-      onPress: () => tl.play(),
-      onDragStart: () => {
-        isDragging = true;
-        content.classList.add("is-dragging");
+      type: "pointer,touch", // Detect both pointer and touch events
+      onPress: () => tl.play(), // Play the timeline when pressing down
+      onDrag: (self) => { // Update the horizontal position while dragging
+        total += self.deltaX
+        xTo(total)
       },
-      onDrag: (self) => {
-        total += self.deltaX;
-        xTo(total);
+      onRelease: () => { // Reverse the timeline when releasing the pointer
+        tl.reverse()
       },
-      onRelease: () => {
-        isDragging = false;
-        content.classList.remove("is-dragging");
-        tl.reverse();
+      onStop: () => { // Reverse the timeline when the interaction stops
+        tl.reverse()
       },
-      onStop: () => {
-        isDragging = false;
-        content.classList.remove("is-dragging");
-        tl.reverse();
-      }
-    });
+    })
 
-    ScrollTrigger.create({
-      trigger: content,
-      start: "top bottom",
-      end: "bottom top",
-      onEnter: startTicker,
-      onEnterBack: startTicker,
-      onLeave: stopTicker,
-      onLeaveBack: stopTicker
-    });
+    gsap.ticker.add(tick);
+
+    // TO GO FURTHER: You can add an offscreen check and kill Observer when necessary
+  });
+
+  function tick(time, deltaTime) {
+    total -= deltaTime / 10  // Adjust the speed of automatic scrolling    
+    xTo(total)
   }
   projectAnim();
 
