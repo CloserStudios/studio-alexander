@@ -684,42 +684,37 @@ function pageInit() {
 
   function marqueeAnimation() {
     const marquee = document.querySelector(".h-clients-track");
-    if (!marquee) {
-      return;
+    if (!marquee) return;
+
+    const duration = parseInt(marquee.getAttribute("data-marquee-duration"), 10) || 20;
+    const original = marquee.firstElementChild;
+    if (!original) return;
+
+    // Remove previous clones (if rerun)
+    marquee.querySelectorAll(".is-clone").forEach((el) => el.remove());
+
+    // Measure one segment
+    const segmentWidth = original.getBoundingClientRect().width;
+    const trackGap = parseFloat(getComputedStyle(marquee).gap) || 0;
+    const step = segmentWidth + trackGap;
+
+    // Ensure enough segments exist for seamless fill
+    const viewport = marquee.getBoundingClientRect().width;
+    const needed = Math.ceil((viewport * 2) / step); // enough to always cover while looping
+
+    for (let i = 0; i < needed; i++) {
+      const clone = original.cloneNode(true);
+      clone.classList.add("is-clone");
+      marquee.appendChild(clone);
     }
-    const duration = parseInt(marquee.getAttribute("data-marquee-duration"), 10) || 5;
-    const marqueeContent = marquee.firstChild;
-    if (!marqueeContent) {
-      return;
-    }
 
-    const marqueeContentClone = marqueeContent.cloneNode(true);
-    marquee.append(marqueeContentClone);
-
-    let tween;
-
-    const playMarquee = () => {
-      let progress = tween ? tween.progress() : 0;
-      tween && tween.progress(0).kill();
-      const width = parseInt(
-        getComputedStyle(marqueeContent).getPropertyValue("width"),
-        10
-      );
-      const gap = parseInt(
-        getComputedStyle(marqueeContent).getPropertyValue("gap"),
-        10
-      );
-      const distanceToTranslate = -1 * (gap + width);
-
-      tween = gsap.fromTo(
-        marquee.children,
-        { x: 0 },
-        { x: distanceToTranslate, duration, ease: "none", repeat: -1 }
-      );
-      tween.progress(progress);
-      console.log({ width });
-    };
-    playMarquee();
+    gsap.set(marquee, { x: 0 });
+    gsap.to(marquee, {
+      x: -step,
+      duration,
+      ease: "none",
+      repeat: -1,
+    });
   }
   marqueeAnimation();
 
