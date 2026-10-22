@@ -909,7 +909,7 @@ function pageInit() {
     if (!bgColour || !bgTrigger) return;
 
     gsap.set(bgColour, { height: '200svh' });
-    gsap.set(bgTrigger, { height: '250svh' });
+    gsap.set(bgTrigger, { height: '150svh' });
 
     let tl = gsap.timeline({
       scrollTrigger: {
