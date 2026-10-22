@@ -693,7 +693,7 @@ function pageInit() {
     marquee.append(marqueeContentClone);
 
     const width = marqueeContent.offsetWidth;
-    const gap = 16; // Match the px gap from CSS
+    const gap = 48; // Match the px gap from CSS
 
     gsap.set(marquee.children, { x: 0 });
 
