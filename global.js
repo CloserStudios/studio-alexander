@@ -706,7 +706,7 @@ function pageInit() {
         10
       );
       const gap = parseInt(
-        getComputedStyle(marqueeContent).getPropertyValue("column-gap"),
+        getComputedStyle(marqueeContent).getPropertyValue("gap"),
         10
       );
       const distanceToTranslate = -1 * (gap + width);
@@ -720,7 +720,6 @@ function pageInit() {
       console.log({ width });
     };
     playMarquee();
-
   }
   marqueeAnimation();
 
