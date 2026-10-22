@@ -295,33 +295,6 @@ function pageInit() {
   }
   partnerAnim();
 
-  function buttonAnim() {
-    const buttons = gsap.utils.toArray("[data-button-hover]");
-    if (!buttons.length) return;
-
-    buttons.forEach((button) => {
-      let buttonArrow = button.querySelector("[data-button-arrow]");
-      let buttonText = button.querySelectorAll("[data-button-text]");
-      let tl = gsap.timeline({
-        paused: true,
-        defaults: {
-          ease: "expo.inOut"
-        }
-      });
-
-      tl
-        .to(buttonText, { y: -12, duration: 0.5 }, 0)
-        .to(buttonArrow, { xPercent: 101, duration: 0.25 }, 0)
-        .set(buttonArrow, { xPercent: -101 }, 0.25)
-        .to(buttonArrow, { xPercent: 0, duration: 0.25 }, 0.25);
-
-      button.addEventListener("mouseenter", () => tl.play(0));
-
-      button.addEventListener("mouseleave", () => tl.reverse());
-    });
-  }
-  buttonAnim();
-
   function paraEffect() {
     const paraWrappers = document.querySelectorAll("[data-para-wrap]");
     if (!paraWrappers.length) return;
@@ -592,7 +565,7 @@ function pageInit() {
         },
         {
           clipPath: "inset(0% 0% 0% 0%)",
-          duration: 1,
+          duration: 1.5,
           ease: "expo.inOut"
         }, 0.5)
     }
@@ -918,89 +891,6 @@ function pageInit() {
   }
   filterReveal();
 
-  function projectHover() {
-    const projectCards = document.querySelectorAll("[data-project-card]");
-    const cursor = document.querySelector(".cursor");
-    const cursorText = cursor?.querySelector("[data-cursor-text]");
-    if (!projectCards.length || !cursor) return;
-
-    gsap.set(cursor, { opacity: 0, x: 0, y: 0 });
-
-    const xTo = gsap.quickTo(cursor, "x", { duration: 0.05, ease: "expo.out" });
-    const yTo = gsap.quickTo(cursor, "y", { duration: 0.05, ease: "expo.out" });
-    const opacityTo = gsap.quickTo(cursor, "opacity", { duration: 0.75, ease: "expo.out" });
-
-    const offsetX = 18;
-    const offsetY = 18;
-
-    projectCards.forEach((card) => {
-      const projectImage = card.querySelector("[data-project-image]");
-      const projectImageOverlay = card.querySelector("[data-image-overlay]");
-      if (!projectImage || !projectImageOverlay) return;
-
-      const isComingSoon = (card.getAttribute("data-coming-soon") || "").toLowerCase() === "true";
-
-      gsap.set(projectImage, { scale: 1.025, transformOrigin: "50% 50%" });
-      gsap.set(projectImageOverlay, { opacity: 0 });
-
-      const tl = gsap.timeline({ paused: true });
-      tl.to(projectImage, { scale: 1, duration: 0.5, ease: "power2.out" }, 0)
-        .to(projectImageOverlay, { opacity: 0.15, duration: 0.25, ease: "power2.out" }, 0);
-
-      const setCursorLabel = () => {
-        const label = isComingSoon ? "Coming Soon" : "View Project";
-        if (cursorText) cursorText.textContent = label;
-        else cursor.textContent = label;
-      };
-
-      const moveCursor = (e) => {
-        xTo(e.clientX + offsetX);
-        yTo(e.clientY + offsetY);
-      };
-
-      card.addEventListener("mouseenter", (e) => {
-        setCursorLabel();
-        moveCursor(e);
-        opacityTo(1);
-        tl.timeScale(1).play();
-      });
-
-      card.addEventListener("mousemove", moveCursor);
-
-      card.addEventListener("mouseleave", () => {
-        opacityTo(0);
-        tl.timeScale(1.8).reverse();
-      });
-    });
-  }
-  projectHover();
-
-  function currentProject() {
-    const projectName = document.querySelector("[data-project-name]");
-    const connectingLine = document.querySelector("[data-connecting-line]");
-    const trigger = document.querySelector("[data-project-trigger]");
-    if (!projectName || !connectingLine || !trigger) return;
-
-    gsap.set(projectName, { y: 12 });
-    gsap.set(connectingLine, { autoAlpha: 1, xPercent: -150 });
-
-    let tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: trigger,
-        start: "top top",
-        end: "bottom top",
-        toggleActions: "play none none reverse",
-        ease: "power2.inOut",
-      },
-    });
-
-    tl
-      .to(projectName, { y: 0 }, 0)
-      .to(connectingLine, { xPercent: 0 }, 0.2);
-
-  }
-  currentProject();
-
   function cmsHighlight() {
     document.querySelectorAll('[data-p-subheading]').length
 
@@ -1023,88 +913,272 @@ function pageInit() {
         trigger: bgTrigger,
         start: "top top",
         end: "bottom bottom",
-        scrub: true,
+        scrub: 0.5,
+        invalidateOnRefresh: true,
       },
     });
 
-    tl.to(bgColour, { opacity: 0, ease: "power2.out" });
+    tl.to(bgColour, { autoAlpha: 0, ease: "none" });
   }
   bgColourChange();
 
-  function lazyImage() {
-    const lazy = document.querySelector("[data-lazy-image]");
-    if (!lazy) return;
-
-    gsap.set(lazy, { y: 200 });
-
-    let tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: lazy,
-        start: "top center",
-        end: "bottom top",
-        ease: "expo.inOut",
-        scrub: 1,
-      }
-    });
-
-    tl.to(lazy, { y: -200 });
-  }
-  lazyImage();
-
-  function teamAnimation() {
-    const teamWrapper = document.querySelector("[data-team-wrapper]");
-    const teamItems = document.querySelectorAll("[data-team-item]");
-
-    if (!teamWrapper || !teamItems.length) return;
-
-    const teamPanels = teamWrapper.querySelectorAll("[data-team-panel]");
-    if (!teamPanels.length) return;
-
-    const roles = Array.from(teamPanels, (panel) => panel.querySelector("[data-team-role]"));
-    const bios = Array.from(teamPanels, (panel) => panel.querySelector("[data-team-bio]"));
-    const allText = [...roles, ...bios].filter(Boolean);
-
-    let currentIndex = -1;
-
-    function setActiveItem(index) {
-      teamItems.forEach((item, i) => {
-        item.classList.toggle("is-active", i === index);
-      });
-    }
-
-    function showPanel(index) {
-      if (index === currentIndex) return;
-      currentIndex = index;
-
-      gsap.set(teamPanels, { autoAlpha: 0 });
-      gsap.set(teamPanels[index], { autoAlpha: 1 });
-      gsap.killTweensOf(allText);
-      gsap.set(bios.filter(Boolean), { autoAlpha: 0, y: 12 });
-      gsap.set(roles.filter(Boolean), { autoAlpha: 0, y: 12 });
-
-      if (roles[index]) {
-        gsap.to(roles[index], { autoAlpha: 1, y: 0, duration: 0.5, ease: "expo.out" });
-      }
-      if (bios[index]) {
-        gsap.to(bios[index], { autoAlpha: 1, duration: 0.5, ease: "expo.out", delay: 0.25 });
-      }
-
-      setActiveItem(index);
-    }
-
-    showPanel(0);
-
-    teamItems.forEach((teamItem, index) => {
-      teamItem.addEventListener("mouseenter", () => showPanel(index));
-    });
-  }
-  teamAnimation();
-
   function desktopAnimations() {
     mm.add("(min-width: 992px)", () => {
+      function lazyImage() {
+        const lazy = document.querySelector("[data-lazy-image]");
+        if (!lazy) return;
+
+        gsap.set(lazy, { y: 200 });
+
+        let tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: lazy,
+            start: "top center",
+            end: "bottom top",
+            ease: "expo.inOut",
+            scrub: 1,
+          }
+        });
+
+        tl.to(lazy, { y: -200 });
+      }
+      lazyImage();
+
+      function teamAnimation() {
+        const teamWrapper = document.querySelector("[data-team-wrapper]");
+        const teamItems = document.querySelectorAll("[data-team-item]");
+
+        if (!teamWrapper || !teamItems.length) return;
+
+        const teamPanels = teamWrapper.querySelectorAll("[data-team-panel]");
+        if (!teamPanels.length) return;
+
+        const roles = Array.from(teamPanels, (panel) => panel.querySelector("[data-team-role]"));
+        const bios = Array.from(teamPanels, (panel) => panel.querySelector("[data-team-bio]"));
+        const allText = [...roles, ...bios].filter(Boolean);
+
+        let currentIndex = -1;
+
+        function setActiveItem(index) {
+          teamItems.forEach((item, i) => {
+            item.classList.toggle("is-active", i === index);
+          });
+        }
+
+        function showPanel(index) {
+          if (index === currentIndex) return;
+          currentIndex = index;
+
+          gsap.set(teamPanels, { autoAlpha: 0 });
+          gsap.set(teamPanels[index], { autoAlpha: 1 });
+          gsap.killTweensOf(allText);
+          gsap.set(bios.filter(Boolean), { autoAlpha: 0, y: 12 });
+          gsap.set(roles.filter(Boolean), { autoAlpha: 0, y: 12 });
+
+          if (roles[index]) {
+            gsap.to(roles[index], { autoAlpha: 1, y: 0, duration: 0.5, ease: "expo.out" });
+          }
+          if (bios[index]) {
+            gsap.to(bios[index], { autoAlpha: 1, duration: 0.5, ease: "expo.out", delay: 0.25 });
+          }
+
+          setActiveItem(index);
+        }
+
+        showPanel(0);
+
+        teamItems.forEach((teamItem, index) => {
+          teamItem.addEventListener("mouseenter", () => showPanel(index));
+        });
+      }
+      teamAnimation();
+
+      function projectHover() {
+        const projectCards = document.querySelectorAll("[data-project-card]");
+        const cursor = document.querySelector(".cursor");
+        const cursorText = cursor?.querySelector("[data-cursor-text]");
+        if (!projectCards.length || !cursor) return;
+
+        gsap.set(cursor, { opacity: 0, x: 0, y: 0 });
+
+        const xTo = gsap.quickTo(cursor, "x", { duration: 0.05, ease: "expo.out" });
+        const yTo = gsap.quickTo(cursor, "y", { duration: 0.05, ease: "expo.out" });
+        const opacityTo = gsap.quickTo(cursor, "opacity", { duration: 0.75, ease: "expo.out" });
+
+        const offsetX = 18;
+        const offsetY = 18;
+
+        projectCards.forEach((card) => {
+          const projectImage = card.querySelector("[data-project-image]");
+          const projectImageOverlay = card.querySelector("[data-image-overlay]");
+          if (!projectImage || !projectImageOverlay) return;
+
+          const isComingSoon = (card.getAttribute("data-coming-soon") || "").toLowerCase() === "true";
+
+          gsap.set(projectImage, { scale: 1.025, transformOrigin: "50% 50%" });
+          gsap.set(projectImageOverlay, { opacity: 0 });
+
+          const tl = gsap.timeline({ paused: true });
+          tl.to(projectImage, { scale: 1, duration: 0.5, ease: "power2.out" }, 0)
+            .to(projectImageOverlay, { opacity: 0.15, duration: 0.25, ease: "power2.out" }, 0);
+
+          const setCursorLabel = () => {
+            const label = isComingSoon ? "Coming Soon" : "View Project";
+            if (cursorText) cursorText.textContent = label;
+            else cursor.textContent = label;
+          };
+
+          const moveCursor = (e) => {
+            xTo(e.clientX + offsetX);
+            yTo(e.clientY + offsetY);
+          };
+
+          card.addEventListener("mouseenter", (e) => {
+            setCursorLabel();
+            moveCursor(e);
+            opacityTo(1);
+            tl.timeScale(1).play();
+          });
+
+          card.addEventListener("mousemove", moveCursor);
+
+          card.addEventListener("mouseleave", () => {
+            opacityTo(0);
+            tl.timeScale(1.8).reverse();
+          });
+        });
+      }
+      projectHover();
+
+      function currentProject() {
+        const projectName = document.querySelector("[data-project-name]");
+        const connectingLine = document.querySelector("[data-connecting-line]");
+        const trigger = document.querySelector("[data-project-trigger]");
+        if (!projectName || !connectingLine || !trigger) return;
+
+        gsap.set(projectName, { y: 12 });
+        gsap.set(connectingLine, { autoAlpha: 1, xPercent: -150 });
+
+        let tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: trigger,
+            start: "top top",
+            end: "bottom top",
+            toggleActions: "play none none reverse",
+            ease: "power2.inOut",
+          },
+        });
+
+        tl
+          .to(projectName, { y: 0 }, 0)
+          .to(connectingLine, { xPercent: 0 }, 0.2);
+
+      }
+      currentProject();
+
+      function buttonAnim() {
+        const buttons = gsap.utils.toArray("[data-button-hover]");
+        if (!buttons.length) return;
+
+        buttons.forEach((button) => {
+          let buttonArrow = button.querySelector("[data-button-arrow]");
+          let buttonText = button.querySelectorAll("[data-button-text]");
+          let tl = gsap.timeline({
+            paused: true,
+            defaults: {
+              ease: "expo.inOut"
+            }
+          });
+
+          tl
+            .to(buttonText, { y: -12, duration: 0.5 }, 0)
+            .to(buttonArrow, { xPercent: 101, duration: 0.25 }, 0)
+            .set(buttonArrow, { xPercent: -101 }, 0.25)
+            .to(buttonArrow, { xPercent: 0, duration: 0.25 }, 0.25);
+
+          button.addEventListener("mouseenter", () => tl.play(0));
+
+          button.addEventListener("mouseleave", () => tl.reverse());
+        });
+      }
+      buttonAnim();
     });
   }
   desktopAnimations();
+
+  function tabletAnimations() {
+    mm.add("(min-width: 479px) and (max-width: 991px)", () => {
+      function lazyImage() {
+        const lazy = document.querySelector("[data-lazy-image]");
+        if (!lazy) return;
+
+        gsap.set(lazy, { y: 200 });
+
+        let tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: lazy,
+            start: "top center",
+            end: "bottom top",
+            ease: "expo.inOut",
+            scrub: 1,
+          }
+        });
+
+        tl.to(lazy, { y: -200 });
+      }
+      lazyImage();
+
+      function teamAnimation() {
+        const teamWrapper = document.querySelector("[data-team-wrapper]");
+        const teamItems = document.querySelectorAll("[data-team-item]");
+
+        if (!teamWrapper || !teamItems.length) return;
+
+        const teamPanels = teamWrapper.querySelectorAll("[data-team-panel]");
+        if (!teamPanels.length) return;
+
+        const roles = Array.from(teamPanels, (panel) => panel.querySelector("[data-team-role]"));
+        const bios = Array.from(teamPanels, (panel) => panel.querySelector("[data-team-bio]"));
+        const allText = [...roles, ...bios].filter(Boolean);
+
+        let currentIndex = -1;
+
+        function setActiveItem(index) {
+          teamItems.forEach((item, i) => {
+            item.classList.toggle("is-active", i === index);
+          });
+        }
+
+        function showPanel(index) {
+          if (index === currentIndex) return;
+          currentIndex = index;
+
+          gsap.set(teamPanels, { autoAlpha: 0 });
+          gsap.set(teamPanels[index], { autoAlpha: 1 });
+          gsap.killTweensOf(allText);
+          gsap.set(bios.filter(Boolean), { autoAlpha: 0, y: 12 });
+          gsap.set(roles.filter(Boolean), { autoAlpha: 0, y: 12 });
+
+          if (roles[index]) {
+            gsap.to(roles[index], { autoAlpha: 1, y: 0, duration: 0.5, ease: "expo.out" });
+          }
+          if (bios[index]) {
+            gsap.to(bios[index], { autoAlpha: 1, duration: 0.5, ease: "expo.out", delay: 0.25 });
+          }
+
+          setActiveItem(index);
+        }
+
+        showPanel(0);
+
+        teamItems.forEach((teamItem, index) => {
+          teamItem.addEventListener("mouseenter", () => showPanel(index));
+        });
+      }
+      teamAnimation();
+    });
+  }
+  tabletAnimations();
 }
 
 function initResizeObserver() {
