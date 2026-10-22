@@ -683,33 +683,21 @@ function pageInit() {
   projectAnim();
 
   function marqueeAnimation() {
-    const marquee = document.querySelector(".h-clients-track");
-    const marqueeContent = document.querySelector(".h-clients-inner");
-    if (!marquee || !marqueeContent) return;
+    const track = document.querySelector(".h-clients-track");
+    if (!track) return;
 
-    const clone = marqueeContent.cloneNode(true);
-    marquee.appendChild(clone);
+    const distance = track.scrollWidth / 2;
 
-    // Get real gap from computed style (matches CSS exactly)
-    const styles = getComputedStyle(marquee);
-    const gap = parseFloat(styles.columnGap || styles.gap || 0);
+    gsap.set(track, { x: 0 });
 
-    // Total distance for one full loop
-    const distance = marqueeContent.offsetWidth + gap;
-
-    gsap.set([marqueeContent, clone], { x: 0 });
-
-    gsap.to([marqueeContent, clone], {
-      x: `-=${distance}`,
+    gsap.to(track, {
+      x: -distance,
       duration: 20,
       ease: "none",
       repeat: -1,
-      modifiers: {
-        x: gsap.utils.unitize((x) => parseFloat(x) % distance),
-      },
+      onRepeat: () => gsap.set(track, { x: 0 }), // hard reset each cycle
     });
   }
-
   marqueeAnimation();
 
   function filterReveal() {
