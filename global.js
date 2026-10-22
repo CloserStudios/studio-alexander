@@ -685,28 +685,31 @@ function pageInit() {
   function marqueeAnimation() {
     const marquee = document.querySelector(".h-clients-track");
     const marqueeContent = document.querySelector(".h-clients-inner");
-    if (!marquee || !marqueeContent) {
-      return;
-    }
+    if (!marquee || !marqueeContent) return;
 
-    const marqueeContentClone = marqueeContent.cloneNode(true);
-    marquee.append(marqueeContentClone);
+    const clone = marqueeContent.cloneNode(true);
+    marquee.appendChild(clone);
 
-    const width = marqueeContent.offsetWidth;
-    const gap = 48; // Match the px gap from CSS
+    // Get real gap from computed style (matches CSS exactly)
+    const styles = getComputedStyle(marquee);
+    const gap = parseFloat(styles.columnGap || styles.gap || 0);
 
-    gsap.set(marquee.children, { x: 0 });
+    // Total distance for one full loop
+    const distance = marqueeContent.offsetWidth + gap;
 
-    gsap.to(marquee.children, {
-      x: -(width + gap),
+    gsap.set([marqueeContent, clone], { x: 0 });
+
+    gsap.to([marqueeContent, clone], {
+      x: `-=${distance}`,
       duration: 20,
       ease: "none",
       repeat: -1,
       modifiers: {
-        x: gsap.utils.unitize((x) => parseFloat(x) % (width + gap)),
+        x: gsap.utils.unitize((x) => parseFloat(x) % distance),
       },
     });
   }
+
   marqueeAnimation();
 
   function filterReveal() {
