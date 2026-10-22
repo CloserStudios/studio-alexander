@@ -721,21 +721,6 @@ function pageInit() {
     };
     playMarquee();
 
-    function debounce(func) {
-      var timer;
-      return function (event) {
-        if (timer) clearTimeout(timer);
-        timer = setTimeout(
-          () => {
-            func();
-          },
-          500,
-          event
-        );
-      };
-    }
-
-    window.addEventListener("resize", debounce(playMarquee));
   }
   marqueeAnimation();
 
