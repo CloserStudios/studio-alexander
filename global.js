@@ -617,86 +617,81 @@ function pageInit() {
   navColourChange();
 
   function projectAnim() {
-    let total = 0,
-      xTo,
-      itemValues = []
+    let total = 0;
+    let isTicking = false;
+    let isDragging = false;
 
-    const content = document.querySelector('.f-work-list')
-    const cards = document.querySelectorAll('.f-work-item')
+    const content = document.querySelector('.f-work-list');
+    const cards = document.querySelectorAll('.f-work-item');
     if (!content || !cards.length) return;
-    const cardsLength = cards.length / 2
-    const half = content.clientWidth / 2
 
+    const half = content.clientWidth / 2;
     const wrap = gsap.utils.wrap(-half, 0);
 
-    xTo = gsap.quickTo(content, "x", {
+    const xTo = gsap.quickTo(content, "x", {
       duration: 0.5,
-      ease: 'power3',
-      modifiers: {
-        x: gsap.utils.unitize(wrap),
-      },
+      ease: "power3",
+      modifiers: { x: gsap.utils.unitize(wrap) }
     });
 
-    for (let i = 0; i < cardsLength; i++) {
-      itemValues.push((Math.random() - 0.5) * 20);
-    }
-
-    const tl = gsap.timeline({ paused: true });
-    tl.to(cards, {
+    const tl = gsap.timeline({ paused: true }).to(cards, {
       scale: 0.95,
       duration: 0.5,
-      ease: 'expo.inOut',
-    })
+      ease: "expo.inOut"
+    });
+
+    function tick(time, deltaTime) {
+      if (isDragging) return; // optional
+      total -= deltaTime / 7.5;
+      xTo(total);
+    }
+
+    function startTicker() {
+      if (isTicking) return;
+      gsap.ticker.add(tick);
+      isTicking = true;
+    }
+
+    function stopTicker() {
+      if (!isTicking) return;
+      gsap.ticker.remove(tick);
+      isTicking = false;
+    }
 
     Observer.create({
       target: content,
       type: "pointer,touch",
       dragMinimum: 10,
-      onPress: () => {
-        tl.play();
-      },
+      onPress: () => tl.play(),
       onDragStart: () => {
-        content.classList.add('is-dragging');
+        isDragging = true;
+        content.classList.add("is-dragging");
       },
       onDrag: (self) => {
         total += self.deltaX;
         xTo(total);
       },
       onRelease: () => {
-        content.classList.remove('is-dragging');
+        isDragging = false;
+        content.classList.remove("is-dragging");
         tl.reverse();
       },
       onStop: () => {
-        content.classList.remove('is-dragging');
+        isDragging = false;
+        content.classList.remove("is-dragging");
         tl.reverse();
       }
     });
 
-    gsap.ticker.add(tick);
-
-    function tick(time, deltaTime) {
-      total -= deltaTime / 7.5  // Adjust the speed of automatic scrolling    
-      xTo(total)
-    }
-
     ScrollTrigger.create({
-      trigger: '.f-work-list',
-      start: 'top bottom',
-      end: 'bottom top',
-      onEnter: () => {
-        gsap.ticker.add(tick);
-      },
-      onEnterBack: () => {
-        gsap.ticker.add(tick);
-      },
-      onLeave: () => {
-        gsap.ticker.remove(tick);
-      },
-      onLeaveBack: () => {
-        gsap.ticker.remove(tick);
-      }
+      trigger: content,
+      start: "top bottom",
+      end: "bottom top",
+      onEnter: startTicker,
+      onEnterBack: startTicker,
+      onLeave: stopTicker,
+      onLeaveBack: stopTicker
     });
-
   }
   projectAnim();
 
