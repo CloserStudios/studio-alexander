@@ -565,7 +565,7 @@ function pageInit() {
         },
         {
           clipPath: "inset(0% 0% 0% 0%)",
-          duration: 1.5,
+          duration: 2,
           ease: "expo.inOut"
         }, 0.5)
     }
@@ -907,6 +907,9 @@ function pageInit() {
     let bgTrigger = document.querySelector("[data-bg-trigger]");
 
     if (!bgColour || !bgTrigger) return;
+
+    gsap.set(bgColour, { height: '200svh' });
+    gsap.set(bgTrigger, { height: '250svh' });
 
     let tl = gsap.timeline({
       scrollTrigger: {
