@@ -683,39 +683,61 @@ function pageInit() {
   projectAnim();
 
   function marqueeAnimation() {
-    const track = document.querySelector(".h-clients-track");
-    const firstInner = track?.querySelector(".h-clients-inner");
-    if (!track || !firstInner) return;
+    const marquee = document.querySelector(".h-clients-track");
+    if (!marquee) {
+      return;
+    }
+    const duration = parseInt(marquee.getAttribute("data-marquee-duration"), 10) || 5;
+    const marqueeContent = marquee.firstChild;
+    if (!marqueeContent) {
+      return;
+    }
 
-    // Kill previous tween if this runs again
-    gsap.killTweensOf(track);
+    const marqueeContentClone = marqueeContent.cloneNode(true);
+    marquee.append(marqueeContentClone);
 
-    // Move by exactly one set width (NOT half of track.scrollWidth guesswork)
-    const distance = firstInner.getBoundingClientRect().width;
+    let tween;
 
-    gsap.set(track, { x: 0 });
+    const playMarquee = () => {
+      let progress = tween ? tween.progress() : 0;
+      tween && tween.progress(0).kill();
+      const width = parseInt(
+        getComputedStyle(marqueeContent).getPropertyValue("width"),
+        10
+      );
+      const gap = parseInt(
+        getComputedStyle(marqueeContent).getPropertyValue("column-gap"),
+        10
+      );
+      const distanceToTranslate = -1 * (gap + width);
 
-    gsap.to(track, {
-      x: -distance,
-      duration: 20,
-      ease: "none",
-      repeat: -1,
-      modifiers: {
-        // wrap perfectly in [-distance, 0)
-        x: gsap.utils.unitize((x) => {
-          const v = parseFloat(x);
-          return ((v % distance) + distance) % distance * -1;
-        }),
-      },
-    });
+      tween = gsap.fromTo(
+        marquee.children,
+        { x: 0 },
+        { x: distanceToTranslate, duration, ease: "none", repeat: -1 }
+      );
+      tween.progress(progress);
+      console.log({ width });
+    };
+    playMarquee();
+
+    function debounce(func) {
+      var timer;
+      return function (event) {
+        if (timer) clearTimeout(timer);
+        timer = setTimeout(
+          () => {
+            func();
+          },
+          500,
+          event
+        );
+      };
+    }
+
+    window.addEventListener("resize", debounce(playMarquee));
   }
-
-  window.addEventListener("load", marqueeAnimation);
-  window.addEventListener("resize", () => {
-    // debounce-ish simple reset
-    clearTimeout(window.__mq);
-    window.__mq = setTimeout(marqueeAnimation, 150);
-  });
+  marqueeAnimation();
 
   function filterReveal() {
     const filterButton = document.querySelector(".filter-button");
@@ -1322,6 +1344,7 @@ function pageInit() {
   }
   tabletAnimations();
 }
+marqueeAnimation();
 
 function initResizeObserver() {
   if (resizeObserver) return;
