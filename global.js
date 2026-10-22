@@ -760,7 +760,6 @@ function pageInit() {
       gsap.set(reasonPanel, { zIndex: reasonPanels.length - i });
     });
 
-    /*
     reasonPanels.slice(0, -1).forEach((reasonPanel, i) => {
       tl.to(
         reasonPanel,
@@ -772,7 +771,6 @@ function pageInit() {
         i
       );
     });
-    */
 
     gsap.set(reasonHead, { autoAlpha: 0, y: 30 });
     gsap.set(reasonSub, { autoAlpha: 0, y: 30 });
@@ -827,7 +825,7 @@ function pageInit() {
       tl.add(() => { showText(i, -1); updateCount(i, -1); }, t - 0.001);
     }
     //Parallax
-    const Parallax = -5; // tweak amount of parallax
+    const Parallax = -5;
     reasonPanels.forEach((reasonPanel) => {
       const inner = reasonPanel.querySelector(".h-reasons-image");
       if (!inner) return;
