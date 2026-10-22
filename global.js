@@ -269,11 +269,13 @@ function pageInit() {
               trigger: el,
               start: "top 80%",
               toggleActions: "play none none reverse",
+              invalidateOnRefresh: true,
             },
           });
         },
       });
     });
+    ScrollTrigger.refresh();
   }
   splitAnimA();
 
