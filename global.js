@@ -1344,7 +1344,6 @@ function pageInit() {
   }
   tabletAnimations();
 }
-marqueeAnimation();
 
 function initResizeObserver() {
   if (resizeObserver) return;
