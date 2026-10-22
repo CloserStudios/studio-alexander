@@ -684,9 +684,14 @@ function pageInit() {
 
   function marqueeAnimation() {
     const track = document.querySelector(".h-clients-track");
-    if (!track) return;
+    const firstInner = track?.querySelector(".h-clients-inner");
+    if (!track || !firstInner) return;
 
-    const distance = track.scrollWidth / 2;
+    // Kill previous tween if this runs again
+    gsap.killTweensOf(track);
+
+    // Move by exactly one set width (NOT half of track.scrollWidth guesswork)
+    const distance = firstInner.getBoundingClientRect().width;
 
     gsap.set(track, { x: 0 });
 
@@ -695,10 +700,22 @@ function pageInit() {
       duration: 20,
       ease: "none",
       repeat: -1,
-      onRepeat: () => gsap.set(track, { x: 0 }), // hard reset each cycle
+      modifiers: {
+        // wrap perfectly in [-distance, 0)
+        x: gsap.utils.unitize((x) => {
+          const v = parseFloat(x);
+          return ((v % distance) + distance) % distance * -1;
+        }),
+      },
     });
   }
-  marqueeAnimation();
+
+  window.addEventListener("load", marqueeAnimation);
+  window.addEventListener("resize", () => {
+    // debounce-ish simple reset
+    clearTimeout(window.__mq);
+    window.__mq = setTimeout(marqueeAnimation, 150);
+  });
 
   function filterReveal() {
     const filterButton = document.querySelector(".filter-button");
