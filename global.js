@@ -269,13 +269,11 @@ function pageInit() {
               trigger: el,
               start: "top 80%",
               toggleActions: "play none none reverse",
-              invalidateOnRefresh: true,
             },
           });
         },
       });
     });
-    ScrollTrigger.refresh();
   }
   splitAnimA();
 
@@ -680,6 +678,24 @@ function pageInit() {
       total -= deltaTime / 7.5  // Adjust the speed of automatic scrolling    
       xTo(total)
     }
+
+    ScrollTrigger.create({
+      trigger: '.f-work-list',
+      start: 'top bottom',
+      end: 'bottom top',
+      onEnter: () => {
+        gsap.ticker.add(tick);
+      },
+      onEnterBack: () => {
+        gsap.ticker.add(tick);
+      },
+      onLeave: () => {
+        gsap.ticker.remove(tick);
+      },
+      onLeaveBack: () => {
+        gsap.ticker.remove(tick);
+      }
+    });
 
   }
   projectAnim();
@@ -1367,7 +1383,7 @@ barba.hooks.beforeLeave(() => {
 });
 
 barba.hooks.afterEnter((data) => {
-  //window.FinsweetAttributes.modules.list.restart();
+  window.FinsweetAttributes.modules.list.restart();
 });
 
 barba.hooks.after((data) => {
