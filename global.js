@@ -675,103 +675,745 @@ function pageInit() {
     gsap.ticker.add(tick);
 
     function tick(time, deltaTime) {
-      total -= deltaTime / 7.5  // Adjust the speed of automatic scrolling    
+      total -= deltaTime / 15  // Adjust the speed of automatic scrolling    
       xTo(total)
     }
 
   }
   projectAnim();
 
-  function initResizeObserver() {
-    if (resizeObserver) return;
+  function marqueeAnimation() {
+    const marquee = document.querySelector(".h-clients-track");
+    if (!marquee) return;
 
-    resizeObserver = new ResizeObserver(() => {
-      ScrollTrigger.refresh();
-      lenis?.resize?.();
+    const duration = parseInt(marquee.getAttribute("data-marquee-duration"), 10) || 20;
+    const original = marquee.firstElementChild;
+    if (!original) return;
+
+    // Remove previous clones (if rerun)
+    marquee.querySelectorAll(".is-clone").forEach((el) => el.remove());
+
+    // Measure one segment
+    const segmentWidth = original.getBoundingClientRect().width;
+    const trackGap = parseFloat(getComputedStyle(marquee).gap) || 0;
+    const step = segmentWidth + trackGap;
+
+    // Ensure enough segments exist for seamless fill
+    const viewport = marquee.getBoundingClientRect().width;
+    const needed = Math.ceil((viewport * 2) / step); // enough to always cover while looping
+
+    for (let i = 0; i < needed; i++) {
+      const clone = original.cloneNode(true);
+      clone.classList.add("is-clone");
+      marquee.appendChild(clone);
+    }
+
+    gsap.set(marquee, { x: 0 });
+    gsap.to(marquee, {
+      x: -step,
+      duration,
+      ease: "none",
+      repeat: -1,
+    });
+  }
+  marqueeAnimation();
+
+  function filterReveal() {
+    const filterButton = document.querySelector(".filter-button");
+    const filterOptions = document.querySelector(".filter-options");
+    const filterIcon = document.querySelector(".plus-svg");
+    const filterType = document.querySelectorAll("[data-filter-type]");
+    const filterOption = document.querySelectorAll("[data-filter-option]");
+
+    if (!filterButton || !filterOptions || !filterIcon || !filterType.length || !filterOption.length) return;
+
+    let isOpen = false;
+    let tl = null;
+
+    // Initial state
+    gsap.set(filterOptions, { height: 0, overflow: "hidden" });
+    gsap.set(filterType, { y: 12 });
+    gsap.set(filterOption, { y: 50 });
+
+    function openFilter() {
+      isOpen = true;
+      if (tl) tl.kill();
+
+      tl = gsap.timeline({ defaults: { ease: "expo.out" } });
+
+      tl
+        .to(filterOptions, { height: "auto", duration: 0.5, transformOrigin: "top center" }, 0)
+        .to(filterIcon, { rotation: -45, transformOrigin: "center center", duration: 0.5 }, 0)
+        .to(filterType, { y: 0, stagger: 0.05, duration: 0.5 }, 0.25)
+        .to(filterOption, { y: 0, stagger: 0.05, duration: 0.5 }, 0.25);
+    }
+
+    function closeFilter() {
+      isOpen = false;
+      if (tl) tl.kill();
+
+      tl = gsap.timeline({ defaults: { ease: "expo.in" } });
+
+      tl
+        .to(filterType, { y: -12, stagger: { each: 0.05, from: "end" }, duration: 0.5 }, 0)
+        .to(filterOption, { y: -50, stagger: { each: 0.05, from: "end" }, duration: 0.5 }, 0)
+        .to(filterOptions, { height: 0, duration: 0.5, transformOrigin: "top center" }, 0.5)
+        .to(filterIcon, { rotation: 0, transformOrigin: "center center", duration: 0.5 }, 0.5)
+        .set(filterType, { y: 12 })
+        .set(filterOption, { y: 50 });
+    }
+
+    filterButton.addEventListener("click", () => {
+      isOpen ? closeFilter() : openFilter();
+    });
+  }
+  filterReveal();
+
+  function cmsHighlight() {
+    document.querySelectorAll('[data-p-subheading]').length
+
+    document.querySelectorAll('[data-p-subheading]').forEach(el => {
+      const raw = el.textContent;
+      const html = raw.replace(/\*([^*]+)\*/g, '<span class="h6__emphasis">$1</span>');
+      el.innerHTML = html;
+    });
+  }
+  cmsHighlight();
+
+  function bgColourChange() {
+    let bgColour = document.querySelector("[data-bg-colour]");
+    let bgTrigger = document.querySelector("[data-bg-trigger]");
+
+    if (!bgColour || !bgTrigger) return;
+
+    gsap.set(bgColour, { height: '200svh' });
+    gsap.set(bgTrigger, { height: '150svh' });
+
+    let tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: bgTrigger,
+        start: "top top",
+        end: "bottom bottom",
+        scrub: 0.5,
+        invalidateOnRefresh: true,
+      },
     });
 
-    resizeObserver.observe(document.body);
+    tl.to(bgColour, { autoAlpha: 0, ease: "none" });
   }
+  bgColourChange();
 
-  function destroyResizeObserver() {
-    if (!resizeObserver) return;
-    resizeObserver.disconnect();
-    resizeObserver = null;
-  }
+  function desktopAnimations() {
+    mm.add("(min-width: 992px)", () => {
+      function lazyImage() {
+        const lazy = document.querySelector("[data-lazy-image]");
+        if (!lazy) return;
 
-  function init() {
-    globalInit();
-    pageInit();
-    navColour();
-    initResizeObserver();
-    menuButtonHover();
-    menuAnimation();
-  }
+        gsap.set(lazy, { y: 200 });
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", init);
-  } else {
-    init();
-  }
+        let tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: lazy,
+            start: "top center",
+            end: "bottom top",
+            ease: "expo.inOut",
+            scrub: 1,
+          }
+        });
 
-  barba.hooks.beforeEnter((data) => {
-    navColour(data.next.container);
-  });
+        tl.to(lazy, { y: -200 });
+      }
+      lazyImage();
 
-  barba.hooks.beforeLeave(() => {
-    destroyResizeObserver();
-  });
+      function teamAnimation() {
+        const teamWrapper = document.querySelector("[data-team-wrapper]");
+        const teamItems = document.querySelectorAll("[data-team-item]");
 
-  barba.hooks.afterEnter((data) => {
-    window.FinsweetAttributes.modules.list.restart();
-  });
+        if (!teamWrapper || !teamItems.length) return;
 
-  barba.hooks.after((data) => {
-    window.scrollTo(0, 0);
-    pageInit(data.next.container);
-    lenis.start();
-    initResizeObserver();
-  });
+        const teamPanels = teamWrapper.querySelectorAll("[data-team-panel]");
+        if (!teamPanels.length) return;
 
-  barba.init({
-    preventRunning: true,
-    transitions: [
-      {
-        name: "default-transition",
+        const roles = Array.from(teamPanels, (panel) => panel.querySelector("[data-team-role]"));
+        const bios = Array.from(teamPanels, (panel) => panel.querySelector("[data-team-bio]"));
+        const allText = [...roles, ...bios].filter(Boolean);
 
-        leave(data) {
-          let tl = gsap.timeline({
-            defaults: {
-              ease: "expo.out",
-            },
+        let currentIndex = -1;
+
+        function setActiveItem(index) {
+          teamItems.forEach((item, i) => {
+            item.classList.toggle("is-active", i === index);
+          });
+        }
+
+        function showPanel(index) {
+          if (index === currentIndex) return;
+          currentIndex = index;
+
+          gsap.set(teamPanels, { autoAlpha: 0 });
+          gsap.set(teamPanels[index], { autoAlpha: 1 });
+          gsap.killTweensOf(allText);
+          gsap.set(bios.filter(Boolean), { autoAlpha: 0, y: 12 });
+          gsap.set(roles.filter(Boolean), { autoAlpha: 0, y: 12 });
+
+          if (roles[index]) {
+            gsap.to(roles[index], { autoAlpha: 1, y: 0, duration: 0.5, ease: "expo.out" });
+          }
+          if (bios[index]) {
+            gsap.to(bios[index], { autoAlpha: 1, duration: 0.5, ease: "expo.out", delay: 0.25 });
+          }
+
+          setActiveItem(index);
+        }
+
+        showPanel(0);
+
+        teamItems.forEach((teamItem, index) => {
+          teamItem.addEventListener("mouseenter", () => showPanel(index));
+        });
+      }
+      teamAnimation();
+
+      function projectHover() {
+        const projectCards = document.querySelectorAll("[data-project-card]");
+        const cursor = document.querySelector(".cursor");
+        const cursorText = cursor?.querySelector("[data-cursor-text]");
+        if (!projectCards.length || !cursor) return;
+
+        gsap.set(cursor, { opacity: 0, x: 0, y: 0 });
+
+        const xTo = gsap.quickTo(cursor, "x", { duration: 0.05, ease: "expo.out" });
+        const yTo = gsap.quickTo(cursor, "y", { duration: 0.05, ease: "expo.out" });
+        const opacityTo = gsap.quickTo(cursor, "opacity", { duration: 0.75, ease: "expo.out" });
+
+        const offsetX = 18;
+        const offsetY = 18;
+
+        projectCards.forEach((card) => {
+          const projectImage = card.querySelector("[data-project-image]");
+          const projectImageOverlay = card.querySelector("[data-image-overlay]");
+          if (!projectImage || !projectImageOverlay) return;
+
+          const isComingSoon = (card.getAttribute("data-coming-soon") || "").toLowerCase() === "true";
+
+          gsap.set(projectImage, { scale: 1.025, transformOrigin: "50% 50%" });
+          gsap.set(projectImageOverlay, { opacity: 0 });
+
+          const tl = gsap.timeline({ paused: true });
+          tl.to(projectImage, { scale: 1, duration: 0.5, ease: "power2.out" }, 0)
+            .to(projectImageOverlay, { opacity: 0.15, duration: 0.25, ease: "power2.out" }, 0);
+
+          const setCursorLabel = () => {
+            const label = isComingSoon ? "Coming Soon" : "View Project";
+            if (cursorText) cursorText.textContent = label;
+            else cursor.textContent = label;
+          };
+
+          const moveCursor = (e) => {
+            xTo(e.clientX + offsetX);
+            yTo(e.clientY + offsetY);
+          };
+
+          card.addEventListener("mouseenter", (e) => {
+            setCursorLabel();
+            moveCursor(e);
+            opacityTo(1);
+            tl.timeScale(1).play();
           });
 
+          card.addEventListener("mousemove", moveCursor);
+
+          card.addEventListener("mouseleave", () => {
+            opacityTo(0);
+            tl.timeScale(1.8).reverse();
+          });
+        });
+      }
+      projectHover();
+
+      function currentProject() {
+        const projectName = document.querySelector("[data-project-name]");
+        const connectingLine = document.querySelector("[data-connecting-line]");
+        const trigger = document.querySelector("[data-project-trigger]");
+        if (!projectName || !connectingLine || !trigger) return;
+
+        gsap.set(projectName, { y: 12 });
+        gsap.set(connectingLine, { autoAlpha: 1, xPercent: -150 });
+
+        let tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: trigger,
+            start: "top top",
+            end: "bottom top",
+            toggleActions: "play none none reverse",
+            ease: "power2.inOut",
+          },
+        });
+
+        tl
+          .to(projectName, { y: 0 }, 0)
+          .to(connectingLine, { xPercent: 0 }, 0.2);
+
+      }
+      currentProject();
+
+      function buttonAnim() {
+        const buttons = gsap.utils.toArray("[data-button-hover]");
+        if (!buttons.length) return;
+
+        buttons.forEach((button) => {
+          let buttonArrow = button.querySelector("[data-button-arrow]");
+          let buttonText = button.querySelectorAll("[data-button-text]");
+          let tl = gsap.timeline({
+            paused: true,
+            defaults: {
+              ease: "expo.inOut"
+            }
+          });
+
+          tl
+            .to(buttonText, { y: -12, duration: 0.5 }, 0)
+            .to(buttonArrow, { xPercent: 101, duration: 0.25 }, 0)
+            .set(buttonArrow, { xPercent: -101 }, 0.25)
+            .to(buttonArrow, { xPercent: 0, duration: 0.25 }, 0.25);
+
+          button.addEventListener("mouseenter", () => tl.play(0));
+
+          button.addEventListener("mouseleave", () => tl.reverse());
+        });
+      }
+      buttonAnim();
+
+      function reasonSwiper() {
+        const reasonTrigger = document.querySelector("[data-reason-trigger]");
+        if (!reasonTrigger) return;
+        const reasonPanels = gsap.utils.toArray("[data-reason-panels]");
+        const reasonSegments = reasonPanels.length - 1;
+        const reasonHead = gsap.utils.toArray("[data-reason-head]");
+        const reasonSub = gsap.utils.toArray("[data-reason-sub]");
+        const reasonCount = document.querySelector("[data-reason-count]");
+
+        let countIndex = 0;
+
+        function updateCount(nextIndex, direction) {
+          if (!reasonCount || nextIndex === countIndex) return;
+          countIndex = nextIndex;
+
+          const outY = direction > 0 ? "-100%" : "100%";
+          const inY = direction > 0 ? "100%" : "-100%";
+
+          gsap.killTweensOf(reasonCount);
+          gsap.to(reasonCount, {
+            yPercent: parseFloat(outY),
+            autoAlpha: 0,
+            duration: 0.25,
+            ease: "expo.in",
+            onComplete: () => {
+              reasonCount.textContent = String(nextIndex + 1).padStart(2, "0");
+              gsap.fromTo(
+                reasonCount,
+                { yPercent: parseFloat(inY), autoAlpha: 0 },
+                { yPercent: 0, autoAlpha: 1, duration: 0.35, ease: "expo.out" }
+              );
+            },
+          });
+        }
+
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: reasonTrigger,
+            start: "top top",
+            end: "+=" + reasonSegments * 100 + "%",
+            scrub: 1,
+            pin: true,
+            anticipatePin: 1,
+            refreshPriority: 1,
+          },
+        });
+
+        reasonPanels.forEach((reasonPanel, i) => {
+          gsap.set(reasonPanel, { zIndex: reasonPanels.length - i });
+        });
+
+        reasonPanels.slice(0, -1).forEach((reasonPanel, i) => {
           tl.to(
-            ".content-overlay",
+            reasonPanel,
             {
-              opacity: 1,
+              clipPath: "inset(0% 0% 100% 0%)",
+              ease: "none",
               duration: 1,
             },
+            i
+          );
+        });
+
+        gsap.set(reasonHead, { autoAlpha: 0, y: 30 });
+        gsap.set(reasonSub, { autoAlpha: 0, y: 30 });
+
+        gsap.set(reasonHead[0], { autoAlpha: 1, y: 0 });
+        gsap.set(reasonSub[0], { autoAlpha: 1, y: 0 });
+
+        let activeIndex = 0;
+
+        function showText(nextIndex, direction) {
+          if (nextIndex === activeIndex) return;
+
+          const prevIndex = activeIndex;
+          activeIndex = nextIndex;
+
+          gsap.killTweensOf(reasonHead);
+          gsap.killTweensOf(reasonSub);
+
+          const outY = direction > 0 ? -30 : 30;
+          const inY = direction > 0 ? 30 : -30;
+
+          // Out
+          gsap.to([reasonHead[prevIndex], reasonSub[prevIndex]], {
+            autoAlpha: 0,
+            y: outY,
+            duration: 0.75,
+            ease: "expo.out",
+            stagger: 0.05,
+            overwrite: true,
+          });
+
+          // In
+          gsap.fromTo(
+            [reasonHead[nextIndex], reasonSub[nextIndex]],
+            { autoAlpha: 0, y: inY },
+            {
+              autoAlpha: 1,
+              y: 0,
+              duration: 0.75,
+              stagger: 0.05,
+              ease: "expo.out",
+              overwrite: true,
+            }
+          );
+        }
+
+        // Callbacks
+        for (let i = 0; i < reasonHead.length - 1; i++) {
+          const t = i + 0.85;
+
+          tl.add(() => { showText(i + 1, 1); updateCount(i + 1, 1); }, t);
+          tl.add(() => { showText(i, -1); updateCount(i, -1); }, t - 0.001);
+        }
+        //Parallax
+        const Parallax = -5;
+        reasonPanels.forEach((reasonPanel) => {
+          const inner = reasonPanel.querySelector(".h-reasons-image");
+          if (!inner) return;
+
+          tl.fromTo(
+            inner,
+            { yPercent: 0 },
+            { yPercent: Parallax, ease: "none", duration: reasonSegments },
             0
           );
+        });
+      }
+      reasonSwiper();
+    });
+  }
+  desktopAnimations();
 
-          return tl;
-        },
+  function tabletAnimations() {
+    mm.add("(min-width: 479px) and (max-width: 991px)", () => {
+      function lazyImage() {
+        const lazy = document.querySelector("[data-lazy-image]");
+        if (!lazy) return;
 
-        afterLeave(data) {
-          gsap.set(data.current.container, { visibility: "hidden" });
-        },
+        gsap.set(lazy, { y: 200 });
 
-        beforeEnter(data) {
-          gsap.set(data.next.container, { visibility: "hidden" });
-          navColour(data.next.container);
-        },
+        let tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: lazy,
+            start: "top center",
+            end: "bottom top",
+            ease: "expo.inOut",
+            scrub: 1,
+          }
+        });
 
-        enter(data) {
-          gsap.set(data.next.container, { visibility: "visible" });
-        },
-      },
-    ],
+        tl.to(lazy, { y: -200 });
+      }
+      lazyImage();
+
+      function teamAnimation() {
+        const teamWrapper = document.querySelector("[data-team-wrapper]");
+        const teamItems = document.querySelectorAll("[data-team-item]");
+
+        if (!teamWrapper || !teamItems.length) return;
+
+        const teamPanels = teamWrapper.querySelectorAll("[data-team-panel]");
+        if (!teamPanels.length) return;
+
+        const roles = Array.from(teamPanels, (panel) => panel.querySelector("[data-team-role]"));
+        const bios = Array.from(teamPanels, (panel) => panel.querySelector("[data-team-bio]"));
+        const allText = [...roles, ...bios].filter(Boolean);
+
+        let currentIndex = -1;
+
+        function setActiveItem(index) {
+          teamItems.forEach((item, i) => {
+            item.classList.toggle("is-active", i === index);
+          });
+        }
+
+        function showPanel(index) {
+          if (index === currentIndex) return;
+          currentIndex = index;
+
+          gsap.set(teamPanels, { autoAlpha: 0 });
+          gsap.set(teamPanels[index], { autoAlpha: 1 });
+          gsap.killTweensOf(allText);
+          gsap.set(bios.filter(Boolean), { autoAlpha: 0, y: 12 });
+          gsap.set(roles.filter(Boolean), { autoAlpha: 0, y: 12 });
+
+          if (roles[index]) {
+            gsap.to(roles[index], { autoAlpha: 1, y: 0, duration: 0.5, ease: "expo.out" });
+          }
+          if (bios[index]) {
+            gsap.to(bios[index], { autoAlpha: 1, duration: 0.5, ease: "expo.out", delay: 0.25 });
+          }
+
+          setActiveItem(index);
+        }
+
+        showPanel(0);
+
+        teamItems.forEach((teamItem, index) => {
+          teamItem.addEventListener("mouseenter", () => showPanel(index));
+        });
+      }
+      teamAnimation();
+
+      function reasonSwiper() {
+        const reasonTrigger = document.querySelector("[data-reason-trigger]");
+        if (!reasonTrigger) return;
+        const reasonPanels = gsap.utils.toArray("[data-reason-panels]");
+        const reasonSegments = reasonPanels.length - 1;
+        const reasonHead = gsap.utils.toArray("[data-reason-head]");
+        const reasonSub = gsap.utils.toArray("[data-reason-sub]");
+        const reasonCount = document.querySelector("[data-reason-count]");
+
+        let countIndex = 0;
+
+        function updateCount(nextIndex, direction) {
+          if (!reasonCount || nextIndex === countIndex) return;
+          countIndex = nextIndex;
+
+          const outY = direction > 0 ? "-100%" : "100%";
+          const inY = direction > 0 ? "100%" : "-100%";
+
+          gsap.killTweensOf(reasonCount);
+          gsap.to(reasonCount, {
+            yPercent: parseFloat(outY),
+            autoAlpha: 0,
+            duration: 0.25,
+            ease: "expo.in",
+            onComplete: () => {
+              reasonCount.textContent = String(nextIndex + 1).padStart(2, "0");
+              gsap.fromTo(
+                reasonCount,
+                { yPercent: parseFloat(inY), autoAlpha: 0 },
+                { yPercent: 0, autoAlpha: 1, duration: 0.35, ease: "expo.out" }
+              );
+            },
+          });
+        }
+
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: reasonTrigger,
+            start: "top top",
+            end: "+=" + reasonSegments * 100 + "%",
+            scrub: 1,
+            pin: true,
+            anticipatePin: 1,
+            refreshPriority: 1,
+          },
+        });
+
+        reasonPanels.forEach((reasonPanel, i) => {
+          gsap.set(reasonPanel, { zIndex: reasonPanels.length - i });
+        });
+
+        reasonPanels.slice(0, -1).forEach((reasonPanel, i) => {
+          tl.to(
+            reasonPanel,
+            {
+              clipPath: "inset(0% 0% 100% 0%)",
+              ease: "none",
+              duration: 1,
+            },
+            i
+          );
+        });
+
+        gsap.set(reasonHead, { autoAlpha: 0, y: 30 });
+        gsap.set(reasonSub, { autoAlpha: 0, y: 30 });
+
+        gsap.set(reasonHead[0], { autoAlpha: 1, y: 0 });
+        gsap.set(reasonSub[0], { autoAlpha: 1, y: 0 });
+
+        let activeIndex = 0;
+
+        function showText(nextIndex, direction) {
+          if (nextIndex === activeIndex) return;
+
+          const prevIndex = activeIndex;
+          activeIndex = nextIndex;
+
+          gsap.killTweensOf(reasonHead);
+          gsap.killTweensOf(reasonSub);
+
+          const outY = direction > 0 ? -30 : 30;
+          const inY = direction > 0 ? 30 : -30;
+
+          // Out
+          gsap.to([reasonHead[prevIndex], reasonSub[prevIndex]], {
+            autoAlpha: 0,
+            y: outY,
+            duration: 0.75,
+            ease: "expo.out",
+            stagger: 0.05,
+            overwrite: true,
+          });
+
+          // In
+          gsap.fromTo(
+            [reasonHead[nextIndex], reasonSub[nextIndex]],
+            { autoAlpha: 0, y: inY },
+            {
+              autoAlpha: 1,
+              y: 0,
+              duration: 0.75,
+              stagger: 0.05,
+              ease: "expo.out",
+              overwrite: true,
+            }
+          );
+        }
+
+        // Callbacks
+        for (let i = 0; i < reasonHead.length - 1; i++) {
+          const t = i + 0.85;
+
+          tl.add(() => { showText(i + 1, 1); updateCount(i + 1, 1); }, t);
+          tl.add(() => { showText(i, -1); updateCount(i, -1); }, t - 0.001);
+        }
+        //Parallax
+        const Parallax = -5;
+        reasonPanels.forEach((reasonPanel) => {
+          const inner = reasonPanel.querySelector(".h-reasons-image");
+          if (!inner) return;
+
+          tl.fromTo(
+            inner,
+            { yPercent: 0 },
+            { yPercent: Parallax, ease: "none", duration: reasonSegments },
+            0
+          );
+        });
+      }
+      reasonSwiper();
+    });
+  }
+  tabletAnimations();
+}
+
+function initResizeObserver() {
+  if (resizeObserver) return;
+
+  resizeObserver = new ResizeObserver(() => {
+    ScrollTrigger.refresh();
+    lenis?.resize?.();
   });
+
+  resizeObserver.observe(document.body);
+}
+
+function destroyResizeObserver() {
+  if (!resizeObserver) return;
+  resizeObserver.disconnect();
+  resizeObserver = null;
+}
+
+function init() {
+  globalInit();
+  pageInit();
+  navColour();
+  initResizeObserver();
+  menuButtonHover();
+  menuAnimation();
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", init);
+} else {
+  init();
+}
+
+barba.hooks.beforeEnter((data) => {
+  navColour(data.next.container);
+});
+
+barba.hooks.beforeLeave(() => {
+  destroyResizeObserver();
+});
+
+barba.hooks.afterEnter((data) => {
+  window.FinsweetAttributes.modules.list.restart();
+});
+
+barba.hooks.after((data) => {
+  window.scrollTo(0, 0);
+  pageInit(data.next.container);
+  lenis.start();
+  initResizeObserver();
+});
+
+barba.init({
+  preventRunning: true,
+  transitions: [
+    {
+      name: "default-transition",
+
+      leave(data) {
+        let tl = gsap.timeline({
+          defaults: {
+            ease: "expo.out",
+          },
+        });
+
+        tl.to(
+          ".content-overlay",
+          {
+            opacity: 1,
+            duration: 1,
+          },
+          0
+        );
+
+        return tl;
+      },
+
+      afterLeave(data) {
+        gsap.set(data.current.container, { visibility: "hidden" });
+      },
+
+      beforeEnter(data) {
+        gsap.set(data.next.container, { visibility: "hidden" });
+        navColour(data.next.container);
+      },
+
+      enter(data) {
+        gsap.set(data.next.container, { visibility: "visible" });
+      },
+    },
+  ],
+});
 
 
