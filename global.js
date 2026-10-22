@@ -6,7 +6,6 @@ const getNav = () => document.querySelector('nav');
 const clipHidden = 'polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)';
 const clipShown = 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)';
 const getContainer = () => document.querySelector('[data-barba="container"]');
-let destroyProjectAnim = null;
 
 function globalInit() {
   lenis = new Lenis();
@@ -258,7 +257,7 @@ function pageInit() {
       SplitText.create(el, {
         type: "lines",
         mask: "lines",
-        autoSplit: true,
+        //autoSplit: true,
         onSplit(self) {
           return gsap.from(self.lines, {
             duration: 1.5,
@@ -539,7 +538,7 @@ function pageInit() {
       SplitText.create(el, {
         type: "lines",
         mask: "lines",
-        autoSplit: true,
+        //autoSplit: true,
         onSplit: (self) => {
           gsap.set(el, { visibility: "visible" });
           gsap.set(self.lines, { yPercent: 100, autoAlpha: 0 });
@@ -617,40 +616,48 @@ function pageInit() {
   }
   navColourChange();
 
-  if (destroyProjectAnim) destroyProjectAnim();
-  destroyProjectAnim = projectAnim();
-
   function projectAnim() {
-    let total = 0;
-    let xTo;
-    let isTicking = false;
+    let total = 0,
+      xTo,
+      itemValues = []
 
-    const content = document.querySelector('.h-featured-bottom .f-work-list');
-    const cards = document.querySelectorAll('.h-featured-bottom .f-work-item');
-    if (!content || !cards.length) return () => { };
+    const content = document.querySelector('.h-featured-bottom .f-work-list')
+    const cards = document.querySelectorAll('.h-featured-bottom.f-work-item')
+    if (!content || !cards.length) return;
+    const cardsLength = cards.length / 2
+    const half = content.clientWidth / 2
 
-    const cardsLength = cards.length / 2;
-    const half = content.scrollWidth / 2; // better than clientWidth
     const wrap = gsap.utils.wrap(-half, 0);
 
     xTo = gsap.quickTo(content, "x", {
       duration: 0.5,
       ease: 'power3',
-      modifiers: { x: gsap.utils.unitize(wrap) },
+      modifiers: {
+        x: gsap.utils.unitize(wrap),
+      },
     });
 
-    const tl = gsap.timeline({ paused: true }).to(cards, {
+    for (let i = 0; i < cardsLength; i++) {
+      itemValues.push((Math.random() - 0.5) * 20);
+    }
+
+    const tl = gsap.timeline({ paused: true });
+    tl.to(cards, {
       scale: 0.95,
       duration: 0.5,
       ease: 'expo.inOut',
-    });
+    })
 
-    const observer = Observer.create({
+    Observer.create({
       target: content,
       type: "pointer,touch",
       dragMinimum: 10,
-      onPress: () => tl.play(),
-      onDragStart: () => content.classList.add('is-dragging'),
+      onPress: () => {
+        tl.play();
+      },
+      onDragStart: () => {
+        content.classList.add('is-dragging');
+      },
       onDrag: (self) => {
         total += self.deltaX;
         xTo(total);
@@ -665,31 +672,13 @@ function pageInit() {
       }
     });
 
-    function tick(_, deltaTime) {
-      total -= deltaTime / 15;
-      xTo(total);
+    gsap.ticker.add(tick);
+
+    function tick(time, deltaTime) {
+      total -= deltaTime / 5  // Adjust the speed of automatic scrolling    
+      xTo(total)
     }
 
-    function startTicker() {
-      if (isTicking) return;
-      gsap.ticker.add(tick);
-      isTicking = true;
-    }
-
-    function stopTicker() {
-      if (!isTicking) return;
-      gsap.ticker.remove(tick);
-      isTicking = false;
-    }
-
-    startTicker();
-
-    return () => {
-      stopTicker();
-      observer.kill();
-      tl.kill();
-      gsap.killTweensOf(content);
-    };
   }
   projectAnim();
 
@@ -1356,7 +1345,7 @@ function init() {
   globalInit();
   pageInit();
   navColour();
-  initResizeObserver();
+  //initResizeObserver();
   menuButtonHover();
   menuAnimation();
 }
@@ -1372,8 +1361,6 @@ barba.hooks.beforeEnter((data) => {
 });
 
 barba.hooks.beforeLeave(() => {
-  destroyProjectAnim?.();
-  destroyProjectAnim = null;
   destroyResizeObserver();
 });
 
@@ -1428,5 +1415,4 @@ barba.init({
     },
   ],
 });
-
 
