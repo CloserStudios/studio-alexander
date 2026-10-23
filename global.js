@@ -614,14 +614,14 @@ function pageInit() {
       onToggle: (self) => nav.classList.toggle("dark", self.isActive ? !baseDark : baseDark),
     });
   }
-  //navColourChange();
+  navColourChange();
 
   function projectAnim() {
     let total = 0,
       xTo,
       itemValues = []
 
-    const content = document.querySelector('.h-featured-bottom-new')
+    const content = document.querySelector('.h-featured-bottom')
     const cards = document.querySelectorAll('.f-work-item')
     if (!content || !cards.length) return;
     const cardsLength = cards.length / 2
