@@ -614,7 +614,7 @@ function pageInit() {
       onToggle: (self) => nav.classList.toggle("dark", self.isActive ? !baseDark : baseDark),
     });
   }
-  navColourChange();
+  //navColourChange();
 
   function projectAnim() {
     let total = 0,
