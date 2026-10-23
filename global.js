@@ -675,7 +675,7 @@ function pageInit() {
     gsap.ticker.add(tick);
 
     function tick(time, deltaTime) {
-      total -= deltaTime / 5  // Adjust the speed of automatic scrolling    
+      total -= deltaTime / 15  // Adjust the speed of automatic scrolling    
       xTo(total)
     }
 
