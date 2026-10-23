@@ -621,7 +621,7 @@ function pageInit() {
       xTo,
       itemValues = []
 
-    const content = document.querySelector('.f-work-list')
+    const content = document.querySelector('.h-featured-bottom-new')
     const cards = document.querySelectorAll('.f-work-item')
     if (!content || !cards.length) return;
     const cardsLength = cards.length / 2
