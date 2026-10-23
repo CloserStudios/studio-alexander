@@ -622,7 +622,7 @@ function pageInit() {
       itemValues = []
 
     const content = document.querySelector('.h-featured-bottom .f-work-list')
-    const cards = document.querySelectorAll('.h-featured-bottom.f-work-item')
+    const cards = document.querySelectorAll('.h-featured-bottom .f-work-item')
     if (!content || !cards.length) return;
     const cardsLength = cards.length / 2
     const half = content.clientWidth / 2
