@@ -1,7 +1,7 @@
 gsap.registerPlugin(ScrollTrigger, SplitText, Observer);
 let mm = gsap.matchMedia();
 let lenis;
-let resizeObserver = null;
+//let resizeObserver = null;
 const getNav = () => document.querySelector('nav');
 const clipHidden = 'polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)';
 const clipShown = 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)';
@@ -1324,6 +1324,7 @@ function pageInit() {
   tabletAnimations();
 }
 
+/*
 function initResizeObserver() {
   if (resizeObserver) return;
 
@@ -1340,6 +1341,7 @@ function destroyResizeObserver() {
   resizeObserver.disconnect();
   resizeObserver = null;
 }
+  */
 
 function init() {
   globalInit();
@@ -1361,7 +1363,7 @@ barba.hooks.beforeEnter((data) => {
 });
 
 barba.hooks.beforeLeave(() => {
-  destroyResizeObserver();
+  //destroyResizeObserver();
 });
 
 barba.hooks.afterEnter((data) => {
@@ -1372,7 +1374,7 @@ barba.hooks.after((data) => {
   window.scrollTo(0, 0);
   pageInit(data.next.container);
   lenis.start();
-  initResizeObserver();
+  //initResizeObserver();
 });
 
 barba.init({
