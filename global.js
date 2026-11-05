@@ -256,7 +256,7 @@ function pageInit() {
       SplitText.create(el, {
         type: "lines",
         mask: "lines",
-        //autoSplit: true,
+        autoSplit: true,
         onSplit(self) {
           return gsap.from(self.lines, {
             duration: 1.5,
