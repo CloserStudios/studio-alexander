@@ -793,7 +793,7 @@ function pageInit() {
         trigger: bgTrigger,
         start: "top top",
         end: "bottom bottom",
-        scrub: 0.5,
+        scrub: true,
         invalidateOnRefresh: true,
       },
     });
