@@ -612,6 +612,12 @@ function pageInit() {
       end: "bottom top",
       onToggle: (self) => nav.classList.toggle("dark", self.isActive ? !baseDark : baseDark),
     });
+
+    navTrigger.querySelectorAll("img").forEach((img) => {
+      if (!img.complete) {
+        img.addEventListener("load", () => ScrollTrigger.refresh(), { once: true });
+      }
+    });
   }
   navColourChange();
 
