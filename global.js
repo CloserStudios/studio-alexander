@@ -329,9 +329,9 @@ function pageInit() {
 
       gsap.fromTo(
         image,
-        { yPercent: -8 },
+        { yPercent: -5 },
         {
-          yPercent: 8,
+          yPercent: 5,
           ease: "none",
           scrollTrigger: {
             trigger: wrapper,
@@ -444,8 +444,7 @@ function pageInit() {
   function defaultPreLoader() {
     const loader = document.querySelector(".preload-wrapper");
     if (!loader) return;
-    const loaderLogoWrap = document.querySelector(".preloader-logo-svg");
-    const loaderLogo = document.querySelectorAll(".preloader-logo-svg path");
+    const loaderLogo = document.querySelector(".preloader-logo-svg");
     const loaderInnerBg = document.querySelector(".preload-inner-bg");
     const loaderInnerImg = document.querySelector(".preload-inner-img");
     const counterEl = document.querySelector("[data-counter]");
@@ -470,36 +469,17 @@ function pageInit() {
       },
     });
 
-    gsap.set(loaderLogo, { autoAlpha: 0, scale: 0.5 });
-    gsap.set(loaderLogoWrap, { autoAlpha: 1 });
-    gsap.set(loading, { y: 12 });
-    gsap.set(connectingLine, { xPercent: -150 });
-    gsap.set(number, { y: 12 });
+    gsap.set(loaderLogo, { autoAlpha: 0 });
+    gsap.set(loading, { autoAlpha: 1, y: 12 });
+    gsap.set(connectingLine, { autoAlpha: 1, xPercent: -150 });
+    gsap.set(number, { autoAlpha: 1, y: 12 });
 
-    // Counter: part of the timeline, starts at 0
-    tl.to(
-      loading,
-      {
-        y: 0,
-      },
-      0.25
-    );
 
-    tl.to(
-      connectingLine,
-      {
-        xPercent: 0,
-      },
-      0.45
-    );
+    tl.to(loading, { y: 0, }, 0.25);
 
-    tl.to(
-      number,
-      {
-        y: 0,
-      },
-      0.65
-    );
+    tl.to(connectingLine, { xPercent: 0, }, 0.45);
+
+    tl.to(number, { y: 0, }, 0.65);
 
     tl.to(
       counter,
@@ -514,19 +494,13 @@ function pageInit() {
       1
     );
 
-    tl.to(
-      loaderInnerImg,
-      {
-        clipPath: clipShown,
-        duration: 1.5,
-      },
-      0.5
-    );
+    tl.to(loaderInnerImg, { clipPath: clipShown, duration: 1.5, }, 0.5);
 
-    tl.to(
+    tl.fromTo(
       loaderLogo,
-      { autoAlpha: 1, scale: 1, transformOrigin: "center center", stagger: 0.05, duration: 2, },
-      0.5
+      { autoAlpha: 0, filter: "blur(10px)" },
+      { autoAlpha: 1, filter: "blur(0px)", duration: 2, },
+      1
     );
 
     tl.to(loaderLogo, { autoAlpha: 0, duration: 1 }, 3);
@@ -535,7 +509,7 @@ function pageInit() {
       loaderInnerBg,
       { clipPath: "inset(30% 30% 30% 30%)" },
       { clipPath: "inset(0% 0% 0% 0%)", duration: 1 },
-      4
+      3
     );
 
     tl.to(loaderInnerImg, { scale: 1, duration: 1 }, 4);
