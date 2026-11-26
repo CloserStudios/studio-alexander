@@ -71,7 +71,20 @@ function menuAnimation() {
 
   menuButton.addEventListener("click", toggle);
   menuBackground.addEventListener("click", toggle);
-  menuLinks.forEach(link => link.addEventListener("click", toggle));
+  //menuLinks.forEach(link => link.addEventListener("click", toggle));
+  const desktopQuery = window.matchMedia("(min-width: 668px)");
+
+  menuButton.addEventListener("click", toggle);
+  menuBackground.addEventListener("click", toggle);
+  menuLinks.forEach((link) => {
+    link.addEventListener("click", (e) => {
+      if (desktopQuery.matches) {
+        e.preventDefault();
+        return;
+      }
+      toggle();
+    });
+  });
 
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape" && !tl.reversed()) tl.timeScale(1).reverse(0);
@@ -294,32 +307,6 @@ function pageInit() {
     tl.to(partner, { yPercent: 0, duration: 1, ease: "expo.out" });
   }
   partnerAnim();
-
-  /*
-  function paraEffect() {
-    const paraWrappers = document.querySelectorAll("[data-para-wrap]");
-    if (!paraWrappers.length) return;
-
-    paraWrappers.forEach((wrapper) => {
-      const image = wrapper.querySelector("[data-para-image]");
-      if (!image) return;
-
-      gsap.timeline({
-        scrollTrigger: {
-          trigger: wrapper,
-          scrub: true,
-          invalidateOnRefresh: true,
-        },
-        defaults: {
-          ease: "none",
-          force3D: true,
-        }
-      })
-        .fromTo(image, { backgroundPosition: "50% 100%" }, { backgroundPosition: "50% 0%", duration: 1 });
-    });
-  }
-  paraEffect();
-  */
 
   function paraEffect() {
     gsap.registerPlugin(ScrollTrigger);
@@ -804,38 +791,13 @@ function pageInit() {
         trigger: bgTrigger,
         start: "top top",
         end: "bottom bottom",
-        scrub: 0.5,               // small smoothing hides per-event jitter
+        scrub: 0.5,
         invalidateOnRefresh: true,
-        ignoreMobileResize: true, // avoids refresh when iOS toolbar shows/hides
+        ignoreMobileResize: true,
       },
-    }).to(bgColour, { opacity: 0, ease: "none" }); // opacity, not autoAlpha
+    }).to(bgColour, { opacity: 0, ease: "none" });
   }
   bgColourChange();
-
-  /*
-  function bgColourChange() {
-    let bgColour = document.querySelector("[data-bg-colour]");
-    let bgTrigger = document.querySelector("[data-bg-trigger]");
-
-    if (!bgColour || !bgTrigger) return;
-
-    gsap.set(bgColour, { height: '200svh' });
-    gsap.set(bgTrigger, { height: '150svh' });
-
-    let tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: bgTrigger,
-        start: "top top",
-        end: "bottom bottom",
-        scrub: true,
-        invalidateOnRefresh: true,
-      },
-    });
-
-    tl.to(bgColour, { autoAlpha: 0, ease: "none" });
-  }
-  bgColourChange();
-  */
 
   function desktopAnimations() {
     mm.add("(min-width: 992px)", () => {
