@@ -87,10 +87,13 @@ function menuAnimation() {
   tl.eventCallback("onStart", () => {
     lenis?.stop?.();
     navMenuOpen = true;
-    const container = getContainer();
-    const baseDark = container?.dataset.navTheme === "dark";
-    menuButton.classList.toggle("dark", baseDark);
-    if (!desktopQuery.matches) getNav()?.classList.toggle("dark", baseDark);
+    if (!desktopQuery.matches) {
+      menuButton.classList.remove("dark");
+      getNav()?.classList.remove("dark");
+    } else {
+      const baseDark = getContainer()?.dataset.navTheme === "dark";
+      menuButton.classList.toggle("dark", baseDark);
+    }
     if (navLogo && desktopQuery.matches) navLogo.style.pointerEvents = "none";
   });
 
