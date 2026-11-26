@@ -258,6 +258,7 @@ function pageInit() {
         mask: "lines",
         autoSplit: true,
         onSplit(self) {
+          self.lines.forEach((line) => line.parentElement.classList.add("split-mask"));
           return gsap.from(self.lines, {
             duration: 1.5,
             y: 50,
