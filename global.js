@@ -570,7 +570,7 @@ function pageInit() {
           duration: 2,
           ease: "expo.inOut"
         },
-        0.5
+        0
       );
     }
 
