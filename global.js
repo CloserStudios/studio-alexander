@@ -567,9 +567,9 @@ function pageInit() {
         },
         {
           clipPath: "inset(0% 0% 0% 0%)",
-          duration: 1,
+          duration: 2,
           ease: "expo.inOut"
-        }), 0.5
+        }), 0
     }
 
     if (elementLoad.length) {
