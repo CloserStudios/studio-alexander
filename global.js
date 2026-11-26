@@ -76,15 +76,7 @@ function menuAnimation() {
 
   menuButton.addEventListener("click", toggle);
   menuBackground.addEventListener("click", toggle);
-  menuLinks.forEach((link) => {
-    link.addEventListener("click", (e) => {
-      if (desktopQuery.matches) {
-        e.preventDefault();
-        return;
-      }
-      toggle();
-    });
-  });
+  menuLinks.forEach(link => link.addEventListener("click", toggle));
 
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape" && !tl.reversed()) tl.timeScale(1).reverse(0);
@@ -95,7 +87,7 @@ function menuAnimation() {
     const container = document.querySelector('[data-barba="container"]');
     const baseDark = container?.dataset.navTheme === "dark";
     menuButton.classList.toggle("dark", baseDark);
-    if (navLogo) navLogo.style.pointerEvents = "none";
+    if (navLogo && desktopQuery.matches) navLogo.style.pointerEvents = "none";
   });
 
   tl.eventCallback("onReverseComplete", () => {
