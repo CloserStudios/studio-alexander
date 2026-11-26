@@ -1,6 +1,8 @@
 gsap.registerPlugin(ScrollTrigger, SplitText, Observer);
 let mm = gsap.matchMedia();
 let lenis;
+let navScrollTrigger = null;
+let navMenuOpen = false;
 const getNav = () => document.querySelector('nav');
 const clipHidden = 'polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)';
 const clipShown = 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)';
@@ -84,16 +86,25 @@ function menuAnimation() {
 
   tl.eventCallback("onStart", () => {
     lenis?.stop?.();
-    const container = document.querySelector('[data-barba="container"]');
+    navMenuOpen = true;
+    const container = getContainer();
     const baseDark = container?.dataset.navTheme === "dark";
     menuButton.classList.toggle("dark", baseDark);
+    if (!desktopQuery.matches) getNav()?.classList.toggle("dark", baseDark);
     if (navLogo && desktopQuery.matches) navLogo.style.pointerEvents = "none";
   });
 
   tl.eventCallback("onReverseComplete", () => {
     lenis?.start?.();
+    navMenuOpen = false;
     menuButton.classList.remove("dark");
     if (navLogo) navLogo.style.pointerEvents = "";
+
+    const nav = getNav();
+    const baseDark = getContainer()?.dataset.navTheme === "dark";
+    if (nav && !desktopQuery.matches) {
+      nav.classList.toggle("dark", navScrollTrigger?.isActive ? !baseDark : baseDark);
+    }
   });
 }
 
@@ -590,6 +601,27 @@ function pageInit() {
     if (!nav || !navTrigger) return;
 
     const baseDark = document.querySelector('[data-barba="container"]').dataset.navTheme === "dark";
+
+    mm.add("(max-width: 667px)", () => {
+      if (!navTrigger) return;
+
+      navScrollTrigger = ScrollTrigger.create({
+        trigger: navTrigger,
+        start: "top top",
+        end: "bottom top",
+        onToggle: (self) => {
+          if (!navMenuOpen) nav.classList.toggle("dark", self.isActive ? !baseDark : baseDark);
+        },
+      });
+
+      nav.classList.toggle("dark", navScrollTrigger.isActive ? !baseDark : baseDark);
+
+      navTrigger.querySelectorAll("img").forEach((img) => {
+        if (!img.complete) {
+          img.addEventListener("load", () => ScrollTrigger.refresh(), { once: true });
+        }
+      });
+    });
 
     ScrollTrigger.create({
       trigger: navTrigger,
