@@ -792,6 +792,28 @@ function pageInit() {
   cmsHighlight();
 
   function bgColourChange() {
+    const bgColour = document.querySelector("[data-bg-colour]");
+    const bgTrigger = document.querySelector("[data-bg-trigger]");
+    if (!bgColour || !bgTrigger) return;
+
+    gsap.set(bgColour, { height: "200svh" });
+    gsap.set(bgTrigger, { height: "150svh" });
+
+    gsap.timeline({
+      scrollTrigger: {
+        trigger: bgTrigger,
+        start: "top top",
+        end: "bottom bottom",
+        scrub: 0.5,               // small smoothing hides per-event jitter
+        invalidateOnRefresh: true,
+        ignoreMobileResize: true, // avoids refresh when iOS toolbar shows/hides
+      },
+    }).to(bgColour, { opacity: 0, ease: "none" }); // opacity, not autoAlpha
+  }
+  bgColourChange();
+
+  /*
+  function bgColourChange() {
     let bgColour = document.querySelector("[data-bg-colour]");
     let bgTrigger = document.querySelector("[data-bg-trigger]");
 
@@ -813,6 +835,7 @@ function pageInit() {
     tl.to(bgColour, { autoAlpha: 0, ease: "none" });
   }
   bgColourChange();
+  */
 
   function desktopAnimations() {
     mm.add("(min-width: 992px)", () => {
